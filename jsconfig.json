@@ -1,0 +1,19 @@
+{
+  "compilerOptions": {
+    "experimentalDecorators": true,
+    "checkJs": false,
+    "baseUrl": ".",
+    "paths": {
+      "@components": ["./src/components/index"],
+      "@contexts": ["./src/contexts/index"],
+      "@pages": ["./src/pages/index"],
+      "@hooks": ["./src/hooks/index"],
+      "@helpers": ["src/helpers/index"],
+      "@environments": ["./src/environments/index"],
+      "@layouts": ["./src/layouts/index"],
+      "@assets": ["./src/assets"]
+    }
+  },
+  "exclude": ["node_modules", "config", "public"],
+  "include": ["src", "../superReport"]
+}
