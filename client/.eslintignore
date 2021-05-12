@@ -1,0 +1,7 @@
+node_modules/
+*.json
+dist/
+config/
+*.config.js
+server.js
+/src

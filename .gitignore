@@ -1,8 +1,0 @@
-/node_modules
-yarn.lock
-package-lock.json
-/dist
-.env.development.local
-.env.production.local
-.env
-.vscode
