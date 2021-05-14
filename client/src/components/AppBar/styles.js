@@ -12,7 +12,11 @@ export default makeStyles(() => ({
       color: 'rgba(255,255,255)',
       textDecoration: 'none',
     },
+    paperMenu: {
+      width: '200px',
+      marginTop: '10px',
+    },
     menu: {
-      float: 'right',
+      justifyContent: 'center'
     }
 }))

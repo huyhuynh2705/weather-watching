@@ -5,6 +5,8 @@ import { Switch, Route } from 'react-router-dom'
 import Login from '@pages/login/index.js'
 import UserHome from '@pages/root/index.js'
 import Devices from '@pages/devices/index.js'
+import User from '@pages/user/index.js'
+import UpdateProfile from '@pages/updateprofile/index.js'
 
 
 function App() {
@@ -13,6 +15,8 @@ function App() {
       <PublicRoute path="/login" component={Login} />
       <PrivateRoute path="/" exact component={UserHome} />
       <PrivateRoute path="/devices" component={Devices} />
+      <PrivateRoute path="/user" component={User} />
+      <PrivateRoute path="/updateprofile" component={UpdateProfile} />
     </Switch>
   )
 }
