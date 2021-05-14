@@ -13,7 +13,7 @@ function Humidity({ data }) {
     <Card className={classes.root}>
       <CardContent>
         <Typography align="center" variant="h6">Humidity</Typography>
-        <Typography align="center" variant="h6">{ data.humidity }%</Typography>
+        <Typography align="center" variant="h6">{ data }%</Typography>
       </CardContent>
       <CardActions />
       {/* <Button size="medium" fullWidth>More</Button> */}

@@ -13,7 +13,7 @@ function Light({ data }) {
     <Card className={classes.root}>
       <CardContent>
         <Typography align="center" variant="h6">Light</Typography>
-        <Typography align="center" variant="h6">{ data.light } Lux</Typography>
+        <Typography align="center" variant="h6">{ data } Lux</Typography>
       </CardContent>
       <CardActions />
       {/* <Button size="medium" fullWidth>More</Button> */}

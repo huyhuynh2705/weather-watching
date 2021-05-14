@@ -32,13 +32,12 @@ export const routes = [
         label: 'user',
         path: '/user/:invitationId',
         component: 'user',
-        exact: true
+        //exact: true
       },
       {
         label: 'devices',
-        path: '/usdeviceser/:invitationId',
-        component: 'devices',
-        exact: true
+        path: '/devices',
+        component: 'devices'
       }
     ]
   },

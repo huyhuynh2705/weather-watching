@@ -12,4 +12,7 @@ export default makeStyles(() => ({
       color: 'rgba(255,255,255)',
       textDecoration: 'none',
     },
+    menu: {
+      float: 'right',
+    }
 }))

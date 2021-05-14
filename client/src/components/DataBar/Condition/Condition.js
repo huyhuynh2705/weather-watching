@@ -13,7 +13,7 @@ function Condition({ data }) {
       <Card className={classes.root}>
         <CardContent>
           <Typography align="center" variant="h6">Condition</Typography>
-          <Typography align="center" variant="h6">{ data.condition }</Typography>
+          <Typography align="center" variant="h6">{ data }</Typography>
         </CardContent>
         <CardActions />
         {/* <Button size="medium" fullWidth>More</Button> */}

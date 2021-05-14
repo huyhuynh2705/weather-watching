@@ -4,24 +4,60 @@ import AppBar from '@material-ui/core/AppBar'
 import Toolbar from '@material-ui/core/Toolbar'
 import Typography from '@material-ui/core/Typography'
 import Button from '@material-ui/core/Button'
+import Popper from '@material-ui/core/Popper';
+import Grow from '@material-ui/core/Grow';
+import Paper from '@material-ui/core/Paper';
+import ClickAwayListener from '@material-ui/core/ClickAwayListener';
+import MenuItem from '@material-ui/core/MenuItem';
+import MenuList from '@material-ui/core/MenuList';
 import AccountCircleIcon from '@material-ui/icons/AccountCircle'
 import DeviceHubIcon from '@material-ui/icons/DeviceHub'
 import useStyles from './styles'
-import MenuItem from '@material-ui/core/MenuItem';
-import Menu from '@material-ui/core/Menu';
 import { useAuth } from '@contexts'
+import { TOKEN_NAME } from '@environments';
 
 export default function ButtonAppBar() {
   const classes = useStyles()
-  const [anchorEl, setAnchorEl] = useState(null);
+  const { logout } = useAuth()
+  const user = JSON.parse(localStorage.getItem(TOKEN_NAME));
 
-  const handleProfileClick = (event) => {
-    setAnchorEl(event.currentTarget);
+  const handleLogout = async (e) => {
+    e.preventDefault();
+    logout();
   };
 
-  const handleProfileClose = () => {
-    setAnchorEl(null);
+  const [open, setOpen] = React.useState(false);
+  const anchorRef = React.useRef(null);
+
+  const handleToggle = () => {
+    setOpen((prevOpen) => !prevOpen);
   };
+
+  const handleClose = (event) => {
+    if (anchorRef.current && anchorRef.current.contains(event.target)) {
+      return;
+    }
+
+    setOpen(false);
+  };
+
+  function handleListKeyDown(event) {
+    if (event.key === 'Tab') {
+      event.preventDefault();
+      setOpen(false);
+    }
+  }
+
+  // return focus to the button when we transitioned from !open -> open
+  const prevOpen = React.useRef(open);
+  React.useEffect(() => {
+    if (prevOpen.current === true && open === false) {
+      anchorRef.current.focus();
+    }
+
+    prevOpen.current = open;
+  }, [open]);
+
 
 
   return (
@@ -29,20 +65,40 @@ export default function ButtonAppBar() {
       <AppBar position="static">
         <Toolbar>
           <Typography variant="h6" component={Link} to="/" className={classes.title}>
-            Weather Watching
+            WEATHER WATCHING
           </Typography>
-          <Button className={classes.button} variant="text" color="inherit" size="large" startIcon={<DeviceHubIcon />} >Devices</Button>
-          <Button className={classes.button} variant="text" color="inherit" size="large" startIcon={<AccountCircleIcon />} onClick={handleProfileClick}>User</Button>
-          <Menu
-            id="profile-menu"
-            anchorEl={anchorEl}
-            keepMounted
-            open={Boolean(anchorEl)}
-            onClose={handleProfileClose}>
-            <MenuItem onClick={handleProfileClose}>My Account</MenuItem>
-            <MenuItem onClick={handleProfileClose}>Logout</MenuItem>
-            <MenuItem onClick={handleProfileClose}>Close</MenuItem>
-          </Menu>
+          <Button 
+            className={classes.button} 
+            variant="text" 
+            color="inherit" 
+            size="large" 
+            startIcon={<DeviceHubIcon />} 
+            component={Link} to="/devices">Devices</Button>
+          <Button 
+            className={classes.button} 
+            variant="text" 
+            color="inherit" 
+            size="large" 
+            startIcon={<AccountCircleIcon />} 
+            ref={anchorRef}
+            onClick={handleToggle}>Hi {user.result.name}</Button>
+          <Popper open={open} anchorEl={anchorRef.current} role={undefined} transition disablePortal>
+            {({ TransitionProps, placement }) => (
+              <Grow
+                {...TransitionProps}
+                style={{ transformOrigin: placement === 'bottom' ? 'center top' : 'center bottom' }}
+              >
+                <Paper>
+                  <ClickAwayListener onClickAway={handleClose}>
+                    <MenuList autoFocusItem={open} id="menu-list-grow" onKeyDown={handleListKeyDown}>
+                      <MenuItem onClick={handleClose}>Profile</MenuItem>
+                      <MenuItem onClick={handleLogout}>Logout</MenuItem>
+                    </MenuList>
+                  </ClickAwayListener>
+                </Paper>
+              </Grow>
+            )}
+          </Popper>
         </Toolbar>
       </AppBar>
     </div>

@@ -1,7 +1,7 @@
 import bcrypt from "bcryptjs";
 import jwt from "jsonwebtoken";
 
-import UserModal from "../models/user.js";
+import UserModel from "../models/user.js";
 
 const secret = 'test';
 
@@ -9,7 +9,7 @@ export const signin = async (req, res) => {
   const { username, password } = req.body;
 
   try {
-    const oldUser = await UserModal.findOne({ username });
+    const oldUser = await UserModel.findOne({ username });
 
     if (!oldUser) return res.status(404).json({ message: "User doesn't exist" });
 
@@ -26,16 +26,16 @@ export const signin = async (req, res) => {
 };
 
 export const signup = async (req, res) => {
-  const { username, password, firstName, lastName } = req.body;
+  const { username, password, name, email, phoneNum, deviceSetId } = req.body;
 
   try {
-    const oldUser = await UserModal.findOne({ username });
+    const oldUser = await UserModel.findOne({ username });
 
     if (oldUser) return res.status(400).json({ message: "User already exists" });
 
     const hashedPassword = await bcrypt.hash(password, 12);
 
-    const result = await UserModal.create({ username, password: hashedPassword, name: `${firstName} ${lastName}` });
+    const result = await UserModel.create({ username, password: hashedPassword, name: name, email: email, phoneNum: phoneNum, deviceSetId: deviceSetId });
 
     const token = jwt.sign( { username: result.username, id: result._id }, secret, { expiresIn: "1h" } );
 

@@ -1,18 +1,16 @@
 import mongoose from 'mongoose';
 
 const dataSchema = mongoose.Schema({
-    username: String,
-    deviceSetId: String,
-    condition: String,
-    temperature: String,
-    humidity: String,
-    light: String,
+    deviceId: {type: String, require: true},
     time: {
         type: Date,
         default: new Date(),
-    }
+    },
+    type: String,
+    value: String,
+    value2: String //DHT11 has 2 value: temperature & humidity
 })
 
-var DataMessage = mongoose.model('DataMessage', dataSchema);
+var DataModel = mongoose.model('DataModel', dataSchema);
 
-export default DataMessage;
+export default DataModel;

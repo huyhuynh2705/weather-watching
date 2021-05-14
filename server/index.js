@@ -7,6 +7,8 @@ import cors from 'cors';
 import postRoutes from './routes/posts.js';
 import userRouter from "./routes/user.js";
 import dataRouter from "./routes/data.js";
+import deviceRouter from "./routes/device.js";
+import deviceSetRouter from "./routes/deviceSet.js";
 
 const app = express();
 
@@ -17,8 +19,10 @@ app.use(cors());
 app.use('/posts', postRoutes);
 app.use("/user", userRouter);
 app.use("/data", dataRouter);
+app.use("/device", deviceRouter);
+app.use("/set", deviceSetRouter);
 
-const CONNECTION_URL = 'mongodb+srv://hqhuy:hqhuy@cluster0.xorja.mongodb.net/test?retryWrites=true&w=majority';
+const CONNECTION_URL = 'mongodb+srv://hqhuy:hqhuy@cluster0.xorja.mongodb.net/weather-watching?retryWrites=true&w=majority';
 const PORT = 5000;
 
 mongoose.connect(CONNECTION_URL, { useNewUrlParser: true, useUnifiedTopology: true })

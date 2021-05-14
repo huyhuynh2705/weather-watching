@@ -12,7 +12,7 @@ function Temperature({ data }) {
     <Card className={classes.root}>
       <CardContent>
         <Typography align="center" variant="h6">Temperature</Typography>
-        <Typography align="center" variant="h6">{ data.temperature }°C</Typography>
+        <Typography align="center" variant="h6">{ data }°C</Typography>
       </CardContent>
       <CardActions />
       {/* <Button size="medium" fullWidth>More</Button> */}

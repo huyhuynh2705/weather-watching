@@ -14,22 +14,22 @@ const initialState = {condition: 'null', temperature: 'null', humidity: 'null', 
 function DataBar() {
   const data = useSelector((state) => state.data)
   const classes = useStyles()
-  //const [data, setData] = useState(initialState)
+
   return (
-    !data.length ? <CircularProgress /> : (
+    !data.length == 0 ? <CircularProgress /> : (
     <Container>
       <Grid className={classes.root} container justify="space-between" alignItems="stretch">
         <Grid item xs={6} sm={3}>
-          <Condition data = {data[data.length - 1]} />
+          <Condition data = {data.condition} />
         </Grid>
         <Grid item xs={6} sm={3}>
-          <Temperature data = {data[data.length - 1]} />
+          <Temperature data = {data.temperature} />
         </Grid>
         <Grid item xs={6} sm={3}>
-          <Humidity data = {data[data.length - 1]} />
+          <Humidity data = {data.humidity} />
         </Grid>
         <Grid item xs={6} sm={3}>
-          <Light data = {data[data.length - 1]} />
+          <Light data = {data.light} />
         </Grid>
       </Grid>
     </Container>

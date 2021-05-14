@@ -5,12 +5,14 @@ import DataBar from '../../components/DataBar/DataBar'
 import Chart from '../../components/Chart/Chart'
 import { useDispatch } from 'react-redux';
 import { getData } from '../../action/data'
+import { TOKEN_NAME } from '@environments';
 
 function Root() {
   const dispatch = useDispatch();
+  const user = JSON.parse(localStorage.getItem(TOKEN_NAME));
 
   useEffect(() => {
-    dispatch(getData());
+    dispatch(getData(user.result._id));
   }, []);
 
   return (
