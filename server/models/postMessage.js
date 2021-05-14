@@ -1,5 +1,5 @@
 import mongoose from 'mongoose';
-
+// Tham khảo
 const postSchema = mongoose.Schema({
     title: String,
     message: String,
@@ -13,7 +13,7 @@ const postSchema = mongoose.Schema({
         default: new Date(),
     },
 })
-
+// Tham khảo
 var PostMessage = mongoose.model('PostMessage', postSchema);
-
+// Tham khảo
 export default PostMessage;

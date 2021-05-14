@@ -13,7 +13,7 @@ function Root() {
 
   useEffect(() => {
     dispatch(getData(user.result._id));
-  }, []);
+  }, [dispatch]);
 
   return (
     <div>

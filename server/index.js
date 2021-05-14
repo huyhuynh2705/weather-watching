@@ -4,7 +4,7 @@ import bodyParser from 'body-parser';
 import mongoose from 'mongoose';
 import cors from 'cors';
 
-import postRoutes from './routes/posts.js';
+import postRoutes from './routes/posts.js'; // Tham khảo
 import userRouter from "./routes/user.js";
 import dataRouter from "./routes/data.js";
 import deviceRouter from "./routes/device.js";
@@ -16,7 +16,7 @@ app.use(bodyParser.json({ limit: '30mb', extended: true }))
 app.use(bodyParser.urlencoded({ limit: '30mb', extended: true }))
 app.use(cors());
 
-app.use('/posts', postRoutes);
+app.use('/posts', postRoutes); // Tham khảo
 app.use("/user", userRouter);
 app.use("/data", dataRouter);
 app.use("/device", deviceRouter);

@@ -2,7 +2,7 @@ import express from 'express';
 import mongoose from 'mongoose';
 
 import PostMessage from '../models/postMessage.js';
-
+// Tham khảo
 const router = express.Router();
 
 export const getPosts = async (req, res) => { 
@@ -14,7 +14,7 @@ export const getPosts = async (req, res) => {
         res.status(404).json({ message: error.message });
     }
 }
-
+// Tham khảo
 export const getPost = async (req, res) => { 
     const { id } = req.params;
 
@@ -26,7 +26,7 @@ export const getPost = async (req, res) => {
         res.status(404).json({ message: error.message });
     }
 }
-
+// Tham khảo
 export const createPost = async (req, res) => {
     const post = req.body;
 
@@ -40,7 +40,7 @@ export const createPost = async (req, res) => {
         res.status(409).json({ message: error.message });
     }
 }
-
+// Tham khảo
 export const updatePost = async (req, res) => {
     const { id } = req.params;
     const { title, message, creator, selectedFile, tags } = req.body;
@@ -53,7 +53,7 @@ export const updatePost = async (req, res) => {
 
     res.json(updatedPost);
 }
-
+// Tham khảo
 export const deletePost = async (req, res) => {
     const { id } = req.params;
 
@@ -63,7 +63,7 @@ export const deletePost = async (req, res) => {
 
     res.json({ message: "Post deleted successfully." });
 }
-
+// Tham khảo
 export const likePost = async (req, res) => {
     const { id } = req.params;
 

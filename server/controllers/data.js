@@ -35,6 +35,7 @@ export const getData = async (req, res) => {
     const DHT11Id =  {deviceId: oldDeviceSet.DHT11Id}
     const lightId =  {deviceId: oldDeviceSet.lightId}
     
+    // Trafic light tạm thời để giá trị, sau này sẽ tính toán từ 3 giá trị kia rồi trả về sau
     const trafficLightValue = await DataModel.find( trafficLightId )
     const DHT11Value = await DataModel.find( DHT11Id )
     const lightValue = await DataModel.find( lightId )
