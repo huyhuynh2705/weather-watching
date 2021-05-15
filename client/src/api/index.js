@@ -18,4 +18,7 @@ export const fetchData = (id) => API.get(`/data/${id}`);
 export const signIn = (form) => API.post('/user/signin', form);
 export const signUp = (form) => API.post('/user/signup', form);
 export const updateProfile = (id, form) => API.post(`/user/updateprofile/${id}`, form);
+export const addDevice = (form) => API.post('/device', form);
+export const addDeviceSet = (form) => API.post('/set', form);
+
 

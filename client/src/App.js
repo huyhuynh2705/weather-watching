@@ -4,7 +4,9 @@ import { PrivateRoute, PublicRoute } from '@helpers'
 import { Switch } from 'react-router-dom'
 import Login from '@pages/login/index.js'
 import Admin from '@pages/adminroot/index.js'
-import Signup from '@pages/adminroot/signup/index.js'
+import AddDevice from '@pages/adminroot/adddevice/index.js'
+import AddDeviceSet from '@pages/adminroot/adddeviceset/index.js'
+import SignUp from '@pages/adminroot/signup/index.js'
 import UserHome from '@pages/root/index.js'
 import Devices from '@pages/root/devices/index.js'
 import User from '@pages/root/user/index.js'
@@ -15,9 +17,11 @@ function App() {
   return (
     <Switch>
       <PublicRoute path="/login" component={Login} />
-      <PrivateRoute path="/admin" component={Admin} />
-      <PrivateRoute path="/signup" component={Signup} />
-      <PrivateRoute path="/" exact component={UserHome} />
+      <PrivateRoute exact path="/admin" component={Admin} />
+      <PrivateRoute path="/admin/adddevice" component={AddDevice} />
+      <PrivateRoute path="/admin/adddeviceset" component={AddDeviceSet} />
+      <PrivateRoute path="/admin/signup" component={SignUp} />
+      <PrivateRoute exact path="/" component={UserHome} />
       <PrivateRoute path="/devices" component={Devices} />
       <PrivateRoute path="/user" component={User} />
       <PrivateRoute path="/updateprofile" component={UpdateProfile} />
