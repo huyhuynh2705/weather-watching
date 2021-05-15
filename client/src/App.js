@@ -1,18 +1,22 @@
 import React from 'react'
 import { hot } from 'react-hot-loader'
 import { PrivateRoute, PublicRoute } from '@helpers'
-import { Switch, Route } from 'react-router-dom'
+import { Switch } from 'react-router-dom'
 import Login from '@pages/login/index.js'
+import Admin from '@pages/adminroot/index.js'
+import Signup from '@pages/adminroot/signup/index.js'
 import UserHome from '@pages/root/index.js'
-import Devices from '@pages/devices/index.js'
-import User from '@pages/user/index.js'
-import UpdateProfile from '@pages/updateprofile/index.js'
+import Devices from '@pages/root/devices/index.js'
+import User from '@pages/root/user/index.js'
+import UpdateProfile from '@pages/root/updateprofile/index.js'
 
 
 function App() {
   return (
     <Switch>
       <PublicRoute path="/login" component={Login} />
+      <PrivateRoute path="/admin" component={Admin} />
+      <PrivateRoute path="/signup" component={Signup} />
       <PrivateRoute path="/" exact component={UserHome} />
       <PrivateRoute path="/devices" component={Devices} />
       <PrivateRoute path="/user" component={User} />

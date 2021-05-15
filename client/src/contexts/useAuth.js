@@ -12,10 +12,14 @@ const AuthContext = createContext()
 function AuthValue() {
   // const { onPost: loginUser }
   const [isAuth, setIsAuth] = useState(!!localStorage.getItem(TOKEN_NAME))
+  const [isAdmin, setIsAdmin] = useState(false)  
 
   const login = useCallback(async () => {
     // handle login
     setIsAuth(!!localStorage.getItem(TOKEN_NAME))
+
+    const role = JSON.parse(localStorage.getItem(TOKEN_NAME)).result.role ;
+    (role == "Admin" ? setIsAdmin(true) : setIsAdmin(false))
   })
 
   const register = useCallback(async () => {
@@ -30,6 +34,7 @@ function AuthValue() {
   useEffect(() => { }, [])
   return {
     isAuth,
+    isAdmin,
     login,
     logout,
     register

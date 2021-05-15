@@ -6,6 +6,9 @@ const authReducer = (state = { authData: null }, action) => {
     case "AUTH":
       localStorage.setItem(TOKEN_NAME, JSON.stringify({ ...action?.data }))
       return { ...state, authData: action.data, loading: false, errors: null }
+    case "UPDATE":
+      localStorage.setItem(TOKEN_NAME, JSON.stringify({ ...action?.data }))
+      return { ...state, authData: action.data, loading: false, errors: null }
     case "LOGOUT":
       localStorage.clear()
       return { ...state, authData: null, loading: false, errors: null }

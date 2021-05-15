@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
-import { Button } from '@material-ui/core'
-import AppBar from '../../components/AppBar/AppBar'
+// import { Button } from '@material-ui/core'
+import AppBarUser from '../../components/AppBar/AppBarUser'
 import DataBar from '../../components/DataBar/DataBar'
 import Chart from '../../components/Chart/Chart'
 import { useDispatch } from 'react-redux';
@@ -12,13 +12,16 @@ function Root() {
   const user = JSON.parse(localStorage.getItem(TOKEN_NAME));
 
   useEffect(() => {
-    dispatch(getData(user.result._id));
-    console.log("use effect from home")
-  }, [dispatch]);
+    dispatch(getData(user.result._id))
+  }, []);
+
+  useEffect(() => {
+    setInterval(() => dispatch(getData(user.result._id)), 10000);
+  }, []);
 
   return (
     <div>
-      <AppBar />
+      <AppBarUser />
       <DataBar />
       <Chart />
     </div>

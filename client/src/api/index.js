@@ -16,4 +16,6 @@ const API = axios.create({ baseURL: 'http://localhost:5000' });
 
 export const fetchData = (id) => API.get(`/data/${id}`);
 export const signIn = (form) => API.post('/user/signin', form);
+export const signUp = (form) => API.post('/user/signup', form);
+export const updateProfile = (id, form) => API.post(`/user/updateprofile/${id}`, form);
 

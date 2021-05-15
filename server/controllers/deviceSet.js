@@ -2,6 +2,7 @@ import express from 'express';
 import mongoose from 'mongoose';
 
 import DeviceSetModel from '../models/deviceSet.js';
+import DeviceModel from '../models/device.js';
 import UserModel from "../models/user.js";
 
 const router = express.Router();
@@ -20,6 +21,18 @@ export const getDeviceSet = async (req, res) => {
 export const addDeviceSet = async (req, res) => {
 
     const deviceSet = req.body;
+
+    const oldTL = await DeviceModel.findOne({ deviceId: deviceSet.trafficLightId });
+
+    if (!oldTL) return res.status(404).json({ message: "Traffic Light doesn't exist" });
+
+    const oldDHT = await DeviceModel.findOne({ deviceId: deviceSet.DHT11Id });
+
+    if (!oldDHT) return res.status(404).json({ message: "DHT11 doesn't exist" });
+
+    const oldL = await DeviceModel.findOne({ deviceId: deviceSet.lightId });
+
+    if (!oldL) return res.status(404).json({ message: "Light doesn't exist" });
 
     const newDeviceSetMessage = new DeviceSetModel(deviceSet)
 
