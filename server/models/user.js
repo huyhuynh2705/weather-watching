@@ -6,7 +6,8 @@ const userSchema = mongoose.Schema({
   name: String,
   email: String,
   phoneNum: String,
-  deviceSetId: String
+  deviceSetId: String,
+  role: String, // User || Admin
 });
 
 var UserModel = mongoose.model('UserModel', userSchema);

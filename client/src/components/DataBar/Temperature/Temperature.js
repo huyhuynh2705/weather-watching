@@ -20,7 +20,7 @@ function Temperature({ data }) {
     else if (Number(data) > 15 && Number(data) < 30) {
       icon = temmed;
     }
-    else {
+    else if (Number(data) >= 30){
       icon = temhigh;
     }
 
@@ -34,7 +34,7 @@ function Temperature({ data }) {
             </Grid>
             <Grid item xs={9} sm={9}>
               <Typography variant="h5" component="h2" align="center">Temperature</Typography>
-              <Typography variant="h6" component="h2" align="center">{ data }</Typography>
+              <Typography variant="h6" component="h2" align="center">{ data }°C</Typography>
             </Grid>
           </Grid>
         </CardContent>

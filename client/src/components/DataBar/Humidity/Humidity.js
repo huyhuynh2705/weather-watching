@@ -20,7 +20,7 @@ function Humidity({ data }) {
             </Grid>
             <Grid item xs={9} sm={9}>
               <Typography variant="h5" component="h2" align="center">Humidity</Typography>
-              <Typography variant="h6" component="h2" align="center">{ data }</Typography>
+              <Typography variant="h6" component="h2" align="center">{ data }%</Typography>
             </Grid>
           </Grid>
         </CardContent>

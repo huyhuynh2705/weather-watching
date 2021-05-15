@@ -13,15 +13,25 @@ export const signIn = (form) => async (dispatch) => {
   }
 }
 
+export const updateProfile = (id, form) => async (dispatch) => {
+  try {
+    const { data } = await api.updateProfile(id, form)
 
-// export const signup = (formData, router) => async (dispatch) => {
-//   try {
-//     const { data } = await api.signUp(formData)
+    dispatch({ type: "UPDATE", data })
+    
+  } catch (error) {
+    console.log(error.response)
+  }
+}
 
-//     dispatch({ type: AUTH, data })
 
-//     router.push('/')
-//   } catch (error) {
-//     console.log(error)
-//   }
-// }
+export const signup = (form) => async (dispatch) => {
+  try {
+    const { data } = await api.signUp(form)
+
+    dispatch({ type: 'SIGNUP', data })
+
+  } catch (error) {
+    console.log(error)
+  }
+}

@@ -28,7 +28,7 @@ export const getData = async (req, res) => {
 
     const deviceSetId = oldUser.deviceSetId;
 
-    const oldDeviceSet = await DeviceSetModel.findOne({ deviceSetId })
+    const oldDeviceSet = await DeviceSetModel.findOne({ deviceSetId: deviceSetId })
     if (!oldDeviceSet) return res.status(404).json({ message: "Device set doesn't exist" });
 
     const trafficLightId =  {deviceId: oldDeviceSet.trafficLightId}
