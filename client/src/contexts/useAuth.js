@@ -15,7 +15,6 @@ function AuthValue() {
 
   const login = useCallback(async () => {
     // handle login
-    //setIsAuth(!!localStorage.getItem(TOKEN_NAME))
     setIsAuth(!!localStorage.getItem(TOKEN_NAME))
   })
 

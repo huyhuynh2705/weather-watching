@@ -9,7 +9,7 @@ const Chart = () => {
         <Container>
             <Grid>
                 <Paper>
-                    <h1>Chart Chart Chart Chart Chart Chart Chart Chart Chart Chart Chart Chart </h1>
+                    
                 </Paper>
             </Grid>
         </Container>

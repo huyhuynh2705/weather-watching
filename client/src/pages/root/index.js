@@ -13,6 +13,7 @@ function Root() {
 
   useEffect(() => {
     dispatch(getData(user.result._id));
+    console.log("use effect from home")
   }, [dispatch]);
 
   return (
