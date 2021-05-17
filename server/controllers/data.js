@@ -62,3 +62,78 @@ export const addData = async (req, res) => {
         res.status(409).json({ message: error.message });
     }
 }
+
+// Get DTH11Id value
+export const getDHT11Id = async (req, res) => { 
+    
+    try {
+        const { id } = req.params;
+
+        const oldUser = await UserModel.findById(id);
+        if (!oldUser) return res.status(404).json({ message: "User doesn't exist" });
+    
+        const deviceSetId = oldUser.deviceSetId;
+    
+        const oldDeviceSet = await DeviceSetModel.findOne({ deviceSetId: deviceSetId })
+        if (!oldDeviceSet) return res.status(404).json({ message: "Device set doesn't exist" });
+        const DHT11Id =  {deviceId: oldDeviceSet.DHT11Id}
+        const DHT11Value = await DataModel.find( DHT11Id )
+        const dataMessage = { temperature: DHT11Value[DHT11Value.length-1].value, humidity: DHT11Value[DHT11Value.length-1].value2}
+        res.status(200).json(dataMessage);
+
+    } catch (error) {
+        res.status(404).json({ message: error.message });
+    }
+}
+
+//Get Light value
+export const getLight = async (req, res) => { 
+    
+    try {
+        const { id } = req.params;
+
+        const oldUser = await UserModel.findById(id);
+        if (!oldUser) return res.status(404).json({ message: "User doesn't exist" });
+    
+        const deviceSetId = oldUser.deviceSetId;
+    
+        const oldDeviceSet = await DeviceSetModel.findOne({ deviceSetId: deviceSetId })
+        if (!oldDeviceSet) return res.status(404).json({ message: "Device set doesn't exist" });
+        const lightId =  {deviceId: oldDeviceSet.lightId}
+        const lightValue = await DataModel.find( lightId )
+        const dataMessage = { light: lightValue[lightValue.length-1].value}
+        res.status(200).json(dataMessage);
+
+    } catch (error) {
+        res.status(404).json({ message: error.message });
+    }
+}
+
+//Get trafficLight value
+export const gettrafficLight = async (req, res) => { 
+    
+    try {
+        const { id } = req.params;
+
+        const oldUser = await UserModel.findById(id);
+        if (!oldUser) return res.status(404).json({ message: "User doesn't exist" });
+    
+        const deviceSetId = oldUser.deviceSetId;
+    
+        const oldDeviceSet = await DeviceSetModel.findOne({ deviceSetId: deviceSetId })
+        if (!oldDeviceSet) return res.status(404).json({ message: "Device set doesn't exist" });
+        const trafficLightId =  {deviceId: oldDeviceSet.trafficLightId}
+        const trafficLightValue = await DataModel.find( trafficLightId )
+        const dataMessage = { condition: trafficLightValue[trafficLightValue.length-1].value}
+        res.status(200).json(dataMessage);
+
+    } catch (error) {
+        res.status(404).json({ message: error.message });
+    }
+}
+
+//Control traffic Light
+
+
+
+
