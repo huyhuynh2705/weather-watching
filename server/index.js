@@ -15,7 +15,7 @@ const app = express();
 app.use(bodyParser.json({ limit: '30mb', extended: true }))
 app.use(bodyParser.urlencoded({ limit: '30mb', extended: true }))
 app.use(cors());
-
+// localhost:5000/user
 app.use('/posts', postRoutes); // Tham khảo
 app.use("/user", userRouter);
 app.use("/data", dataRouter);
