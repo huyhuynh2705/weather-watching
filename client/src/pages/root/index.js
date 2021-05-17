@@ -5,7 +5,6 @@ import DataBar from '../../components/DataBar/DataBar'
 import Chart from '../../components/Chart/Chart'
 import { useDispatch } from 'react-redux';
 import { getData } from '../../action/data'
-import { getAllData } from '../../action/data'
 import { TOKEN_NAME } from '@environments';
 
 function Root() {
@@ -18,7 +17,6 @@ function Root() {
 
   useEffect(() => {
     dispatch(getData(user.result._id))
-    dispatch(getAllData())
     setInterval(() => dispatch(getData(user.result._id)), 5000);
   }, []);
 

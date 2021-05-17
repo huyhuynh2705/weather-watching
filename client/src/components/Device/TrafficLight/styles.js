@@ -12,7 +12,4 @@ export default makeStyles(() => ({
   media: {
     height: '150px',
   },
-  table: {
-    //minWidth: 650,
-  },
 }))
