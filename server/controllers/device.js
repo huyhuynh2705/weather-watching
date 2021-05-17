@@ -20,8 +20,6 @@ export const addDevice = async (req, res) => {
 
     const device = req.body;
 
-    console.log(device)
-
     const newDeviceMessage = new DeviceModel(device)
 
     try {

@@ -39,8 +39,12 @@ export const getData = async (req, res) => {
     const trafficLightValue = await DataModel.find( trafficLightId )
     const DHT11Value = await DataModel.find( DHT11Id )
     const lightValue = await DataModel.find( lightId )
+    
+    // console.log(DHT11Value[DHT11Value.length-1].value)
+    // console.log(DHT11Value[DHT11Value.length-1].value2)
 
     const dataMessage = {condition: trafficLightValue[trafficLightValue.length-1].value, temperature: DHT11Value[DHT11Value.length-1].value, humidity: DHT11Value[DHT11Value.length-1].value2, light: lightValue[lightValue.length-1].value};
+
 
     res.status(200).json(dataMessage);
 
@@ -52,7 +56,10 @@ export const getData = async (req, res) => {
 export const addData = async (req, res) => {
     const data = req.body;
 
-    const newDataMessage = new DataModel({...data, time: new Date().toISOString()})
+    const newDataMessage = new DataModel({...data, time: new Date().toUTCString()})
+
+    const test = new Date()
+    console.log(test.toUTCString())
 
     try {
         await newDataMessage.save();
