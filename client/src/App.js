@@ -12,7 +12,6 @@ import Devices from '@pages/root/devices/index.js'
 import User from '@pages/root/user/index.js'
 import UpdateProfile from '@pages/root/updateprofile/index.js'
 
-
 function App() {
   return (
     <Switch>

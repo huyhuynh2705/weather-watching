@@ -17,26 +17,26 @@ function SocketValue() {
   const socketRef = useRef()
   const token = localStorage.getItem(TOKEN_NAME)
 
-  useEffect(() => {
-    let isCancelled = false
-    const runAsync = async () => {
-      try {
-        if (!isCancelled) {
-          socketRef.current = socket.connect(API, {
-            query: { token }
-          })
-        }
-      } catch (e) {
-        if (!isCancelled) {
-          throw e
-        }
-      }
-    }
-    runAsync()
-    return () => {
-      isCancelled = true
-    }
-  }, [])
+  // useEffect(() => {
+  //   let isCancelled = false
+  //   const runAsync = async () => {
+  //     try {
+  //       if (!isCancelled) {
+  //         socketRef.current = socket.connect(API, {
+  //           query: { token }
+  //         })
+  //       }
+  //     } catch (e) {
+  //       if (!isCancelled) {
+  //         throw e
+  //       }
+  //     }
+  //   }
+  //   runAsync()
+  //   return () => {
+  //     isCancelled = true
+  //   }
+  // }, [])
 
   const socketOn = useCallback((key = '', callback) => {
     socket.current.on(key, data => callback(data))

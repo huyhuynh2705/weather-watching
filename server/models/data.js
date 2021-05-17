@@ -6,9 +6,9 @@ const dataSchema = mongoose.Schema({
         type: Date,
         default: new Date(),
     },
-    type: String,
-    value: String,
-    value2: String //DHT11 has 2 value: temperature & humidity
+    type: String, //Traffic Light || DHT11 || Light 
+    value: String, // Temperature || Traffic Light
+    value2: String //Humidity
 })
 
 var DataModel = mongoose.model('DataModel', dataSchema);

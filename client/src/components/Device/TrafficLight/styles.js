@@ -10,6 +10,9 @@ export default makeStyles(() => ({
       justifyContent: 'center',
   },
   media: {
-    height: '200px',
+    height: '150px',
+  },
+  table: {
+    //minWidth: 650,
   },
 }))
