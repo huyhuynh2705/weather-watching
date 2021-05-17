@@ -12,12 +12,15 @@ import { useSelector } from 'react-redux';
 function DataBar() {
   const classes = useStyles()
 
-  const data = useSelector((state) => state.data)
+  let data = useSelector((state) => state.data)
 
   console.log("data from databar: ", data)
+  if (data.length == 0) {
+    data = {condition: "null", temperature: "null", humidity: "null", light:"null"}
+  }
 
   return (
-    !data.length == 0 ? <CircularProgress /> : (
+    data.length == 0 ? <CircularProgress /> : (
     <Container>
       <Grid className={classes.root} container justify="space-between" alignItems="stretch" spacing={3}>
         <Grid item xs={12} sm={6} md={3}>

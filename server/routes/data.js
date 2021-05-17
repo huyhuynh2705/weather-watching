@@ -1,15 +1,15 @@
 import express from 'express';
 
-import { addData, getData, getAllData } from '../controllers/data.js';
+import { addData, getData, getAllDeviceData } from '../controllers/data.js';
 
 const router = express.Router();
 import auth from "../middleware/auth.js";
 
-router.get('/', getAllData);
 router.get('/:id', getData);
+router.get('/all/:id', getAllDeviceData);
 router.post('/', addData);
-// router.get('/trafficlight/:id', getAllTrafficLight);
-// router.get('/dht11/:id', getAllDHT11);
-// router.get('/light/:id', getAllLight);
+// router.get('/trafficlight/:id', getTrafficLightData);
+// router.get('/dht11/:id', getDHT11Data);
+// router.get('/light/:id', getLightData);
 
 export default router;
