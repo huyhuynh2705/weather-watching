@@ -15,20 +15,24 @@ function createData(time, deviceId, type, temperature, humidity) {
 function DHT11({ data }) {
   const classes = useStyles()
 
+  console.log(data)
+
   if (data.length == 0) {
     return (
       <Paper>
-        <Typography align="center">DHT11 data is empty</Typography>
+        <Typography align="center" variant="h6">DHT11 data is empty</Typography>
       </Paper>
     )
   }
 
   let rows1 = []
   let rows2 = []
-  let divide = data.length /2
+  let divide 
 
   if (data.length % 2 != 0) {
     divide = (data.length +1) / 2
+  } else {
+    divide = data.length / 2
   }
 
   for (let i = 0; i < data.length/2 ; i++) {
@@ -41,59 +45,60 @@ function DHT11({ data }) {
 
   return (
     <Paper className={classes.root}>
+      <Typography align="center" variant="h6" gutterBottom>DHT11</Typography>
       <Grid container spacing={3}>
-            <Grid item xs={2} sm={2}>
-              {/* <img className={classes.media} src={light} alt="light" /> */}
-            </Grid>
-            <Grid item xs={5} sm={5}>
-              <Table size="small" aria-label="a dense table">
-                <TableHead>
-                  <TableRow>
-                    <TableCell align="left">Time</TableCell>
-                    <TableCell align="left">Device Id</TableCell>
-                    <TableCell align="left">Type</TableCell>
-                    <TableCell align="center">Temperature</TableCell>
-                    <TableCell align="center">Humidity</TableCell>
-                  </TableRow>
-                </TableHead>
-                <TableBody>
-                  {rows1.map((row1) => (
-                    <TableRow key={row1.name}>
-                      <TableCell component="th" scope="row">{row1.time}</TableCell>
-                      <TableCell align="center">{row1.deviceId}</TableCell>
-                      <TableCell align="center">{row1.type}</TableCell>
-                      <TableCell align="center">{row1.temperature}</TableCell>
-                      <TableCell align="center">{row1.humidity}</TableCell>
-                    </TableRow>
-                  ))}
-                </TableBody>
-              </Table>
-            </Grid>
-            <Grid item xs={5} sm={5}>
-              <Table size="small" aria-label="a dense table">
-                <TableHead>
-                  <TableRow>
-                    <TableCell align="left">Time</TableCell>
-                    <TableCell align="left">Device Id</TableCell>
-                    <TableCell align="left">Type</TableCell>
-                    <TableCell align="left">Temperature</TableCell>
-                    <TableCell align="left">Humidity</TableCell>
-                  </TableRow>
-                </TableHead>
-                <TableBody>
-                  {rows2.map((row2) => (
-                    <TableRow key={row2.name}>
-                      <TableCell component="th" scope="row">{row2.time}</TableCell>
-                      <TableCell align="left">{row2.deviceId}</TableCell>
-                      <TableCell align="left">{row2.type}</TableCell>
-                      <TableCell align="left">{row2.temperature}</TableCell>
-                      <TableCell align="left">{row2.humidity}</TableCell>
-                    </TableRow>
-                  ))}
-                </TableBody>
-              </Table>
-            </Grid>
-          </Grid>
+        {/* <Grid item xs={false} sm={12} md={2}>
+          <img className={classes.media} src={light} alt="light" />
+        </Grid> */}
+        <Grid item xs={12} sm={12} md={6}>
+          <Table size="small" aria-label="a dense table">
+            <TableHead>
+              <TableRow>
+                <TableCell align="left">Time</TableCell>
+                <TableCell align="left">Device Id</TableCell>
+                <TableCell align="left">Type</TableCell>
+                <TableCell align="center">Temperature</TableCell>
+                <TableCell align="center">Humidity</TableCell>
+              </TableRow>
+            </TableHead>
+            <TableBody>
+              {rows1.map((row1) => (
+                <TableRow key={row1.name}>
+                  <TableCell component="th" scope="row">{row1.time}</TableCell>
+                  <TableCell align="center">{row1.deviceId}</TableCell>
+                  <TableCell align="center">{row1.type}</TableCell>
+                  <TableCell align="center">{row1.temperature}</TableCell>
+                  <TableCell align="center">{row1.humidity}</TableCell>
+                </TableRow>
+              ))}
+            </TableBody>
+          </Table>
+        </Grid>
+        <Grid item xs={12} sm={12} md={6}>
+          <Table size="small" aria-label="a dense table">
+            <TableHead>
+              <TableRow>
+                <TableCell align="left">Time</TableCell>
+                <TableCell align="left">Device Id</TableCell>
+                <TableCell align="left">Type</TableCell>
+                <TableCell align="left">Temperature</TableCell>
+                <TableCell align="left">Humidity</TableCell>
+              </TableRow>
+            </TableHead>
+            <TableBody>
+              {rows2.map((row2) => (
+                <TableRow key={row2.name}>
+                  <TableCell component="th" scope="row">{row2.time}</TableCell>
+                  <TableCell align="left">{row2.deviceId}</TableCell>
+                  <TableCell align="left">{row2.type}</TableCell>
+                  <TableCell align="left">{row2.temperature}</TableCell>
+                  <TableCell align="left">{row2.humidity}</TableCell>
+                </TableRow>
+              ))}
+            </TableBody>
+          </Table>
+        </Grid>
+      </Grid>
     </Paper>
   )
 }
