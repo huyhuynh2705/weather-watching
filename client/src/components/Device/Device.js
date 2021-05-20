@@ -11,7 +11,6 @@ function Device() {
   const classes = useStyles()
 
   const data = useSelector((state) => state.alldevicedata)
-  console.log("from device", data)
 
   return data.length == 0 ? <CircularProgress /> : (
     <Container>
