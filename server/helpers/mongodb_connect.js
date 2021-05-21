@@ -1,8 +1,6 @@
 import mongoose from 'mongoose'
 import { mongodb_url } from '../environments/index.js'
 
-console.log(mongodb_url)
-
 const connectionOptions = {
     useNewUrlParser: true,
     useUnifiedTopology: true
