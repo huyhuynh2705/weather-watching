@@ -15,8 +15,6 @@ function createData(time, deviceId, type, temperature, humidity) {
 function DHT11({ data }) {
   const classes = useStyles()
 
-  console.log(data)
-
   if (data.length == 0) {
     return (
       <Paper>
@@ -63,7 +61,7 @@ function DHT11({ data }) {
             </TableHead>
             <TableBody>
               {rows1.map((row1) => (
-                <TableRow key={row1.name}>
+                <TableRow key={row1.time}>
                   <TableCell component="th" scope="row">{row1.time}</TableCell>
                   <TableCell align="center">{row1.deviceId}</TableCell>
                   <TableCell align="center">{row1.type}</TableCell>
@@ -87,7 +85,7 @@ function DHT11({ data }) {
             </TableHead>
             <TableBody>
               {rows2.map((row2) => (
-                <TableRow key={row2.name}>
+                <TableRow key={row2.time}>
                   <TableCell component="th" scope="row">{row2.time}</TableCell>
                   <TableCell align="left">{row2.deviceId}</TableCell>
                   <TableCell align="left">{row2.type}</TableCell>

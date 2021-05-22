@@ -63,7 +63,7 @@ function TrafficLight({ data }) {
             </TableHead>
             <TableBody>
               {rows1.map((row1) => (
-                <TableRow key={row1.name}>
+                <TableRow key={row1.time}>
                   <TableCell component="th" scope="row">{row1.time}</TableCell>
                   <TableCell align="left">{row1.deviceId}</TableCell>
                   <TableCell align="left">{row1.type}</TableCell>
@@ -85,7 +85,7 @@ function TrafficLight({ data }) {
             </TableHead>
             <TableBody>
               {rows2.map((row2) => (
-                <TableRow key={row2.name}>
+                <TableRow key={row2.time}>
                   <TableCell component="th" scope="row">{row2.time}</TableCell>
                   <TableCell align="left">{row2.deviceId}</TableCell>
                   <TableCell align="left">{row2.type}</TableCell>
