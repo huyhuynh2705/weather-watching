@@ -22,15 +22,15 @@ export const addDeviceSet = async (req, res) => {
 
     const deviceSet = req.body;
 
-    const oldTL = await DeviceModel.findOne({ deviceId: deviceSet.trafficLightId });
+    const oldTL = await DeviceModel.findById(deviceSet.trafficLightId);
 
     if (!oldTL) return res.status(404).json({ message: "Traffic Light doesn't exist" });
 
-    const oldDHT = await DeviceModel.findOne({ deviceId: deviceSet.DHT11Id });
+    const oldDHT = await DeviceModel.findById(deviceSet.DHT11Id);
 
     if (!oldDHT) return res.status(404).json({ message: "DHT11 doesn't exist" });
 
-    const oldL = await DeviceModel.findOne({ deviceId: deviceSet.lightId });
+    const oldL = await DeviceModel.findById(deviceSet.lightId);
 
     if (!oldL) return res.status(404).json({ message: "Light doesn't exist" });
 
@@ -52,7 +52,7 @@ export const addUser = async (req, res) => {
 
     if (!oldUser) return res.status(404).json({ message: "User doesn't exist" });
     
-    const oldDeviceSet = await DeviceSetModel.findOne({ deviceSetId });
+    const oldDeviceSet = await DeviceSetModel.findById(deviceSetId);
     
     if (!oldDeviceSet) return res.status(404).json({ message: "Device set doesn't exist" });
     
