@@ -6,8 +6,6 @@ const server_port = process.env.SERVER_PORT || 8883
 const username = process.env.USERNAME_ADAFUIRT || ""
 const key = process.env.KEY_ADAFUIRT || ""
 
-console.log(username)
-
 const url = process.env.URL || `mttqs://${username}:${key}@${server}`
 const mongodb_url = process.env.MONGODB_URL || ""
 
