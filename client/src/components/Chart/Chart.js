@@ -14,13 +14,11 @@ const Chart = () => {
     let tllabels = [];
 
     if (!!devicedata.tlvalues) {
-        for (let i = 0; i < devicedata.tlvalues.length; i++) {
+        for (let i = devicedata.tlvalues.length - 1 ; i >= 0 ; i--) {
             tldata.push(devicedata.tlvalues[i].value)
             tllabels.push(devicedata.tlvalues[i].time.slice(11, 16) + " " + devicedata.tlvalues[i].time.slice(8, 10)+ "/" + devicedata.tlvalues[i].time.slice(5, 7))
         }
     }
-    console.log("tlvalues", tldata)
-
 
     let tempdata = [];
     let templabels = [];    
@@ -28,7 +26,7 @@ const Chart = () => {
     let humlabels = [];
 
     if (!!devicedata.dhtvalues) {
-        for (let i = 0; i < devicedata.dhtvalues.length; i++) {
+        for (let i = devicedata.dhtvalues.length - 1 ; i >= 0 ; i--) {
             tempdata.push(devicedata.dhtvalues[i].value)
             humdata.push(devicedata.dhtvalues[i].value2)
             templabels.push(devicedata.dhtvalues[i].time.slice(11, 16) + " " + devicedata.dhtvalues[i].time.slice(8, 10)+ "/" + devicedata.dhtvalues[i].time.slice(5, 7))
@@ -38,6 +36,13 @@ const Chart = () => {
 
     let lightdata = [];
     let lightlabels = [];
+
+    if (!!devicedata.lvalues) {
+        for (let i = devicedata.lvalues.length - 1 ; i >= 0 ; i--) {
+            lightdata.push(devicedata.lvalues[i].value)
+            lightlabels.push(devicedata.lvalues[i].time.slice(11, 16) + " " + devicedata.lvalues[i].time.slice(8, 10)+ "/" + devicedata.lvalues[i].time.slice(5, 7))
+        }
+    }
 
     const tlChartData = {
         labels: tllabels,
@@ -94,10 +99,10 @@ const Chart = () => {
                         <Line data={tempChartData} height={200} />
                     </Grid>
                     <Grid item xs={false} sm={6}>
-                        <Line data={humChartData} height={400} width={600} />
+                        <Line data={humChartData} height={200} />
                     </Grid>
                     <Grid item xs={false} sm={6}>
-                        <Line data={lightChartData} height={400} width={600} />
+                        <Line data={lightChartData} height={200} />
                     </Grid>
                 </Grid>
             </Paper>

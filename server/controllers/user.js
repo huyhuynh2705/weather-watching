@@ -1,4 +1,5 @@
 import bcrypt from "bcryptjs";
+import e from "express";
 import jwt from "jsonwebtoken";
 
 import UserModel from "../models/user.js";
@@ -33,6 +34,14 @@ export const signup = async (req, res) => {
 
     if (oldUser) return res.status(400).json({ message: "User already exists" });
 
+    const oldEmail = await UserModel.findOne({ email });
+
+    if (oldEmail) return res.status(400).json({ message: "Email already exists" });
+
+    const oldPhoneNum = await UserModel.findOne({ phoneNum });
+
+    if (oldPhoneNum) return res.status(400).json({ message: "Phone number already exists" });
+
     const hashedPassword = await bcrypt.hash(password, 12);
 
     const result = await UserModel.create({ username, password: hashedPassword, name: name, email: email, phoneNum: phoneNum, deviceSetId: deviceSetId, role: role });
@@ -52,8 +61,17 @@ export const updateProfile = async (req, res) => {
   const { name, email, phoneNum, deviceSetId, password } = req.body;
 
   const oldUser = await UserModel.findById(id)
-  
   if (!oldUser) return res.status(404).json({ message: "User doesn't exist" });
+
+  if (email != oldUser.email) {
+    const oldEmail = await UserModel.findOne({ email });
+    if (oldEmail && oldEmail != oldUser.email) return res.status(400).json({ message: "Email already exists" });
+  }
+
+  if (phoneNum != oldUser.phoneNum) {
+    const oldPhoneNum = await UserModel.findOne({ phoneNum });
+    if (oldPhoneNum) return res.status(400).json({ message: "Phone number already exists" });
+  }
   
   let updateProfile = { name, email, phoneNum, deviceSetId };
 

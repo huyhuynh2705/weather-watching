@@ -3,8 +3,8 @@ dotenv.config()
 
 const server = process.env.SERVER || "io.adafruit.com"
 const server_port = process.env.SERVER_PORT || 8883
-const username = process.env.USERNAME_ADAFUIRT || ""
-const key = process.env.KEY_ADAFUIRT || ""
+const username = process.env.USERNAME_ADAFRUIT || ""
+const key = process.env.KEY_ADAFRUIT || ""
 
 const url = process.env.URL || `mttqs://${username}:${key}@${server}`
 const mongodb_url = process.env.MONGODB_URL || ""
