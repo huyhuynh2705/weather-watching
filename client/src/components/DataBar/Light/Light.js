@@ -5,11 +5,26 @@ import Typography from '@material-ui/core/Typography'
 import useStyles from "./styles"
 import { CardActionArea, Grid } from '@material-ui/core'
 
-import icon from './light.png'
+import light from './light.png'
+import lightlow from './lightlow.png'
+import lightmed from './lightmed.png'
+import lighthigh from './lighthigh.png'
 
 function Light({ data }) {
   const classes = useStyles()
+
+  let icon = light
   
+  if (Number(data) <= 200) {
+    icon = lightlow;
+  }
+  else if (Number(data) > 200 && Number(data) < 500) {
+    icon = lightmed;
+  }
+  else if (Number(data) >= 500){
+    icon = lighthigh;
+  }
+
   return (
     <Card>
       <CardActionArea>

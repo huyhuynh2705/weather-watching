@@ -4,8 +4,8 @@ const userSchema = mongoose.Schema({
   username: { type: String, required: true, unique: true },
   password: { type: String, required: true },
   name: String,
-  email: String,
-  phoneNum: String,
+  email: { type: String, unique: true },
+  phoneNum: { type: String, unique: true },
   deviceSetId: String,
   role: String, // User || Admin
 });

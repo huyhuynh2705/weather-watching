@@ -17,10 +17,10 @@ function Temperature({ data }) {
     if (Number(data) <= 15) {
       icon = temlow;
     }
-    else if (Number(data) > 15 && Number(data) < 30) {
+    else if (Number(data) > 15 && Number(data) < 35) {
       icon = temmed;
     }
-    else if (Number(data) >= 30){
+    else if (Number(data) >= 35){
       icon = temhigh;
     }
 
