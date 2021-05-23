@@ -30,3 +30,20 @@ export const addDevice = async (req, res) => {
         res.status(409).json({ message: error.message });
     }
 }
+
+// export const getAdminDevice = async (req, res) => {
+
+//     // {
+//     //     "page" = "1",
+//     //     "limit" = "10"
+//     // }
+
+//     const { page, limit } = req.body
+
+//     // Get limit phần tử trong trang page
+// }
+
+// export const getCountDevice = async (req, res) => {
+
+
+// }

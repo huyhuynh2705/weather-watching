@@ -8,7 +8,10 @@ import DeviceModel from '../models/device.js';
 
 const router = express.Router();
 
+
+
 export const getAllDeviceData = async (req, res) => { 
+
     try {
         const { id } = req.params;
 
