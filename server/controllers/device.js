@@ -60,6 +60,13 @@ export const getAdminDevice = async (req, res, next) => {
 }
 
 export const getCountDevice = async (req, res) => {
+    try {
+        const numberOfDevice = await DeviceModel.estimatedDocumentCount();
 
+        res.status(200).json(numberOfDevice);
+        
+    } catch (error) {
+        res.status(404).json({ message: error.message });
+    }
 
 }
