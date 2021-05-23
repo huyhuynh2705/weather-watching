@@ -7,5 +7,8 @@ import auth from "../middleware/auth.js";
 
 router.get('/', getDevice);
 router.post('/', addDevice);
+// router.get('/admin', getAdminDevice);
+// router.get('/admin/count', getCountDevice);
+// router.post('/admin/updatedevice', getCountDevice);
 
 export default router;

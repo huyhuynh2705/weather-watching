@@ -14,7 +14,7 @@ function Root() {
   useEffect(() => {
     dispatch(getData(user.result._id))
     dispatch(getAllDeviceData(user.result._id))
-    // setInterval(() => dispatch(getData(user.result._id)), 10000);
+    setInterval(() => dispatch(getData(user.result._id)), 5000);
   }, []);
 
   return (

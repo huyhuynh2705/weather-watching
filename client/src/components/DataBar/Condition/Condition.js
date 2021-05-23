@@ -14,11 +14,11 @@ function Condition({ data }) {
   let condition
   let icon = tl
   switch (data) {
-    case '10':
+    case '11':
       icon = tlr;
       condition = 'Bad'
       break;
-    case '11':
+    case '10':
       icon = tly;
       condition = 'Normal'
       break;

@@ -41,6 +41,18 @@ function TrafficLight({ data }) {
     rows2.push(createData(data[i].time.slice(11, 19), data[i].time.slice(0, 10), data[i].deviceId, data[i].type, data[i].value))
   }
 
+  for (let i = 0; i < rows1.length; i++) {
+    if (rows1[i].condition == '10') { rows1[i].condition = 'Bad'}
+    else if (rows1[i].condition == '11') { rows1[i].condition = 'Normal'}
+    else if (rows1[i].condition == '01') { rows1[i].condition = 'Fine'}
+  }
+
+  for (let i = 0; i < rows2.length; i++) {
+    if (rows2[i].condition == '10') { rows2[i].condition = 'Bad'}
+    else if (rows2[i].condition == '11') { rows2[i].condition = 'Normal'}
+    else if (rows2[i].condition == '01') { rows2[i].condition = 'Fine'}
+  }
+
   return (
     <Paper className={classes.root}>
       <Typography align="center" variant="h6">Traffic Light</Typography>
