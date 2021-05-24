@@ -64,3 +64,14 @@ export const addUser = async (req, res) => {
 
     res.json({updatedDeviceSet, updatedUser});
 }
+
+export const getCountDeviceSet = async (req, res) => {
+    try {
+        const numberOfDeviceSet = await DeviceSetModel.estimatedDocumentCount();
+
+        res.status(200).json(numberOfDeviceSet);
+        
+    } catch (error) {
+        res.status(404).json({ message: error.message });
+    }
+}

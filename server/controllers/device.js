@@ -31,19 +31,42 @@ export const addDevice = async (req, res) => {
     }
 }
 
-// export const getAdminDevice = async (req, res) => {
+export const getAdminDevice = async (req, res, next) => {
+    // {
+    //     "page" = "1",
+    //     "limit" = "10"
+    // }
 
-//     // {
-//     //     "page" = "1",
-//     //     "limit" = "10"
-//     // }
+    // ref: 
+    // https://www.thanhlongdev.com/huong-dan-xay-dung-pagination-voi-nodejs-express-va-mongodb/
+    // https://betterprogramming.pub/build-a-paginated-api-using-node-js-express-and-mongodb-227ed5dc2b4b
+    const { page, limit } = req.body;
+    const skipIndex = (page - 1) * limit;
+    const results = {};
 
-//     const { page, limit } = req.body
+    // Get limit phần tử trong trang page
+    try {
+        results.results = await DeviceModel.find()
+            .sort({ _id: 1 })
+            .limit(limit)
+            .skip(skipIndex)
+            .exec();
+        res.getAdminDevice = results;
+        next();
+        //res.status(200).json(deviceMessage);
+    } catch (error) {
+        res.status(404).json({ message: error.message });
+    }
+}
 
-//     // Get limit phần tử trong trang page
-// }
+export const getCountDevice = async (req, res) => {
+    try {
+        const numberOfDevice = await DeviceModel.estimatedDocumentCount();
 
-// export const getCountDevice = async (req, res) => {
+        res.status(200).json(numberOfDevice);
+        
+    } catch (error) {
+        res.status(404).json({ message: error.message });
+    }
 
-
-// }
+}
