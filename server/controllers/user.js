@@ -8,7 +8,6 @@ const secret = 'test';
 
 export const signin = async (req, res) => {
   const { username, password } = req.body;
-
   try {
     const oldUser = await UserModel.findOne({ username });
 
