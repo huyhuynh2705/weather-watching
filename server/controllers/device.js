@@ -20,7 +20,7 @@ export const addDevice = async (req, res) => {
 
     const device = req.body;
 
-    const newDeviceMessage = new DeviceModel(device)
+    const newDeviceMessage = new DeviceModel({...device, time: new Date().toUTCString()})
 
     try {
         await newDeviceMessage.save();
@@ -58,5 +58,17 @@ export const getCountDevice = async (req, res) => {
     } catch (error) {
         res.status(404).json({ message: error.message });
     }
+
+}
+
+export const updateDevice = async (req, res) => {
+    
+    // req.body = {id: '', type: '', idServer: '', name: '', unit: '', topic: ''}
+
+}
+
+export const deleteDevice = async (req, res) => {
+    
+    // req.params= {id: ''}
 
 }

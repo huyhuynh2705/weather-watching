@@ -22,5 +22,7 @@ export const addDevice = (form) => API.post('/device', form);
 export const addDeviceSet = (form) => API.post('/set', form);
 export const getAdminDevice = (form) => API.post('/device/admin/all', form);
 export const getCountDevice = () => API.get('/device/admin/count');
+export const updateDevice = (form) => API.post('/device/admin/update', form);
+export const deleteDevice = (id) => API.post(`/device/admin/delete/${id}`);
 
 
