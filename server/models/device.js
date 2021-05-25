@@ -2,6 +2,10 @@ import mongoose from 'mongoose';
 
 const deviceSchema = mongoose.Schema({
     type: String, //Traffic Light || DHT11 || Light 
+    time: {
+        type: Date,
+        default: new Date(),
+    },
     idServer: String,
     name: String,
     unit: String,
