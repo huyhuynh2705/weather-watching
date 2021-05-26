@@ -85,3 +85,42 @@ export const updateProfile = async (req, res) => {
 
   res.json({ result: updatedProfile, token });
 }
+
+export const deleteUser = async (req, res) => {
+    
+  // req.params= {id: ''}
+  const { id } = req.params;
+
+  try {
+      const oldDevice = await UserModel.findById(id);
+      if (!oldDevice) {
+          return res.status(404).json({ message: "User doesn't exist." });
+      }
+      else {
+          await UserModel.findByIdAndRemove(id);
+
+          return res.status(200).json({ message: "User is deleted."});            
+      }
+      
+  } catch (error) {
+      res.status(404).json({ message: error.message });
+  }
+
+}
+export const getAdminUser = async (req, res) => {
+    
+  const { page, limit } = req.body;
+  const skipIndex = (page - 1) * limit;
+  let UserMessage = [];
+
+  try {
+      UserMessage = await UserModel.find()
+      .sort({ _id: 1 })
+      .skip(skipIndex)
+      .limit(limit)
+
+      res.status(200).json(UserMessage);
+  } catch (error) {
+      res.status(404).json({ message: error.message });
+  }
+}
