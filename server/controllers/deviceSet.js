@@ -97,3 +97,20 @@ export const deleteDeviceSet = async (req, res) => {
     }
 
 }
+export const getAdminSet = async (req, res) => {
+    
+    const { page, limit } = req.body;
+    const skipIndex = (page - 1) * limit;
+    let deviceSetMessage = [];
+
+    try {
+        deviceSetMessage = await DeviceSetModel.find()
+        .sort({ _id: 1 })
+        .skip(skipIndex)
+        .limit(limit)
+
+        res.status(200).json(deviceSetMessage);
+    } catch (error) {
+        res.status(404).json({ message: error.message });
+    }
+}

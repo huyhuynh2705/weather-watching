@@ -107,3 +107,20 @@ export const deleteUser = async (req, res) => {
   }
 
 }
+export const getAdminUser = async (req, res) => {
+    
+  const { page, limit } = req.body;
+  const skipIndex = (page - 1) * limit;
+  let UserMessage = [];
+
+  try {
+      UserMessage = await UserModel.find()
+      .sort({ _id: 1 })
+      .skip(skipIndex)
+      .limit(limit)
+
+      res.status(200).json(UserMessage);
+  } catch (error) {
+      res.status(404).json({ message: error.message });
+  }
+}
