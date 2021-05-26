@@ -61,9 +61,13 @@ export const updateDevice = (form) => async (dispatch) => {
 export const deleteDevice = (id) => async (dispatch) => {
   try {
     
-    const { data } = await api.deleteDevice(form);
+    await api.deleteDevice(id);
 
-    dispatch({ type: 'DELETE_DEVICE', payload: data });
+    const { data } = await api.getCountDevice();
+    
+    dispatch({ type: 'DEVICE_COUNT', payload: data });
+    
+    dispatch({ type: 'DELETE_DEVICE', payload: id });
 
   } catch (error) {
     console.log(error);

@@ -1,7 +1,7 @@
 import React, { useState } from 'react'
 import { Button, Container, Grid, Paper, TextField, Typography } from '@material-ui/core'
 import useStyles from "./styles"
-import { useSelector } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 import Table from '@material-ui/core/Table';
 import TableBody from '@material-ui/core/TableBody';
 import TableCell from '@material-ui/core/TableCell';
@@ -10,6 +10,8 @@ import TableHead from '@material-ui/core/TableHead';
 import TableRow from '@material-ui/core/TableRow';
 import Backdrop from '@material-ui/core/Backdrop';
 import CircularProgress from '@material-ui/core/CircularProgress';
+import Pagination from '@material-ui/lab/Pagination';
+import { updateDevice, deleteDevice, getAdminDevice } from '../../action/device'
 
 function createData(index, id, type, name, time, idServer, unit, topic) {
     return { index, id, type, name, time, idServer, unit, topic };
@@ -17,8 +19,11 @@ function createData(index, id, type, name, time, idServer, unit, topic) {
   
 const initialState = {id: '', type: '', idServer: '', name: '', unit: '', topic: ''}
 
-const AdminDevices = () => {
+const AdminDevices = ({limitPerPage}) => {
     const classes = useStyles()
+    const dispatch = useDispatch()
+    const totalItems = useSelector((state) => state.count)
+
     let devices = useSelector((state) => state.devices)
 
     const [updateIndex, setUpdateIndex] = useState(null)
@@ -26,14 +31,22 @@ const AdminDevices = () => {
     const [open, setOpen] = useState(false);
     const [form, setForm] = useState(initialState);
 
+    const [page, setPage] = useState(1);
+    const count = Math.ceil(totalItems/limitPerPage)
+
+    const handleChangePage = (e, value) => {
+        e.preventDefault()
+        setPage(value)
+        dispatch(getAdminDevice({page: value, limit: limitPerPage}))
+    }
+
     const handleChange = (e) => setForm({ ...form, [e.target.name]: e.target.value });
 
     const handleSubmit = (e) => {
         e.preventDefault();
         if (form!=initialState) {
-            console.log(form);
+            dispatch(updateDevice(form))
         }
-        //dispatch(updateProfile(user.result._id, form)).then(() => history.push('/admin'))
         setOpen(!open);
     };
 
@@ -43,8 +56,19 @@ const AdminDevices = () => {
 
     const handleToggle = (value) => {
       setUpdateIndex(value)
+      setForm({ ...form, id: rows[value].id });
       setOpen(!open);
     };
+
+    const handleDelete = (value) => {
+        dispatch(deleteDevice(rows[value].id))
+        setUpdateIndex(null)
+        console.log(rows.length, totalItems);
+        if (rows.length == 1 &&  totalItems != 0) {
+            dispatch(getAdminDevice({page: page - 1, limit: limitPerPage}))
+            setPage(page-1)
+        }
+    }
 
     let rows = [];
     if (!!devices) {
@@ -53,7 +77,7 @@ const AdminDevices = () => {
         }
     }
 
-    return (rows.length == 0) ? <CircularProgress /> : (
+    return (rows.length == 0 && totalItems == 0) ? <CircularProgress /> : (
         <Container>
              {(updateIndex == null) ? 
              <Backdrop className={classes.backdrop} open={open}> <CircularProgress /> </Backdrop> : 
@@ -63,18 +87,18 @@ const AdminDevices = () => {
                     <form onSubmit={handleSubmit}>
                         <Grid container spacing={2}>
                             <Grid item xs={3}>
-                                <Typography className={classes.title} align="right" variant="h6" gutterBottom>Name: </Typography>
-                                <Typography className={classes.title1} align="right" variant="h6" gutterBottom>Type: </Typography>
+                                <Typography className={classes.title} align="right" variant="h6" gutterBottom>Type: </Typography>
+                                <Typography className={classes.title1} align="right" variant="h6" gutterBottom>Name: </Typography>
                                 <Typography className={classes.title1} align="right" variant="h6" gutterBottom>Id Server: </Typography>
                                 <Typography className={classes.title1} align="right" variant="h6" gutterBottom>Unit: </Typography>
                                 <Typography className={classes.title1} align="right" variant="h6" gutterBottom>Topic: </Typography>
                             </Grid>
                             <Grid item xs={9}>
-                                <TextField className={classes.text} autoComplete="false" fullWidth variant="outlined" name="name" label={rows[updateIndex].name} onChange={handleChange}/>
                                 <TextField className={classes.text} autoComplete="false" fullWidth variant="outlined" name="type" label={rows[updateIndex].type} onChange={handleChange}/>
-                                <TextField className={classes.text} autoComplete="false" fullWidth variant="outlined" name="type" label={rows[updateIndex].idServer} onChange={handleChange}/>
-                                <TextField className={classes.text} autoComplete="false" fullWidth variant="outlined" name="type" label={rows[updateIndex].unit} onChange={handleChange}/>
-                                <TextField className={classes.text} autoComplete="false" fullWidth variant="outlined" name="type" label={rows[updateIndex].topic} onChange={handleChange}/>
+                                <TextField className={classes.text} autoComplete="false" fullWidth variant="outlined" name="name" label={rows[updateIndex].name} onChange={handleChange}/>
+                                <TextField className={classes.text} autoComplete="false" fullWidth variant="outlined" name="idServer" label={rows[updateIndex].idServer} onChange={handleChange}/>
+                                <TextField className={classes.text} autoComplete="false" fullWidth variant="outlined" name="unit" label={rows[updateIndex].unit} onChange={handleChange}/>
+                                <TextField className={classes.text} autoComplete="false" fullWidth variant="outlined" name="topic" label={rows[updateIndex].topic} onChange={handleChange}/>
                             </Grid>
                         </Grid>
                         <Button variant="outlined" color="primary" size="large" type="submit" fullWidth>Update</Button>
@@ -113,13 +137,16 @@ const AdminDevices = () => {
                         <TableCell align="left">
                             <Button variant="outlined" color="primary" onClick={() => handleToggle(row.index - 1)}>Update</Button>
                             &nbsp;
-                            <Button variant="outlined" color="secondary">Delete</Button>
+                            <Button variant="outlined" color="secondary" onClick={() => handleDelete(row.index - 1)}>Delete</Button>
                         </TableCell>
                         </TableRow>
                     ))}
                     </TableBody>
                 </Table>
             </TableContainer>
+            <div className={classes.pagination}>
+                <Pagination count={count} page={page} size="large" color="primary" onChange={handleChangePage}/>
+            </div>
         </Container>
     )
 }
