@@ -85,3 +85,25 @@ export const updateProfile = async (req, res) => {
 
   res.json({ result: updatedProfile, token });
 }
+
+export const deleteUser = async (req, res) => {
+    
+  // req.params= {id: ''}
+  const { id } = req.params;
+
+  try {
+      const oldDevice = await UserModel.findById(id);
+      if (!oldDevice) {
+          return res.status(404).json({ message: "User doesn't exist." });
+      }
+      else {
+          await UserModel.findByIdAndRemove(id);
+
+          return res.status(200).json({ message: "User is deleted."});            
+      }
+      
+  } catch (error) {
+      res.status(404).json({ message: error.message });
+  }
+
+}
