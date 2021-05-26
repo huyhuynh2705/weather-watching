@@ -164,7 +164,8 @@ export const getCountAllUser = async (req, res) => {
 
 }
 
-//dem tổng số users có deviceSet
+//dem tổng số users có deviceSet 
+//? admin có thể so huu deviceSet ko?
 export const getCountSubscriber = async (req, res) => {
   try {
     const numberOfSubscriber = await UserModel.countDocuments( { deviceSetId: { $ne:"" } } );
