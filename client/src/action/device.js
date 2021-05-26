@@ -3,11 +3,12 @@ import * as api from '../api/index'
 export const addDevice = (form) => async (dispatch) => {
   try {
     const { data } = await api.addDevice(form)
+    console.log("data: ", data);
 
-    dispatch({ type: "ADD_DEVICE", data })
+    dispatch({ type: 'ADD_DEVICE', data })
     
   } catch (error) {
-    alert(error.response.data.message)
+    console.log(error.message)
   }
 }
 

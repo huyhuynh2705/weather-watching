@@ -13,7 +13,6 @@ import MenuList from '@material-ui/core/MenuList';
 import AccountCircleIcon from '@material-ui/icons/AccountCircle'
 import PersonAddIcon from '@material-ui/icons/PersonAdd';
 import DeviceHubIcon from '@material-ui/icons/DeviceHub'
-import DevicesOtherIcon from '@material-ui/icons/DevicesOther';
 import useStyles from './styles'
 import { useDispatch } from 'react-redux'
 import { useAuth } from '@contexts'
@@ -70,7 +69,6 @@ export default function AppBarAdmin() {
       <AppBar position="static">
         <Toolbar>
           <Typography component={Link} to="/admin" className={classes.title}>WEATHER WATCHING</Typography>
-          <Button className={classes.button} variant="text" color="inherit" size="large" startIcon={<DevicesOtherIcon />} component={Link} to="/admin/adddevice">Add Device</Button>
           <Button className={classes.button} variant="text" color="inherit" size="large" startIcon={<DeviceHubIcon />} component={Link} to="/admin/adddeviceset">Add Device Set</Button>
           <Button className={classes.button} variant="text" color="inherit" size="large" startIcon={<PersonAddIcon />} component={Link} to="/admin/signup">Add User</Button>
           <Button className={classes.button} variant="text" color="inherit" size="large" startIcon={<AccountCircleIcon />} onClick={handleLogout}>Admin Logout</Button>

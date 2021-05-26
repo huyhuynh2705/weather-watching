@@ -1,10 +1,6 @@
 import { makeStyles } from '@material-ui/core/styles'
 
 export default makeStyles((theme) => ({
-    root: {
-      padding: '20px',
-      marginTop: '20px'
-    },
     table: {
       marginTop: '20px',
       paddingTop: '10px'
