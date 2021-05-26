@@ -10,6 +10,6 @@ router.post('/', addDevice);
 router.post('/admin/all', getAdminDevice);
 router.get('/admin/count', getCountDevice);
 router.post('/admin/update', updateDevice);
-router.post('/admin/delete', deleteDevice);
+router.delete('/admin/delete/:id', deleteDevice);
 
 export default router;

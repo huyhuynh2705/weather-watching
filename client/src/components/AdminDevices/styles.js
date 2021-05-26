@@ -25,5 +25,10 @@ export default makeStyles((theme) => ({
     },
     text: {
       marginBottom: '15px',
-    }
+    },
+    pagination: {
+      '& > *': {
+        marginTop: theme.spacing(2),
+      },
+    },
 }))
