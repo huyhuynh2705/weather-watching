@@ -11,7 +11,9 @@ import TableRow from '@material-ui/core/TableRow';
 import Backdrop from '@material-ui/core/Backdrop';
 import CircularProgress from '@material-ui/core/CircularProgress';
 import Pagination from '@material-ui/lab/Pagination';
-import { updateDevice, deleteDevice, getAdminDevice } from '../../action/device'
+import DevicesOtherIcon from '@material-ui/icons/DevicesOther';
+
+import { updateDevice, deleteDevice, getAdminDevice, addDevice } from '../../action/device'
 
 function createData(index, id, type, name, time, idServer, unit, topic) {
     return { index, id, type, name, time, idServer, unit, topic };
@@ -22,14 +24,14 @@ const initialState = {id: '', type: '', idServer: '', name: '', unit: '', topic:
 const AdminDevices = ({limitPerPage}) => {
     const classes = useStyles()
     const dispatch = useDispatch()
-    const totalItems = useSelector((state) => state.count)
+    const totalItems = useSelector((state) => state.countdevice)
 
     let devices = useSelector((state) => state.devices)
-
     const [updateIndex, setUpdateIndex] = useState(null)
 
     const [open, setOpen] = useState(false);
     const [form, setForm] = useState(initialState);
+    const [isUpdate, setIsUpdate] = useState(true);
 
     const [page, setPage] = useState(1);
     const count = Math.ceil(totalItems/limitPerPage)
@@ -45,8 +47,9 @@ const AdminDevices = ({limitPerPage}) => {
     const handleSubmit = (e) => {
         e.preventDefault();
         if (form!=initialState) {
-            dispatch(updateDevice(form))
+            (isUpdate) ? dispatch(updateDevice(form)) : dispatch(addDevice(form));
         }
+        setIsUpdate(true);
         setOpen(!open);
     };
 
@@ -60,10 +63,14 @@ const AdminDevices = ({limitPerPage}) => {
       setOpen(!open);
     };
 
+    const handleNewDevice = () => {
+        setIsUpdate(false)
+        setOpen(!open)
+    }
+
     const handleDelete = (value) => {
         dispatch(deleteDevice(rows[value].id))
         setUpdateIndex(null)
-        console.log(rows.length, totalItems);
         if (rows.length == 1 &&  totalItems != 0) {
             dispatch(getAdminDevice({page: page - 1, limit: limitPerPage}))
             setPage(page-1)
@@ -78,10 +85,11 @@ const AdminDevices = ({limitPerPage}) => {
     }
 
     return (rows.length == 0 && totalItems == 0) ? <CircularProgress /> : (
-        <Container>
-             {(updateIndex == null) ? 
+        <div>
+             {(updateIndex == null && isUpdate == true) ? 
              <Backdrop className={classes.backdrop} open={open}> <CircularProgress /> </Backdrop> : 
              <Backdrop className={classes.backdrop} open={open}>
+                {(isUpdate) ? 
                 <Paper className={classes.paper}>
                     <Typography align="center" variant="h6" gutterBottom>Update Device</Typography>
                     <form onSubmit={handleSubmit}>
@@ -105,10 +113,42 @@ const AdminDevices = ({limitPerPage}) => {
                     </form>
                     &nbsp;
                     <Button variant="outlined" color="secondary" size="large" onClick={handleClose} fullWidth>Close</Button>
-                </Paper>
+                </Paper> :
+                <Paper className={classes.paper}>
+                <Typography align="center" variant="h6" gutterBottom>New Device</Typography>
+                <form onSubmit={handleSubmit}>
+                    <Grid container spacing={2}>
+                        <Grid item xs={3}>
+                            <Typography className={classes.title} align="right" variant="h6" gutterBottom>Type: </Typography>
+                            <Typography className={classes.title1} align="right" variant="h6" gutterBottom>Name: </Typography>
+                            <Typography className={classes.title1} align="right" variant="h6" gutterBottom>Id Server: </Typography>
+                            <Typography className={classes.title1} align="right" variant="h6" gutterBottom>Unit: </Typography>
+                            <Typography className={classes.title1} align="right" variant="h6" gutterBottom>Topic: </Typography>
+                        </Grid>
+                        <Grid item xs={9}>
+                            <TextField className={classes.text} autoComplete="false" fullWidth variant="outlined" name="type" label="Type" onChange={handleChange}/>
+                            <TextField className={classes.text} autoComplete="false" fullWidth variant="outlined" name="name" label="Name" onChange={handleChange}/>
+                            <TextField className={classes.text} autoComplete="false" fullWidth variant="outlined" name="idServer" label="Id Server" onChange={handleChange}/>
+                            <TextField className={classes.text} autoComplete="false" fullWidth variant="outlined" name="unit" label="Unit" onChange={handleChange}/>
+                            <TextField className={classes.text} autoComplete="false" fullWidth variant="outlined" name="topic" label="Topic" onChange={handleChange}/>
+                        </Grid>
+                    </Grid>
+                    <Button variant="outlined" color="primary" size="large" type="submit" fullWidth>New Device</Button>
+                </form>
+                &nbsp;
+                <Button variant="outlined" color="secondary" size="large" onClick={handleClose} fullWidth>Close</Button>
+            </Paper>
+                }
              </Backdrop>}
             <TableContainer className={classes.table} component={Paper}>
-            <Typography style={{color: "#20339c", fontWeight: '500', fontSize: '30px'}} align="center" gutterBottom>Device List</Typography>
+            <Grid container>
+                <Grid item xs={5}>
+                    <Button style={{marginLeft: '20px'}} variant="outlined" startIcon={<DevicesOtherIcon />} color="primary" size="large" onClick={handleNewDevice}>New Device</Button>
+                </Grid>
+                <Grid item xs={7}>
+                    <Typography style={{color: "#20339c", fontWeight: '500', fontSize: '30px'}} align="left" gutterBottom>Device List</Typography>
+                </Grid>
+            </Grid>
                 <Table aria-label="simple table">
                     <TableHead>
                     <TableRow>
@@ -147,7 +187,7 @@ const AdminDevices = ({limitPerPage}) => {
             <div className={classes.pagination}>
                 <Pagination count={count} page={page} size="large" color="primary" onChange={handleChangePage}/>
             </div>
-        </Container>
+        </div>
     )
 }
 

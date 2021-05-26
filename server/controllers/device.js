@@ -18,10 +18,13 @@ export const getDevice = async (req, res) => {
 
 export const addDevice = async (req, res) => {
 
-    const device = req.body;
-
+    //const device = req.body;
+    const {type, idServer, name, unit, topic} = req.body;
+    
+    const device = {type, idServer, name, unit, topic}
+    
     const newDeviceMessage = new DeviceModel({...device, time: new Date().toUTCString()})
-
+    
     try {
         await newDeviceMessage.save();
 
