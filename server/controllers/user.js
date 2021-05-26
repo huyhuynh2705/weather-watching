@@ -124,3 +124,55 @@ export const getAdminUser = async (req, res) => {
       res.status(404).json({ message: error.message });
   }
 }
+
+//dem so admin(s)
+export const getCountAdmin = async (req, res) => {
+  try {
+      const numberOfAdmin = await UserModel.countDocuments({role:{$eq:"Admin"}});
+
+      res.status(200).json(numberOfAdmin);
+      
+  } catch (error) {
+      res.status(404).json({ message: error.message });
+  }
+
+}
+
+//dem so users
+export const getCountUser = async (req, res) => {
+  try {
+      const numberOfUser = await UserModel.countDocuments({role:{$eq:"User"}});
+
+      res.status(200).json(numberOfUser);
+      
+  } catch (error) {
+      res.status(404).json({ message: error.message });
+  }
+
+}
+
+//dem tổng số users (gồm admin và users)
+export const getCountAllUser = async (req, res) => {
+  try {
+      const numberOfUser = await UserModel.estimatedDocumentCount();
+
+      res.status(200).json(numberOfUser);
+      
+  } catch (error) {
+      res.status(404).json({ message: error.message });
+  }
+
+}
+
+//dem tổng số users có deviceSet
+export const getCountSubscriber = async (req, res) => {
+  try {
+    const numberOfSubscriber = await UserModel.countDocuments( { deviceSetId: { $ne:"" } } );
+
+      res.status(200).json(numberOfSubscriber);
+      
+  } catch (error) {
+      res.status(404).json({ message: error.message });
+  }
+
+}

@@ -18,13 +18,10 @@ export const getDevice = async (req, res) => {
 
 export const addDevice = async (req, res) => {
 
-    //const device = req.body;
-    const {type, idServer, name, unit, topic} = req.body;
-    
-    const device = {type, idServer, name, unit, topic}
-    
+    const device = req.body;
+
     const newDeviceMessage = new DeviceModel({...device, time: new Date().toUTCString()})
-    
+
     try {
         await newDeviceMessage.save();
 
@@ -67,8 +64,7 @@ export const getCountDevice = async (req, res) => {
 export const updateDevice = async (req, res) => {
     
     // req.body = {id: '', type: '', idServer: '', name: '', unit: '', topic: ''}
-    let { id, type, idServer, name, unit, topic} = req.body;
-
+    const { id, type, idServer, name, unit, topic} = req.body;
 
     const oldDevice = await DeviceModel.findById(id);
 
@@ -77,8 +73,11 @@ export const updateDevice = async (req, res) => {
         return res.status(404).json({ message: "Device doesn't exist."});
     }
 
-    if ((type == '' &&  idServer == '' && name == '' && unit == '' && topic == '') || 
-        (type==oldDevice.type && idServer==oldDevice.idServer && name==oldDevice.name && unit==oldDevice.unit && topic==oldDevice.topic)) {
+    //check if nothing is changed
+    if ( ((type==oldDevice.type)||(type='')) && ((idServer==oldDevice.idServer)||(idServer==''))
+        && ((name==oldDevice.name)||(name=='')) && ((unit==oldDevice.unit)||(unit=='')) && 
+        ((topic==oldDevice.topic)||(topic=='')) ) 
+    {
         return res.status(200).json({ message: "Nothing was changed."});
     }
 
@@ -101,7 +100,7 @@ export const updateDevice = async (req, res) => {
     }
 
     if (unit != oldDevice.unit) {
-        if (unit == '' && type != 'Light') {
+        if (unit == '') {
             unit = oldDevice.unit;
         }
     }
@@ -114,12 +113,11 @@ export const updateDevice = async (req, res) => {
 
     let updateDevice = { type, idServer, name, unit, topic };
 
-    try {
-        const updatedDevice = await DeviceModel.findByIdAndUpdate(id, updateDevice, { new: true });
-        res.status(200).json(updatedDevice);
-    } catch (error) {
-        res.status(404).json({ message: error.message });
-    }
+    const updatedDevice = await DeviceModel.findByIdAndUpdate(id, updateDevice, { new: true });
+
+    //res.json({ result: updatedDevice });
+    //?????????????
+    res.status(200).json(updatedDevice);
 }
 
 export const deleteDevice = async (req, res) => {
