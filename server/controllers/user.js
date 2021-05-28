@@ -124,3 +124,30 @@ export const getAdminUser = async (req, res) => {
       res.status(404).json({ message: error.message });
   }
 }
+
+export const getCountUser = async (req, res) => {
+  try {
+      const numberOfUser = await UserModel.estimatedDocumentCount();
+
+      res.status(200).json(numberOfUser);
+      
+  } catch (error) {
+      res.status(404).json({ message: error.message });
+  }
+}
+
+export const updateUser = async (req, res) => {
+    
+  // req.body = {
+//   id: '60b0b181d40d6f2afc138f41',
+//   username: 'huyhuynh',
+//   password: '',
+//   name: '',
+//   email: '',
+//   phoneNum: '',
+//   deviceSetId: '',
+//   role: '',
+//   confirmPassword: ''
+// }
+ 
+}
