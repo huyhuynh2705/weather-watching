@@ -97,7 +97,7 @@ export const deleteDeviceSet = async (req, res) => {
     }
 
 }
-export const getAdminSet = async (req, res) => {
+export const getAdminDeviceSet = async (req, res) => {
     
     const { page, limit } = req.body;
     const skipIndex = (page - 1) * limit;
