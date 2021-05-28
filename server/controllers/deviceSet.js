@@ -114,3 +114,48 @@ export const getAdminSet = async (req, res) => {
         res.status(404).json({ message: error.message });
     }
 }
+export const updateDeviceSet = async (req, res) => {
+    
+    // req.body = {id: '', type: '', idServer: '', name: '', unit: '', topic: ''}
+    let { trafficlight, DTH11, Light} = req.body;
+    let { id } = req.params;
+
+
+    const oldDevice = await DeviceSetModel.findById(id);
+
+    //san pham khong ton tai
+    if (!oldDevice) {
+        return res.status(404).json({ message: "DeviceSet doesn't exist."});
+    }
+
+    if ((trafficlight == '' &&  DTH11 == '' && Light == '') || 
+        (trafficlight==oldDevice.trafficLightId && DTH11==oldDevice.DHT11Id && Light==oldDevice.lightId)) {
+        return res.status(200).json({ message: "Nothing was changed."});
+    }
+
+    if (trafficlight != oldDevice.trafficLightId) {
+        if (trafficlight == '') {
+            trafficlight = oldDevice.trafficLightId;
+        }
+    }
+    
+    if (DTH11 != oldDevice.DHT11Id) {
+        if (DTH11 == '') {
+            DTH11 = oldDevice.DHT11Id;
+        }
+    }
+
+    if (Light != oldDevice.lightId) {
+        if (Light == '') {
+            Light = oldDevice.lightId;
+        }
+    }
+    let updateDeviceSet = { trafficlight, DTH11, Light };
+
+    try {
+        const updatedDeviceSet = await DeviceSetModel.findByIdAndUpdate(id, updateDeviceSet, { new: true });
+        res.status(200).json(updatedDeviceSet);
+    } catch (error) {
+        res.status(404).json({ message: error.message });
+    }
+}
