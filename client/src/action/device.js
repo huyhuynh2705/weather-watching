@@ -4,7 +4,7 @@ export const addDevice = (form) => async (dispatch) => {
   try {
     const { data } = await api.addDevice(form)
 
-    dispatch({ type: 'ADD_DEVICE', data })
+    dispatch({ type: 'ADD_DEVICE', payload: data })
     
   } catch (error) {
     console.log(error.message)

@@ -3,7 +3,7 @@ import { makeStyles } from '@material-ui/core/styles'
 export default makeStyles((theme) => ({
     table: {
       marginTop: '20px',
-      paddingTop: '10px'
+      padding: '10px'
     },
     backdrop: {
       zIndex: theme.zIndex.drawer + 1,
