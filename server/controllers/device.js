@@ -143,3 +143,4 @@ export const deleteDevice = async (req, res) => {
     }
 
 }
+

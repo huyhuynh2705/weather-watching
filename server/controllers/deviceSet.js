@@ -65,17 +65,6 @@ export const addUser = async (req, res) => {
     res.json({updatedDeviceSet, updatedUser});
 }
 
-export const getCountDeviceSet = async (req, res) => {
-    try {
-        const numberOfDeviceSet = await DeviceSetModel.estimatedDocumentCount();
-
-        res.status(200).json(numberOfDeviceSet);
-        
-    } catch (error) {
-        res.status(404).json({ message: error.message });
-    }
-}
-
 export const deleteDeviceSet = async (req, res) => {
     
     // req.params= {id: ''}
@@ -114,6 +103,41 @@ export const getAdminDeviceSet = async (req, res) => {
         res.status(404).json({ message: error.message });
     }
 }
+
+export const getCountDeviceSet = async (req, res) => {
+    try {
+        const numberOfDeviceSet = await DeviceSetModel.estimatedDocumentCount();
+
+        res.status(200).json(numberOfDeviceSet);
+        
+    } catch (error) {
+        res.status(404).json({ message: error.message });
+    }
+}
+
+// deviceSet that has been used by user.
+export const getCountUsedSet = async (req, res) => {
+    try {
+        const num = await DeviceSetModel.countDocuments( { userID: { $ne:"" } } );
+
+        res.status(200).json(num);
+        
+    } catch (error) {
+        res.status(404).json({ message: error.message });
+    }
+}
+
+// deviceSet that has not been used by user.
+export const getCountUnusedSet = async (req, res) => {
+    try {
+        const num = await DeviceSetModel.countDocuments( { userID: { $eq:"" } } );
+
+        res.status(200).json(num);
+    } catch (error) {
+        res.status(404).json({ message: error.message });
+    }
+}
+        
 export const updateDeviceSet = async (req, res) => {
     
     // req.body = {id: '', type: '', idServer: '', name: '', unit: '', topic: ''}
