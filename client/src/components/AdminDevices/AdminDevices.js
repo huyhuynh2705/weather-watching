@@ -1,5 +1,5 @@
-import React, { useState } from 'react'
-import { Button, Container, Grid, Paper, TextField, Typography } from '@material-ui/core'
+import React, { useState, useEffect } from 'react'
+import { Button, Grid, Paper, TextField, Typography } from '@material-ui/core'
 import useStyles from "./styles"
 import { useDispatch, useSelector } from 'react-redux';
 import Table from '@material-ui/core/Table';
@@ -17,7 +17,7 @@ import MenuItem from '@material-ui/core/MenuItem';
 import Select from '@material-ui/core/Select';
 import InputLabel from '@material-ui/core/InputLabel';
 import FormControl from '@material-ui/core/FormControl';
-import { updateDevice, deleteDevice, getAdminDevice, addDevice } from '../../action/device'
+import { updateDevice, deleteDevice, getAdminDevice, getCountDevice, addDevice } from '../../action/device'
 
 function createData(index, id, type, name, time, idServer, unit, topic) {
     return { index, id, type, name, time, idServer, unit, topic };
@@ -39,6 +39,11 @@ const AdminDevices = ({limitPerPage}) => {
 
     const [page, setPage] = useState(1);
     const count = Math.ceil(totalItems/limitPerPage)
+    
+    useEffect(() => {
+        dispatch(getCountDevice());
+        dispatch(getAdminDevice({page: 1, limit: limitPerPage}))
+    }, [])
 
     const handleChangePage = (e, value) => {
         e.preventDefault()
@@ -81,8 +86,10 @@ const AdminDevices = ({limitPerPage}) => {
         dispatch(deleteDevice(rows[value].id))
         setUpdateIndex(null)
         if (rows.length == 1 &&  totalItems != 0) {
-            dispatch(getAdminDevice({page: page - 1, limit: limitPerPage}))
-            setPage(page-1)
+            if (page > 1) {
+                dispatch(getAdminDevice({page: page - 1, limit: limitPerPage}));
+                setPage(page-1)
+            }
         }
     }
 

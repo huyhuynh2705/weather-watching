@@ -1,5 +1,5 @@
-import React, { useState } from 'react'
-import { Button, Container, Grid, Paper, TextField, Typography } from '@material-ui/core'
+import React, { useState, useEffect } from 'react'
+import { Button, Grid, Paper, TextField, Typography } from '@material-ui/core'
 import useStyles from "./styles"
 import { useDispatch, useSelector } from 'react-redux';
 import validator from 'validator' 
@@ -14,14 +14,19 @@ import CircularProgress from '@material-ui/core/CircularProgress';
 import Pagination from '@material-ui/lab/Pagination';
 import PersonAddIcon from '@material-ui/icons/PersonAdd';
 import RefreshIcon from '@material-ui/icons/Refresh';
+import MenuItem from '@material-ui/core/MenuItem';
+import Select from '@material-ui/core/Select';
+import InputLabel from '@material-ui/core/InputLabel';
+import FormControl from '@material-ui/core/FormControl';
+import Input from '@material-ui/core/Input';
 
-import { addUser, updateUser, deleteUser, getAdminUser } from '../../action/user'
+import { addUser, updateUser, deleteUser, getAdminUser, getCountAllUser } from '../../action/user'
 
-function createData(index, id, username, name, email, phoneNum, deviceSetId, role) {
-    return { index, id, username, name, email, phoneNum, deviceSetId, role };
+function createData(index, id, username, name, email, phoneNum, deviceSetName, role) {
+    return { index, id, username, name, email, phoneNum, deviceSetName, role };
 }
   
-const initialState = {id: '', username: '', password: '', name: '', email:'', phoneNum: '', deviceSetId: '', role: '', confirmPassword: ''};
+const initialState = {id: '', username: '', password: '', name: '', email:'', phoneNum: '', deviceSetName: '', role: '', confirmPassword: ''};
 
 const AdminUsers = ({limitPerPage}) => {
     const classes = useStyles()
@@ -38,6 +43,24 @@ const AdminUsers = ({limitPerPage}) => {
     const [page, setPage] = useState(1);
     const count = Math.ceil(totalItems/limitPerPage)
 
+    const deviceSetNames = [
+        'Oliver Hansen',
+        'Van Henry',
+        'April Tucker',
+        'Ralph Hubbard',
+        'Omar Alexander',
+        'Carlos Abbott',
+        'Miriam Wagner',
+        'Bradley Wilkerson',
+        'Virginia Andrews',
+        'Kelly Snyder',
+      ];
+
+    useEffect(() => {
+        dispatch(getCountAllUser());
+        dispatch(getAdminUser({page: 1, limit: limitPerPage}))
+    }, [])
+
     const handleChangePage = (e, value) => {
         e.preventDefault()
         setPage(value)
@@ -49,27 +72,28 @@ const AdminUsers = ({limitPerPage}) => {
     const handleSubmit = (e) => {
         e.preventDefault();
         console.log(form);
-        console.log(validator.isMobilePhone(form.phoneNum));
         if ((form.password !== form.confirmPassword) ) {
           alert("Password and confirm password must match")
           return
         }
         if (form!=initialState ) {
          if (isUpdate) { 
-            dispatch(updateProfile(form))
+            dispatch(updateUser(form))
         } 
         else {
             dispatch(addUser(form))
             dispatch(getAdminUser({page: page, limit: limitPerPage})) 
             };
         }
+        setForm(initialState);
         setIsUpdate(true);
         setOpen(!open);
     };
 
     const handleClose = () => {
-      setIsUpdate(true);
-      setOpen(false);
+        setForm(initialState);
+        setOpen(false);
+        setIsUpdate(true);
     };
 
     const handleToggle = (value) => {
@@ -87,8 +111,10 @@ const AdminUsers = ({limitPerPage}) => {
         dispatch(deleteUser(rows[value].id))
         setUpdateIndex(null)
         if (rows.length == 1 &&  totalItems != 0) {
-            dispatch(getAdminUser({page: page - 1, limit: limitPerPage}))
-            setPage(page-1)
+            if (page > 1) {
+                dispatch(getAdminUser({page: page - 1, limit: limitPerPage}));
+                setPage(page-1)
+            }
         }
     }
 
@@ -106,18 +132,18 @@ const AdminUsers = ({limitPerPage}) => {
                 users[i].name, 
                 users[i].email, 
                 users[i].phoneNum, 
-                users[i].deviceSetId, 
+                users[i].deviceSetName, 
                 users[i].role))
         }
     }
 
-    return (rows.length == 0 && totalItems == 0) ? <CircularProgress /> : (
+    return (
         <div>
              {(updateIndex == null && isUpdate == true) ? 
              <Backdrop className={classes.backdrop} open={open}> <CircularProgress /> </Backdrop> : 
              <Backdrop className={classes.backdrop} open={open}>
                 {(isUpdate) ? 
-                <Paper className={classes.paper}>
+                    <Paper className={classes.paper}>
                     <Typography align="center" variant="h6" gutterBottom>Update User</Typography>
                     <form onSubmit={handleSubmit}>
                         <Grid container spacing={2}>
@@ -136,7 +162,7 @@ const AdminUsers = ({limitPerPage}) => {
                                 <TextField className={classes.text} autoComplete="false" fullWidth variant="outlined" name="name" label={rows[updateIndex].name} onChange={handleChange}/>
                                 <TextField className={classes.text} autoComplete="false" fullWidth variant="outlined" name="email" label={rows[updateIndex].email} onChange={handleChange} type="email" />
                                 <TextField className={classes.text} autoComplete="false" fullWidth variant="outlined" name="phoneNum" label={rows[updateIndex].phoneNum} onChange={handleChange} type="number"/>
-                                <TextField className={classes.text} autoComplete="false" fullWidth variant="outlined" name="deviceSetId" label={rows[updateIndex].deviceSetId} onChange={handleChange}/>
+                                <TextField className={classes.text} autoComplete="false" fullWidth variant="outlined" name="deviceSetName" label={rows[updateIndex].deviceSetName} onChange={handleChange}/>
                                 <TextField className={classes.text} autoComplete="false" fullWidth variant="outlined" name="role" label={rows[updateIndex].role} onChange={handleChange}/>
                                 <TextField className={classes.text} autoComplete="false" fullWidth variant="outlined" name="password" label={rows[updateIndex].password} onChange={handleChange}/>
                                 <TextField className={classes.text} autoComplete="false" fullWidth variant="outlined" name="confirmPassword" label={rows[updateIndex].confirmPassword} onChange={handleChange}/>
@@ -161,7 +187,7 @@ const AdminUsers = ({limitPerPage}) => {
                             <Typography className={classes.title1} align="right" variant="h6" gutterBottom>Name: </Typography>
                             <Typography className={classes.title1} align="right" variant="h6" gutterBottom>Email: </Typography>
                             <Typography className={classes.title1} align="right" variant="h6" gutterBottom>Phone Number: </Typography>
-                            <Typography className={classes.title1} align="right" variant="h6" gutterBottom>Device Set Id: </Typography>
+                            <Typography className={classes.title1} align="right" variant="h6" gutterBottom>Device Set Name: </Typography>
                             <Typography className={classes.title1} align="right" variant="h6" gutterBottom>Role: </Typography>
                             <Typography className={classes.title1} align="right" variant="h6" gutterBottom>Password: </Typography>
                             <Typography className={classes.title1} align="right" variant="h6" gutterBottom>Confirm Password: </Typography>
@@ -171,8 +197,35 @@ const AdminUsers = ({limitPerPage}) => {
                             <TextField required className={classes.text} autoComplete="false" fullWidth variant="outlined" name="name" label="Full Name" onChange={handleChange}/>
                             <TextField required className={classes.text} autoComplete="false" fullWidth variant="outlined" name="email" label="Email" onChange={handleChange} type="email" />
                             <TextField required className={classes.text} autoComplete="false" fullWidth variant="outlined" name="phoneNum" label="Phone Number" onChange={handleChange} type="number" />
-                            <TextField className={classes.text} autoComplete="false" fullWidth variant="outlined" name="deviceSetId" label="Device Set Id" onChange={handleChange}/>
-                            <TextField required className={classes.text} autoComplete="false" fullWidth variant="outlined" name="role" label="Rolw" onChange={handleChange}/>
+                            {/* <TextField className={classes.text} autoComplete="false" fullWidth variant="outlined" name="deviceSetName" label="Device Set Id" onChange={handleChange}/> */}
+                            <FormControl fullWidth variant="outlined" className={classes.formControl}>
+                                <InputLabel id="deviceSetName-new-label">Device Set Name</InputLabel>
+                                <Select
+                                labelId="deviceSetName-new-label"
+                                name="deviceSetName"
+                                value={form.deviceSetName}
+                                onChange={handleChange}
+                                >
+                                {deviceSetNames.map((Set) => (
+                                    <MenuItem key={Set} value={Set}>
+                                    {Set}
+                                    </MenuItem>
+                                ))}
+                                </Select>
+                            </FormControl>
+                            {/* <TextField required className={classes.text} autoComplete="false" fullWidth variant="outlined" name="role" label="Rol" onChange={handleChange}/> */}
+                            <FormControl fullWidth variant="outlined" className={classes.formControl}>
+                                <InputLabel id="role-new-label">Type</InputLabel>
+                                <Select
+                                labelId="role-new-label"
+                                name="role"
+                                value={form.role}
+                                onChange={handleChange}
+                                >
+                                    <MenuItem value="User">User</MenuItem>
+                                    <MenuItem value="Admin">Admin</MenuItem>
+                                </Select>
+                            </FormControl>
                             <TextField required className={classes.text} autoComplete="false" fullWidth variant="outlined" name="password" label="Password" onChange={handleChange}/>
                             <TextField required className={classes.text} autoComplete="false" fullWidth variant="outlined" name="confirmPassword" label="Confirm Password" onChange={handleChange}/>
                         </Grid>
@@ -188,24 +241,23 @@ const AdminUsers = ({limitPerPage}) => {
                 </form>
                 </Paper>
                 }
-             </Backdrop>}
+            </Backdrop>}
             <TableContainer className={classes.table} component={Paper}>
-            <Grid container>
-                <Grid item xs={2}>
-                    <Button variant="outlined" fullWidth startIcon={<PersonAddIcon />} color="primary" size="large" onClick={handleNewUser}>New User</Button>
+                <Grid container>
+                    <Grid item xs={2}>
+                        <Button variant="outlined" fullWidth startIcon={<PersonAddIcon />} color="primary" size="large" onClick={handleNewUser}>New User</Button>
+                    </Grid>
+                    <Grid item xs={8}>
+                        <Typography style={{color: "#20339c", fontWeight: '500', fontSize: '30px'}} align="center" gutterBottom>Users List</Typography>
+                    </Grid>
+                    <Grid item xs={2}>
+                        <Button  variant="outlined" fullWidth startIcon={<RefreshIcon />} color="primary" size="large" onClick={handleRefresh}>Refresh</Button>
+                    </Grid>
                 </Grid>
-                <Grid item xs={8}>
-                    <Typography style={{color: "#20339c", fontWeight: '500', fontSize: '30px'}} align="center" gutterBottom>Users List</Typography>
-                </Grid>
-                <Grid item xs={2}>
-                    <Button  variant="outlined" fullWidth startIcon={<RefreshIcon />} color="primary" size="large" onClick={handleRefresh}>Refresh</Button>
-                </Grid>
-            </Grid>
                 <Table aria-label="simple table">
                     <TableHead>
                     <TableRow>
                         <TableCell align="left">Index</TableCell>
-                        {/* <TableCell align="left">Device Id</TableCell> */}
                         <TableCell align="left">Username</TableCell>
                         <TableCell align="left">Name</TableCell>
                         <TableCell align="left">Email</TableCell>
@@ -219,12 +271,11 @@ const AdminUsers = ({limitPerPage}) => {
                     {rows.map((row) => (
                         <TableRow key={row.id}>
                         <TableCell component="th" scope="row">{row.index}</TableCell>
-                        {/* <TableCell align="left">{row.id}</TableCell> */}
                         <TableCell align="left">{row.username}</TableCell>
                         <TableCell align="left">{row.name}</TableCell>
                         <TableCell align="left">{row.email}</TableCell>
                         <TableCell align="left">{row.phoneNum}</TableCell>
-                        <TableCell align="left">{row.deviceSetId}</TableCell>
+                        <TableCell align="left">{row.deviceSetName}</TableCell>
                         <TableCell align="left">{row.role}</TableCell>
                         <TableCell align="left">
                             <Button variant="outlined" color="primary" onClick={() => handleToggle(row.index - 1)}>Update</Button>
@@ -235,6 +286,7 @@ const AdminUsers = ({limitPerPage}) => {
                     ))}
                     </TableBody>
                 </Table>
+                <Typography style={{marginTop: '10px'}} variant="body1" align="center">Showing {rows.length} out of {totalItems} users</Typography>
             </TableContainer>
             <div className={classes.pagination}>
                 <Pagination count={count} page={page} size="large" color="primary" onChange={handleChangePage}/>

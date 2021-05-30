@@ -140,10 +140,11 @@ export const getCountUnusedSet = async (req, res) => {
         
 export const updateDeviceSet = async (req, res) => {
     
-    // req.body = {id: '', type: '', idServer: '', name: '', unit: '', topic: ''}
-    let { trafficlight, DTH11, Light} = req.body;
-    let { id } = req.params;
+    // req.body = {id: '', setName: '', trafficLightId: '', DHT11Id: '', lightId: ''}
 
+    //Them setName nen sua lai
+    
+    let { id, trafficlight, DTH11, Light} = req.body;
 
     const oldDevice = await DeviceSetModel.findById(id);
 

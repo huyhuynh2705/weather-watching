@@ -1,11 +1,7 @@
 import express from "express";
 const router = express.Router();
 
-<<<<<<< HEAD
-import { signin, signup, updateProfile, getAdminUser, getCountAdmin, getCountUser, getCountAllUser, getCountSubscriber, deleteUser, updateUser } from "../controllers/user.js";
-=======
-import { signin, addUser, updateProfile, getAdminUser, getCountUser, deleteUser, updateUser } from "../controllers/user.js";
->>>>>>> 2f3cf356b03801157a3fa88c8203581b48a0799a
+import { signin, addUser, updateProfile, getAdminUser, getCountUser, deleteUser, updateUser, getCountAdmin, getCountAllUser, getCountSubscriber } from "../controllers/user.js";
 
 router.post("/signin", signin);
 router.post("/admin/adduser", addUser);
@@ -18,6 +14,6 @@ router.get('/admin/countSubscriber', getCountSubscriber);
 
 router.post('/admin/all', getAdminUser);
 router.delete('/admin/delete/:id', deleteUser);
-router.post('/admin/update/:id', updateUser);
+router.post('/admin/update', updateUser);
 
 export default router;
