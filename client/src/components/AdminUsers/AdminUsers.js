@@ -15,7 +15,7 @@ import Pagination from '@material-ui/lab/Pagination';
 import PersonAddIcon from '@material-ui/icons/PersonAdd';
 import RefreshIcon from '@material-ui/icons/Refresh';
 
-import { signUp, updateUser, deleteUser, getAdminUser } from '../../action/user'
+import { addUser, updateUser, deleteUser, getAdminUser } from '../../action/user'
 
 function createData(index, id, username, name, email, phoneNum, deviceSetId, role) {
     return { index, id, username, name, email, phoneNum, deviceSetId, role };
@@ -59,7 +59,7 @@ const AdminUsers = ({limitPerPage}) => {
             dispatch(updateProfile(form))
         } 
         else {
-            dispatch(signUp(form))
+            dispatch(addUser(form))
             dispatch(getAdminUser({page: page, limit: limitPerPage})) 
             };
         }
@@ -95,12 +95,6 @@ const AdminUsers = ({limitPerPage}) => {
     const handleRefresh = () => {
         dispatch(getAdminUser({page: page, limit: limitPerPage}))
     }
-
-    const validatePhoneNumber = (number) => {
-        const isValidPhoneNumber = validator.isMobilePhone(number)
-        return (isValidPhoneNumber)
-    }
-       
 
     let rows = [];
     if (!!users) {

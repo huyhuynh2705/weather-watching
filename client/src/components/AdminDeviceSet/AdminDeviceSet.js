@@ -12,6 +12,7 @@ import Backdrop from '@material-ui/core/Backdrop';
 import CircularProgress from '@material-ui/core/CircularProgress';
 import Pagination from '@material-ui/lab/Pagination';
 import DeviceHubIcon from '@material-ui/icons/DeviceHub'
+import RefreshIcon from '@material-ui/icons/Refresh';
 
 import { deleteDeviceSet, getAdminDeviceSet } from '../../action/deviceset'
 
@@ -77,6 +78,10 @@ const AdminDeviceSet = ({limitPerPage}) => {
             dispatch(getAdminDeviceSet({page: page - 1, limit: limitPerPage}))
             setPage(page-1)
         }
+    }
+    
+    const handleRefresh = () => {
+        dispatch(getAdminDeviceSet({page: page, limit: limitPerPage}))
     }
 
     let rows = [];
@@ -151,11 +156,14 @@ const AdminDeviceSet = ({limitPerPage}) => {
              </Backdrop>}
             <TableContainer className={classes.table} component={Paper}>
             <Grid container>
-                <Grid item xs={5}>
-                    <Button style={{marginLeft: '20px'}} variant="outlined" startIcon={<DeviceHubIcon />} color="primary" size="large" onClick={handleNewDevice}>New Device Set</Button>
+                <Grid item xs={2}>
+                    <Button variant="outlined" fullWidth startIcon={<DeviceHubIcon />} color="primary" size="large" onClick={handleNewDevice}>New Device Set</Button>
                 </Grid>
-                <Grid item xs={7}>
-                    <Typography style={{color: "#20339c", fontWeight: '500', fontSize: '30px'}} align="left" gutterBottom>Device Set List</Typography>
+                <Grid item xs={8}>
+                    <Typography style={{color: "#20339c", fontWeight: '500', fontSize: '30px'}} align="center" gutterBottom>Device Set List</Typography>
+                </Grid>
+                <Grid item xs={2}>
+                    <Button  variant="outlined" fullWidth startIcon={<RefreshIcon />} color="primary" size="large" onClick={handleRefresh}>Refresh</Button>
                 </Grid>
             </Grid>
                 <Table aria-label="simple table">

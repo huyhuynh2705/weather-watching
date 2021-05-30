@@ -1,11 +1,13 @@
 import * as api from '../api/index'
 
 
-export const signUp = (form) => async (dispatch) => {
+export const addUser = (form) => async (dispatch) => {
     try {
-      const { data } = await api.signUp(form)
+      const { data } = await api.addUser(form)
   
       dispatch({ type: 'ADD_USER', data })
+
+      alert("User Added")
   
     } catch (error) {
       console.log(error)

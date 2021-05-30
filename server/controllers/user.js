@@ -25,7 +25,7 @@ export const signin = async (req, res) => {
   }
 };
 
-export const signup = async (req, res) => {
+export const addUser = async (req, res) => {
   const { username, password, name, email, phoneNum, deviceSetId, role } = req.body;
 
   try {

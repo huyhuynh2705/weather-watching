@@ -1,10 +1,10 @@
 import express from "express";
 const router = express.Router();
 
-import { signin, signup, updateProfile, getAdminUser, getCountUser, deleteUser, updateUser } from "../controllers/user.js";
+import { signin, addUser, updateProfile, getAdminUser, getCountUser, deleteUser, updateUser } from "../controllers/user.js";
 
 router.post("/signin", signin);
-router.post("/signup", signup);
+router.post("/admin/adduser", addUser);
 router.post("/updateprofile/:id", updateProfile);
 router.post('/admin/all', getAdminUser);
 router.get('/admin/count', getCountUser);

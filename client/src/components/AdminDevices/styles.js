@@ -3,7 +3,7 @@ import { makeStyles } from '@material-ui/core/styles'
 export default makeStyles((theme) => ({
     table: {
       marginTop: '20px',
-      paddingTop: '10px'
+      padding: '10px'
     },
     backdrop: {
       zIndex: theme.zIndex.drawer + 1,
@@ -26,5 +26,12 @@ export default makeStyles((theme) => ({
       '& > *': {
         marginTop: theme.spacing(2),
       },
+    },
+    formControl: {
+      marginBottom: theme.spacing(2),
+      minWidth: 120,
+    },
+    selectEmpty: {
+      marginTop: theme.spacing(2),
     },
 }))
