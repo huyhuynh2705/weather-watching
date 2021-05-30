@@ -14,6 +14,6 @@ router.get('/admin/countSubscriber', getCountSubscriber);
 
 router.post('/admin/all', getAdminUser);
 router.delete('/admin/delete/:id', deleteUser);
-router.post('/admin/update', updateUser);
+router.post('/admin/update/:id', updateUser);
 
 export default router;

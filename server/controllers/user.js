@@ -1,6 +1,7 @@
 import bcrypt from "bcryptjs";
 import e from "express";
 import jwt from "jsonwebtoken";
+import DeviceSetModel from "../models/deviceSet.js";
 
 import UserModel from "../models/user.js";
 
@@ -181,15 +182,64 @@ export const getCountSubscriber = async (req, res) => {
 export const updateUser = async (req, res) => {
     
   // req.body = {
-//   id: '60b0b181d40d6f2afc138f41',
-//   username: 'huyhuynh',
-//   password: '',
-//   name: '',
-//   email: '',
-//   phoneNum: '',
-//   deviceSetId: '',
-//   role: '',
-//   confirmPassword: ''
-// }
+  //   id: '60b0b181d40d6f2afc138f41',
+  //   username: 'huyhuynh', x
+  //   password: '', x
+  //   name: '',
+  //   email: '',
+  //   phoneNum: '',
+  //   deviceSetId: '', x
+  //   role: '', x
+  //   confirmPassword: '' x
+  // }
+
+  const { id, username, password, name, email, phoneNum, deviceSetId, role, confirmPassword } = req.body;
+
+  if (password != confirmPassword) return res.status(404).json({ message: "Invalid confirm Password."});
+
+  const oldUser = await UserModel.findById(id)
+  if (!oldUser) return res.status(404).json({ message: "User doesn't exist." });
+  
+  if ((password == '' &&  deviceSetId == '' && role == '') || 
+        (password==oldUser.password && deviceSetId==oldUser.deviceSetId && role==oldUser.role && username==oldUser.username)) {
+        return res.status(200).json({ message: "User is up to date."});
+  }
+
+  if (username != oldUser.username) {
+      if (username == '') {
+          username = oldUser.username;
+      }
+  }
+
+  if (deviceSetId != oldUser.deviceSetId) {
+    if (deviceSetId == '') {
+      deviceSetId = oldUser.deviceSetId;
+    }
+    //update deviceSet table 
+    else {
+        const deviceSet = await DeviceSetModel.findById(deviceSetId)
+        if (!deviceSet) return res.status(404).json({ message: "Device Set doesn't exist."}) 
+        DeviceSetModel.findByIdAndUpdate(deviceSetId, {"userID": id}, { new: true } )
+    }
+  }
+
+  if (role != oldUser.role) {
+    if (role == '') {
+      role = oldUser.role;
+    }
+  }
+
+  let updateUser = { username, deviceSetId, role };
+
+  if (password) {
+    const hashedPassword = await bcrypt.hash(password, 12);
+    updateUser = { username, password: hashedPassword, deviceSetId, role };
+  }
+
+  //const token = jwt.sign({ username: oldUser.username, id: oldUser._id }, secret, { expiresIn: "1h" });
+  
+  const updatedUser = await UserModel.findByIdAndUpdate(id, updateUser, { new: true });
+
+  res.json({ result: updatedUser });
  
 }
