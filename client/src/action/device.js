@@ -13,7 +13,6 @@ export const addDevice = (form) => async (dispatch) => {
 
 export const getAdminDevice = (form) => async (dispatch) => {
   try {
-    
     const { data } = await api.getAdminDevice(form);
 
     dispatch({ type: 'ADMIN_DEVICE', payload: data });

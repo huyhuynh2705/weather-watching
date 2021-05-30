@@ -14,5 +14,6 @@ router.patch('/adduser', addUser);
 router.get('/admin/countDeviceSet', getCountDeviceSet);
 router.get('/admin/countUsedSet', getCountUsedSet);
 router.get('/admin/countUnusedSet', getCountUnusedSet);
+router.get('/admin/getNameSet', getNameSet); // tra ve mang cac ten cua device set [SET001, SET002, SET003...]
 
 export default router;

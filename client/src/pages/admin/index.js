@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react';
-import { getAdminDevice, getCountDevice } from '../../action/device'
-import { getAdminDeviceSet, getCountDeviceSet } from '../../action/deviceset'
-import { getAdminUser, getCountUser } from '../../action/user'
+// import { getAdminDevice, getCountDevice } from '../../action/device'
+// import { getAdminDeviceSet, getCountDeviceSet } from '../../action/deviceset'
+// import { getAdminUser, getCountAllUser } from '../../action/user'
 import { useDispatch } from 'react-redux';
 import useStyles from "./styles"
 import PropTypes from 'prop-types';
@@ -63,14 +63,14 @@ function Admin() {
     setValue(newValue);
   };
 
-  useEffect(() => {
-    dispatch(getCountUser())
-    dispatch(getCountDeviceSet())
-    dispatch(getCountDevice())
-    dispatch(getAdminUser({page: 1, limit: limitPerPage}))
-    dispatch(getAdminDeviceSet({page: 1, limit: limitPerPage}))
-    dispatch(getAdminDevice({page: 1, limit: limitPerPage}))
-  }, [dispatch]);
+  // useEffect(() => {
+  //   dispatch(getCountAllUser())
+  //   dispatch(getAdminUser({page: 1, limit: limitPerPage}))
+  //   dispatch(getCountDeviceSet())
+  //   dispatch(getCountDevice())
+  //   dispatch(getAdminDeviceSet({page: 1, limit: limitPerPage}))
+  //   dispatch(getAdminDevice({page: 1, limit: limitPerPage}))
+  // }, [dispatch]);
 
 
   return (

@@ -28,7 +28,7 @@ export const getAdminDeviceSet = (form) => API.post('/set/admin/all', form);
 export const getCountDeviceSet = () => API.get('/set/admin/count');
 export const deleteDeviceSet = (id) => API.delete(`/set/admin/delete/${id}`);
 export const getAdminUser = (form) => API.post('/user/admin/all', form);
-export const getCountUser = () => API.get('/user/admin/count');
+export const getCountAllUser = () => API.get('/user/admin/countAllUser');
 export const deleteUser = (id) => API.delete(`/user/admin/delete/${id}`);
 export const updateUser = (form) => API.post('/user/admin/update', form);
 

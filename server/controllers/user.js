@@ -27,7 +27,7 @@ export const signin = async (req, res) => {
 };
 
 export const addUser = async (req, res) => {
-  const { username, password, name, email, phoneNum, deviceSetId, role } = req.body;
+  const { username, password, name, email, phoneNum, deviceSetName, role } = req.body;
 
   try {
     const oldUser = await UserModel.findOne({ username });
@@ -44,11 +44,9 @@ export const addUser = async (req, res) => {
 
     const hashedPassword = await bcrypt.hash(password, 12);
 
-    const result = await UserModel.create({ username, password: hashedPassword, name: name, email: email, phoneNum: phoneNum, deviceSetId: deviceSetId, role: role });
+    const result = await UserModel.create({ username, password: hashedPassword, name: name, email: email, phoneNum: phoneNum, deviceSetName: deviceSetName, role: role });
 
-    const token = jwt.sign( { username: result.username, id: result._id }, secret, { expiresIn: "1h" } );
-
-    res.status(201).json({ result, token });
+    res.status(201).json(result);
   } catch (error) {
     res.status(500).json({ message: "Something went wrong" });
     
@@ -58,7 +56,7 @@ export const addUser = async (req, res) => {
 
 export const updateProfile = async (req, res) => {
   const { id } = req.params;
-  const { name, email, phoneNum, deviceSetId, password } = req.body;
+  const { name, email, phoneNum, deviceSetName, password } = req.body;
 
   const oldUser = await UserModel.findById(id)
   if (!oldUser) return res.status(404).json({ message: "User doesn't exist" });
@@ -73,11 +71,11 @@ export const updateProfile = async (req, res) => {
     if (oldPhoneNum) return res.status(400).json({ message: "Phone number already exists" });
   }
   
-  let updateProfile = { name, email, phoneNum, deviceSetId };
+  let updateProfile = { name, email, phoneNum, deviceSetName };
 
   if (password) {
     const hashedPassword = await bcrypt.hash(password, 12);
-    updateProfile = { name, email, phoneNum, deviceSetId, password: hashedPassword };
+    updateProfile = { name, email, phoneNum, deviceSetName, password: hashedPassword };
   }
 
   const token = jwt.sign({ username: oldUser.username, id: oldUser._id }, secret, { expiresIn: "1h" });
@@ -169,7 +167,7 @@ export const getCountAllUser = async (req, res) => {
 //? admin có thể so huu deviceSet ko?
 export const getCountSubscriber = async (req, res) => {
   try {
-    const numberOfSubscriber = await UserModel.countDocuments( { deviceSetId: { $ne:"" } } );
+    const numberOfSubscriber = await UserModel.countDocuments( { deviceSetName: { $ne:"" } } );
 
       res.status(200).json(numberOfSubscriber);
       
@@ -188,20 +186,20 @@ export const updateUser = async (req, res) => {
   //   name: '',
   //   email: '',
   //   phoneNum: '',
-  //   deviceSetId: '', x
+  //   deviceSetName: '', x
   //   role: '', x
   //   confirmPassword: '' x
   // }
+  // Khoi check confirmPassword
+  // Update tat ca 
 
-  const { id, username, password, name, email, phoneNum, deviceSetId, role, confirmPassword } = req.body;
-
-  if (password != confirmPassword) return res.status(404).json({ message: "Invalid confirm Password."});
+  const { id, username, password, name, email, phoneNum, deviceSetName, role, confirmPassword } = req.body;
 
   const oldUser = await UserModel.findById(id)
   if (!oldUser) return res.status(404).json({ message: "User doesn't exist." });
   
-  if ((password == '' &&  deviceSetId == '' && role == '') || 
-        (password==oldUser.password && deviceSetId==oldUser.deviceSetId && role==oldUser.role && username==oldUser.username)) {
+  if ((password == '' &&  deviceSetName == '' && role == '') || 
+        (password==oldUser.password && deviceSetName==oldUser.deviceSetName && role==oldUser.role && username==oldUser.username)) {
         return res.status(200).json({ message: "User is up to date."});
   }
 
@@ -211,15 +209,15 @@ export const updateUser = async (req, res) => {
       }
   }
 
-  if (deviceSetId != oldUser.deviceSetId) {
-    if (deviceSetId == '') {
-      deviceSetId = oldUser.deviceSetId;
+  if (deviceSetName != oldUser.deviceSetName) {
+    if (deviceSetName == '') {
+      deviceSetName = oldUser.deviceSetName;
     }
     //update deviceSet table 
     else {
-        const deviceSet = await DeviceSetModel.findById(deviceSetId)
+        const deviceSet = await DeviceSetModel.findById(deviceSetName) // Tim bang setName cua model deviceSet
         if (!deviceSet) return res.status(404).json({ message: "Device Set doesn't exist."}) 
-        DeviceSetModel.findByIdAndUpdate(deviceSetId, {"userID": id}, { new: true } )
+        DeviceSetModel.findByIdAndUpdate(deviceSetName, {"userID": id}, { new: true } )
     }
   }
 
@@ -229,11 +227,11 @@ export const updateUser = async (req, res) => {
     }
   }
 
-  let updateUser = { username, deviceSetId, role };
+  let updateUser = { username, deviceSetName, role };
 
   if (password) {
     const hashedPassword = await bcrypt.hash(password, 12);
-    updateUser = { username, password: hashedPassword, deviceSetId, role };
+    updateUser = { username, password: hashedPassword, deviceSetName, role };
   }
 
   //const token = jwt.sign({ username: oldUser.username, id: oldUser._id }, secret, { expiresIn: "1h" });
