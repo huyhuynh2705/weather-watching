@@ -198,8 +198,9 @@ export const updateUser = async (req, res) => {
   const oldUser = await UserModel.findById(id)
   if (!oldUser) return res.status(404).json({ message: "User doesn't exist." });
   
-  if ((password == '' &&  deviceSetName == '' && role == '') || 
-        (password==oldUser.password && deviceSetName==oldUser.deviceSetName && role==oldUser.role && username==oldUser.username)) {
+  if ((password == '' &&  deviceSetName == '' && role == '' && username == '' && name=='' && email=='' && phoneNum=='') || 
+        (password==oldUser.password && deviceSetName==oldUser.deviceSetName && role==oldUser.role && username==oldUser.username
+          && username==oldUser.username && name==oldUser.name && email==oldUser.email && phoneNum==oldUser.phoneNum)) {
         return res.status(200).json({ message: "User is up to date."});
   }
 
@@ -207,6 +208,30 @@ export const updateUser = async (req, res) => {
       if (username == '') {
           username = oldUser.username;
       }
+      else {
+        const oldUsername = await UserModel.findOne({ username });
+        if (oldUsername) return res.status(400).json({ message: "Username already exists" });
+      }
+  }
+
+  if (email != oldUser.email) {
+    if (email == '') {
+      email = oldUser.email;
+    }
+    else {
+      const oldEmail = await UserModel.findOne({ email });
+      if (oldEmail && oldEmail != oldUser.email) return res.status(400).json({ message: "Email already exists" });
+    }
+  }
+
+  if (phoneNum != oldUser.phoneNum) {
+    if (phoneNum == '') {
+      phoneNum = oldUser.phoneNum;
+    }
+    else {
+      const oldPhoneNum = await UserModel.findOne({ phoneNum });
+      if (oldPhoneNum) return res.status(400).json({ message: "Phone number already exists" });
+    }
   }
 
   if (deviceSetName != oldUser.deviceSetName) {
@@ -215,9 +240,10 @@ export const updateUser = async (req, res) => {
     }
     //update deviceSet table 
     else {
-        const deviceSet = await DeviceSetModel.findById(deviceSetName) // Tim bang setName cua model deviceSet
+        const deviceSet = await DeviceSetModel.findOne( {deviceSetName} ) // Tim bang setName cua model deviceSet
         if (!deviceSet) return res.status(404).json({ message: "Device Set doesn't exist."}) 
-        DeviceSetModel.findByIdAndUpdate(deviceSetName, {"userID": id}, { new: true } )
+        //????
+        DeviceSetModel.findOneAndUpdate( { deviceSetName: deviceSetName }, {$set: {userID: id} }, { new: true } )
     }
   }
 
@@ -231,7 +257,7 @@ export const updateUser = async (req, res) => {
 
   if (password) {
     const hashedPassword = await bcrypt.hash(password, 12);
-    updateUser = { username, password: hashedPassword, deviceSetName, role };
+    updateUser = { username, password: hashedPassword, name, email, phoneNum, deviceSetName, role };
   }
 
   //const token = jwt.sign({ username: oldUser.username, id: oldUser._id }, secret, { expiresIn: "1h" });

@@ -1,6 +1,6 @@
 import express from 'express';
 
-import { addDeviceSet, getDeviceSet, addUser, getAdminDeviceSet, getCountDeviceSet, deleteDeviceSet, getCountUsedSet, getCountUnusedSet } from '../controllers/deviceset.js';
+import { addDeviceSet, getDeviceSet, addUser, getAdminDeviceSet, getCountDeviceSet, deleteDeviceSet, getCountUsedSet, getCountUnusedSet, getNameSet } from '../controllers/deviceset.js';
 
 const router = express.Router();
 import auth from "../middleware/auth.js";
