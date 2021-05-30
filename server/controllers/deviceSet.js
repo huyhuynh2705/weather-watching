@@ -103,7 +103,6 @@ export const getAdminDeviceSet = async (req, res) => {
         res.status(404).json({ message: error.message });
     }
 }
-<<<<<<< HEAD
 
 export const getCountDeviceSet = async (req, res) => {
     try {
@@ -134,8 +133,11 @@ export const getCountUnusedSet = async (req, res) => {
         const num = await DeviceSetModel.countDocuments( { userID: { $eq:"" } } );
 
         res.status(200).json(num);
+    } catch (error) {
+        res.status(404).json({ message: error.message });
+    }
+}
         
-=======
 export const updateDeviceSet = async (req, res) => {
     
     // req.body = {id: '', type: '', idServer: '', name: '', unit: '', topic: ''}
@@ -177,7 +179,6 @@ export const updateDeviceSet = async (req, res) => {
     try {
         const updatedDeviceSet = await DeviceSetModel.findByIdAndUpdate(id, updateDeviceSet, { new: true });
         res.status(200).json(updatedDeviceSet);
->>>>>>> 2f3cf356b03801157a3fa88c8203581b48a0799a
     } catch (error) {
         res.status(404).json({ message: error.message });
     }
