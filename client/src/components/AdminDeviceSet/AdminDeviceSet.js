@@ -11,22 +11,23 @@ import TableRow from '@material-ui/core/TableRow';
 import Backdrop from '@material-ui/core/Backdrop';
 import CircularProgress from '@material-ui/core/CircularProgress';
 import Pagination from '@material-ui/lab/Pagination';
-import DevicesOtherIcon from '@material-ui/icons/DevicesOther';
+import DeviceHubIcon from '@material-ui/icons/DeviceHub'
 
-import { updateDevice, deleteDevice, getAdminDevice, addDevice } from '../../action/device'
+import { deleteDeviceSet, getAdminDeviceSet } from '../../action/deviceset'
 
-function createData(index, id, type, name, time, idServer, unit, topic) {
-    return { index, id, type, name, time, idServer, unit, topic };
+function createData(index, id, time, userId, trafficLightId, DHT11Id, lightId) {
+    return { index, id, time, userId, trafficLightId, DHT11Id, lightId };
 }
   
 const initialState = {id: '', type: '', idServer: '', name: '', unit: '', topic: ''}
 
-const AdminDevices = ({limitPerPage}) => {
+const AdminDeviceSet = ({limitPerPage}) => {
     const classes = useStyles()
     const dispatch = useDispatch()
-    const totalItems = useSelector((state) => state.countdevice)
+    const totalItems = useSelector((state) => state.countdeviceset)
 
-    let devices = useSelector((state) => state.devices)
+    let deviceset = useSelector((state) => state.deviceset)
+
     const [updateIndex, setUpdateIndex] = useState(null)
 
     const [open, setOpen] = useState(false);
@@ -54,7 +55,6 @@ const AdminDevices = ({limitPerPage}) => {
     };
 
     const handleClose = () => {
-      setIsUpdate(true);
       setOpen(false);
     };
 
@@ -70,18 +70,26 @@ const AdminDevices = ({limitPerPage}) => {
     }
 
     const handleDelete = (value) => {
-        dispatch(deleteDevice(rows[value].id))
+        console.log(rows[value].id);
+        dispatch(deleteDeviceSet(rows[value].id))
         setUpdateIndex(null)
         if (rows.length == 1 &&  totalItems != 0) {
-            dispatch(getAdminDevice({page: page - 1, limit: limitPerPage}))
+            dispatch(getAdminDeviceSet({page: page - 1, limit: limitPerPage}))
             setPage(page-1)
         }
     }
 
     let rows = [];
-    if (!!devices) {
-        for (let i = 0; i < devices.length; i++) {
-            rows.push(createData(i+1, devices[i]._id, devices[i].type, devices[i].name, devices[i].time.slice(0, 10) + " " + devices[i].time.slice(11, 19), devices[i].idServer, devices[i].unit, devices[i].topic))
+    if (!!deviceset) {
+        for (let i = 0; i < deviceset.length; i++) {
+            rows.push(createData(
+                i+1, 
+                deviceset[i]._id, 
+                deviceset[i].time.slice(0, 10) + " " + deviceset[i].time.slice(11, 19), 
+                deviceset[i].userID, 
+                deviceset[i].trafficLightId, 
+                deviceset[i].DHT11Id, 
+                deviceset[i].lightId))
         }
     }
 
@@ -144,10 +152,10 @@ const AdminDevices = ({limitPerPage}) => {
             <TableContainer className={classes.table} component={Paper}>
             <Grid container>
                 <Grid item xs={5}>
-                    <Button style={{marginLeft: '20px'}} variant="outlined" startIcon={<DevicesOtherIcon />} color="primary" size="large" onClick={handleNewDevice}>New Device</Button>
+                    <Button style={{marginLeft: '20px'}} variant="outlined" startIcon={<DeviceHubIcon />} color="primary" size="large" onClick={handleNewDevice}>New Device Set</Button>
                 </Grid>
                 <Grid item xs={7}>
-                    <Typography style={{color: "#20339c", fontWeight: '500', fontSize: '30px'}} align="left" gutterBottom>Device List</Typography>
+                    <Typography style={{color: "#20339c", fontWeight: '500', fontSize: '30px'}} align="left" gutterBottom>Device Set List</Typography>
                 </Grid>
             </Grid>
                 <Table aria-label="simple table">
@@ -155,12 +163,12 @@ const AdminDevices = ({limitPerPage}) => {
                     <TableRow>
                         <TableCell align="left">Index</TableCell>
                         {/* <TableCell align="left">Device Id</TableCell> */}
-                        <TableCell align="left">Type</TableCell>
-                        <TableCell align="left">Name</TableCell>
+                        {/* <TableCell align="left">Device Set Id</TableCell> */}
                         <TableCell align="left">Date Added</TableCell>
-                        <TableCell align="left">Id Server</TableCell>
-                        <TableCell align="left">Unit</TableCell>
-                        <TableCell align="left">Topic</TableCell>
+                        <TableCell align="left">User Id</TableCell>
+                        <TableCell align="left">Traffic Light Id</TableCell>
+                        <TableCell align="left">DHT11 Id</TableCell>
+                        <TableCell align="left">Light Id</TableCell>
                         <TableCell align="left"></TableCell>
                     </TableRow>
                     </TableHead>
@@ -169,12 +177,12 @@ const AdminDevices = ({limitPerPage}) => {
                         <TableRow key={row.id}>
                         <TableCell component="th" scope="row">{row.index}</TableCell>
                         {/* <TableCell align="left">{row.id}</TableCell> */}
-                        <TableCell align="left">{row.type}</TableCell>
-                        <TableCell align="left">{row.name}</TableCell>
+                        {/* <TableCell align="left">{row.id}</TableCell> */}
                         <TableCell align="left">{row.time}</TableCell>
-                        <TableCell align="left">{row.idServer}</TableCell>
-                        <TableCell align="left">{row.unit}</TableCell>
-                        <TableCell align="left">{row.topic}</TableCell>
+                        <TableCell align="left">{row.userId}</TableCell>
+                        <TableCell align="left">{row.trafficLightId}</TableCell>
+                        <TableCell align="left">{row.DHT11Id}</TableCell>
+                        <TableCell align="left">{row.lightId}</TableCell>
                         <TableCell align="left">
                             <Button variant="outlined" color="primary" onClick={() => handleToggle(row.index - 1)}>Update</Button>
                             &nbsp;
@@ -192,4 +200,4 @@ const AdminDevices = ({limitPerPage}) => {
     )
 }
 
-export default AdminDevices
+export default AdminDeviceSet

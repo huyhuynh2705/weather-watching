@@ -125,6 +125,7 @@ export const getAdminUser = async (req, res) => {
   }
 }
 
+<<<<<<< HEAD
 //dem so admin(s)
 export const getCountAdmin = async (req, res) => {
   try {
@@ -154,6 +155,10 @@ export const getCountUser = async (req, res) => {
 //dem tổng số users (gồm admin và users)
 export const getCountAllUser = async (req, res) => {
   try {
+=======
+export const getCountUser = async (req, res) => {
+  try {
+>>>>>>> eb989ca24c08c8f76709505364e3444f806a0f3b
       const numberOfUser = await UserModel.estimatedDocumentCount();
 
       res.status(200).json(numberOfUser);
@@ -161,6 +166,7 @@ export const getCountAllUser = async (req, res) => {
   } catch (error) {
       res.status(404).json({ message: error.message });
   }
+<<<<<<< HEAD
 
 }
 
@@ -176,4 +182,22 @@ export const getCountSubscriber = async (req, res) => {
       res.status(404).json({ message: error.message });
   }
 
+=======
+}
+
+export const updateUser = async (req, res) => {
+    
+  // req.body = {
+//   id: '60b0b181d40d6f2afc138f41',
+//   username: 'huyhuynh',
+//   password: '',
+//   name: '',
+//   email: '',
+//   phoneNum: '',
+//   deviceSetId: '',
+//   role: '',
+//   confirmPassword: ''
+// }
+ 
+>>>>>>> eb989ca24c08c8f76709505364e3444f806a0f3b
 }
