@@ -103,6 +103,7 @@ export const getAdminDeviceSet = async (req, res) => {
         res.status(404).json({ message: error.message });
     }
 }
+<<<<<<< HEAD
 
 export const getCountDeviceSet = async (req, res) => {
     try {
@@ -134,6 +135,49 @@ export const getCountUnusedSet = async (req, res) => {
 
         res.status(200).json(num);
         
+=======
+export const updateDeviceSet = async (req, res) => {
+    
+    // req.body = {id: '', type: '', idServer: '', name: '', unit: '', topic: ''}
+    let { trafficlight, DTH11, Light} = req.body;
+    let { id } = req.params;
+
+
+    const oldDevice = await DeviceSetModel.findById(id);
+
+    //san pham khong ton tai
+    if (!oldDevice) {
+        return res.status(404).json({ message: "DeviceSet doesn't exist."});
+    }
+
+    if ((trafficlight == '' &&  DTH11 == '' && Light == '') || 
+        (trafficlight==oldDevice.trafficLightId && DTH11==oldDevice.DHT11Id && Light==oldDevice.lightId)) {
+        return res.status(200).json({ message: "Nothing was changed."});
+    }
+
+    if (trafficlight != oldDevice.trafficLightId) {
+        if (trafficlight == '') {
+            trafficlight = oldDevice.trafficLightId;
+        }
+    }
+    
+    if (DTH11 != oldDevice.DHT11Id) {
+        if (DTH11 == '') {
+            DTH11 = oldDevice.DHT11Id;
+        }
+    }
+
+    if (Light != oldDevice.lightId) {
+        if (Light == '') {
+            Light = oldDevice.lightId;
+        }
+    }
+    let updateDeviceSet = { trafficlight, DTH11, Light };
+
+    try {
+        const updatedDeviceSet = await DeviceSetModel.findByIdAndUpdate(id, updateDeviceSet, { new: true });
+        res.status(200).json(updatedDeviceSet);
+>>>>>>> 2f3cf356b03801157a3fa88c8203581b48a0799a
     } catch (error) {
         res.status(404).json({ message: error.message });
     }
