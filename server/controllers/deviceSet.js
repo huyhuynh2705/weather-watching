@@ -144,7 +144,8 @@ export const updateDeviceSet = async (req, res) => {
 
     //Them setName nen sua lai
     
-    let { id, trafficlight, DTH11, Light} = req.body;
+    // const hay let ?????????
+    let { id, setName, trafficlight, DTH11, Light} = req.body;
 
     const oldDevice = await DeviceSetModel.findById(id);
 
@@ -153,8 +154,8 @@ export const updateDeviceSet = async (req, res) => {
         return res.status(404).json({ message: "DeviceSet doesn't exist."});
     }
 
-    if ((trafficlight == '' &&  DTH11 == '' && Light == '') || 
-        (trafficlight==oldDevice.trafficLightId && DTH11==oldDevice.DHT11Id && Light==oldDevice.lightId)) {
+    if ((trafficlight == '' &&  DTH11 == '' && Light == '' && setName=='') || 
+        (trafficlight==oldDevice.trafficLightId && DTH11==oldDevice.DHT11Id && Light==oldDevice.lightId && setName==oldDevice.setName)) {
         return res.status(200).json({ message: "Nothing was changed."});
     }
 
@@ -175,11 +176,32 @@ export const updateDeviceSet = async (req, res) => {
             Light = oldDevice.lightId;
         }
     }
-    let updateDeviceSet = { trafficlight, DTH11, Light };
+
+    if (setName != oldDevice.setName) {
+        if (setName == '') {
+            setName = oldDevice.setName;
+        }
+        else {
+            const oldSetName = await DeviceSetModel.findOne({ setName });
+            if (oldSetName) return res.status(400).json({ message: "Set Name already exists" })
+        }
+    }
+
+    let updateDeviceSet = { setName, trafficlight, DTH11, Light };
 
     try {
         const updatedDeviceSet = await DeviceSetModel.findByIdAndUpdate(id, updateDeviceSet, { new: true });
         res.status(200).json(updatedDeviceSet);
+    } catch (error) {
+        res.status(404).json({ message: error.message });
+    }
+}
+
+export const getNameSet = async (req, res) => {
+    try {
+        const array = await DeviceSetModel.find({}, { _id: 0, setName: 1 });
+
+        res.status(200).json(array);
     } catch (error) {
         res.status(404).json({ message: error.message });
     }
