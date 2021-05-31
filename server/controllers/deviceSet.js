@@ -200,8 +200,11 @@ export const updateDeviceSet = async (req, res) => {
 export const getNameSet = async (req, res) => {
     try {
         const array = await DeviceSetModel.find({}, { _id: 0, setName: 1 });
-
-        res.status(200).json(array);
+        let devicesetname = []
+        for (let i = 0; i < array.length; i++) {
+            devicesetname.push(array[i].setName)
+        }
+        res.status(200).json(devicesetname);
     } catch (error) {
         res.status(404).json({ message: error.message });
     }
