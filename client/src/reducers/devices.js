@@ -1,7 +1,7 @@
 export default (devices = [], action) => {
   switch (action.type) {
     case 'ADMIN_DEVICE':
-      return action.payload;
+      return action.payload;z
     case 'UPDATE_DEVICE':
       return devices.map((device) => (device._id === action.payload._id ? action.payload : device));
     case 'DELETE_DEVICE':

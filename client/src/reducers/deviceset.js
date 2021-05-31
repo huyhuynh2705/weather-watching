@@ -1,7 +1,7 @@
 export default (deviceset = [], action) => {
     switch (action.type) {
       case 'ADMIN_DEVICE_SET':
-          return action.payload;
+        return action.payload;
       case 'DELETE_DEVICE_SET':
       return deviceset.filter((set) => set._id !== action.payload);
       // case LIKE:

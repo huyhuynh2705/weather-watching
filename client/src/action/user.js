@@ -4,7 +4,6 @@ import * as api from '../api/index'
 export const addUser = (form) => async (dispatch) => {
     try {
       const { data } = await api.addUser(form)
-      console.log(data);
   
       dispatch({ type: 'ADD_USER', payload: data })
 
@@ -36,7 +35,7 @@ export const addUser = (form) => async (dispatch) => {
       dispatch({ type: 'USER_COUNT_ALL', payload: data });
   
     } catch (error) {
-      console.log(error);
+      console.log(error.response);
     }
   };
   
@@ -52,7 +51,7 @@ export const addUser = (form) => async (dispatch) => {
       dispatch({ type: 'DELETE_USER', payload: id });
   
     } catch (error) {
-      console.log(error);
+      console.log(error.response);
     }
   };
     
@@ -64,7 +63,8 @@ export const addUser = (form) => async (dispatch) => {
       dispatch({ type: 'UPDATE_USER', payload: data });
   
     } catch (error) {
-      console.log(error);
+      alert(error.response.data.message);
+      console.log(error.response);
     }
   };
   
