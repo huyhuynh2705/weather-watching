@@ -28,7 +28,6 @@ export const signin = async (req, res) => {
 
 export const addUser = async (req, res) => {
   const { username, password, name, email, phoneNum, deviceSetName, role } = req.body;
-
   try {
     const oldUser = await UserModel.findOne({ username });
 
@@ -178,23 +177,8 @@ export const getCountSubscriber = async (req, res) => {
 }
 
 export const updateUser = async (req, res) => {
-    
-  // req.body = {
-  // 	"id": "60b3a809baa4aa2fa04abfab",
-  //   "username": "Shadow", 
-  //   "password": "", 
-  //   "name": "",
-  //   "email": "thaihuy1111@gmail.com",
-  //   "phoneNum": "",
-  //   "deviceSetName": "", 
-  //   "role": "user", 
-  //   "confirmPassword": "" 
-  // }
-  // Khoi check confirmPassword
-  // Update tat ca 
 
-  // const hay let ?????????
-  let { id, username, password, name, email, phoneNum, deviceSetName, role, confirmPassword } = req.body;
+  let { id, username, password, name, email, phoneNum, deviceSetName, role } = req.body;
 
   const oldUser = await UserModel.findById(id)
   if (!oldUser) return res.status(404).json({ message: "User doesn't exist." });
@@ -220,7 +204,7 @@ export const updateUser = async (req, res) => {
       name = oldUser.name;
     }
   }
-
+  
   if (email != oldUser.email) {
     if (email == '') {
       email = oldUser.email;
@@ -245,13 +229,19 @@ export const updateUser = async (req, res) => {
     if (deviceSetName == '') {
       deviceSetName = oldUser.deviceSetName;
     }
-    //update deviceSet table 
+    else if (deviceSetName == 'None') { 
+      deviceSetName = oldUser.deviceSetName 
+      const deviceSet = await DeviceSetModel.findOne( {setName: deviceSetName} )
+      if (!deviceSet) return res.status(404).json({ message: "Device set doesn't exist."}) 
+      await DeviceSetModel.findByIdAndUpdate( deviceSet._id, { userID: '' } , { new: true } )
+      deviceSetName = ''
+    }
     else {
-        const deviceSet = await DeviceSetModel.findOne({ setName: deviceSetName }) // Tim bang setName cua model deviceSet
-        console.log(deviceSetName);
-        if (!deviceSet) return res.status(404).json({ message: "Device Set doesn't exist."}) 
-        //????
-        DeviceSetModel.findOneAndUpdate( { deviceSetName: deviceSetName }, {$set: {userID: id} }, { new: true } )
+      const deviceSet = await DeviceSetModel.findOne( {setName: deviceSetName} )
+      if (!deviceSet) return res.status(404).json({ message: "Device set doesn't exist."}) 
+      if (deviceSet.userID != "") return res.status(404).json({ message: "Device set already has user."}) 
+      await DeviceSetModel.findByIdAndUpdate( deviceSet._id, { userID: id } , { new: true } )
+
     }
   }
 
@@ -261,17 +251,14 @@ export const updateUser = async (req, res) => {
     }
   }
 
-  let updateUser = { username, name, email, phoneNum, deviceSetName, role };
+  let updateUser = { username, deviceSetName, name, email, phoneNum, deviceSetName, role };
 
   if (password) {
     const hashedPassword = await bcrypt.hash(password, 12);
     updateUser = { username, password: hashedPassword, name, email, phoneNum, deviceSetName, role };
   }
 
-  //const token = jwt.sign({ username: oldUser.username, id: oldUser._id }, secret, { expiresIn: "1h" });
-  
   const updatedUser = await UserModel.findByIdAndUpdate(id, updateUser, { new: true });
-
-  res.json({ result: updatedUser });
+  res.json(updatedUser);
  
 }

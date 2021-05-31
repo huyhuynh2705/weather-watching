@@ -9,5 +9,6 @@ import countdevice from './countdevice';
 import countdeviceset from './countdeviceset';
 import users from './users';
 import countuser from './countuser';
+import devicesetname from './devicesetname';
 
-export default combineReducers({auth, data, devices, deviceset, alldevicedata, countdevice, countdeviceset, users, countuser});
+export default combineReducers({auth, data, devices, deviceset, alldevicedata, countdevice, countdeviceset, users, countuser, devicesetname});
