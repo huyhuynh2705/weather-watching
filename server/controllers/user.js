@@ -180,20 +180,21 @@ export const getCountSubscriber = async (req, res) => {
 export const updateUser = async (req, res) => {
     
   // req.body = {
-  //   id: '60b0b181d40d6f2afc138f41',
-  //   username: 'huyhuynh', x
-  //   password: '', x
-  //   name: '',
-  //   email: '',
-  //   phoneNum: '',
-  //   deviceSetName: '', x
-  //   role: '', x
-  //   confirmPassword: '' x
+  // 	"id": "60b3a809baa4aa2fa04abfab",
+  //   "username": "Shadow", 
+  //   "password": "", 
+  //   "name": "",
+  //   "email": "thaihuy1111@gmail.com",
+  //   "phoneNum": "",
+  //   "deviceSetName": "", 
+  //   "role": "user", 
+  //   "confirmPassword": "" 
   // }
   // Khoi check confirmPassword
   // Update tat ca 
 
-  const { id, username, password, name, email, phoneNum, deviceSetName, role, confirmPassword } = req.body;
+  // const hay let ?????????
+  let { id, username, password, name, email, phoneNum, deviceSetName, role, confirmPassword } = req.body;
 
   const oldUser = await UserModel.findById(id)
   if (!oldUser) return res.status(404).json({ message: "User doesn't exist." });
@@ -212,6 +213,12 @@ export const updateUser = async (req, res) => {
         const oldUsername = await UserModel.findOne({ username });
         if (oldUsername) return res.status(400).json({ message: "Username already exists" });
       }
+  }
+
+  if (name != oldUser.name) {
+    if (name == '') {
+      name = oldUser.name;
+    }
   }
 
   if (email != oldUser.email) {
@@ -240,7 +247,8 @@ export const updateUser = async (req, res) => {
     }
     //update deviceSet table 
     else {
-        const deviceSet = await DeviceSetModel.findOne( {deviceSetName} ) // Tim bang setName cua model deviceSet
+        const deviceSet = await DeviceSetModel.findOne({ setName: deviceSetName }) // Tim bang setName cua model deviceSet
+        console.log(deviceSetName);
         if (!deviceSet) return res.status(404).json({ message: "Device Set doesn't exist."}) 
         //????
         DeviceSetModel.findOneAndUpdate( { deviceSetName: deviceSetName }, {$set: {userID: id} }, { new: true } )
@@ -253,7 +261,7 @@ export const updateUser = async (req, res) => {
     }
   }
 
-  let updateUser = { username, deviceSetName, role };
+  let updateUser = { username, name, email, phoneNum, deviceSetName, role };
 
   if (password) {
     const hashedPassword = await bcrypt.hash(password, 12);
