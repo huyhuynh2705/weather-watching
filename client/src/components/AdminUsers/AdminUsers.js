@@ -21,6 +21,7 @@ import FormControl from '@material-ui/core/FormControl';
 import Input from '@material-ui/core/Input';
 
 import { addUser, updateUser, deleteUser, getAdminUser, getCountAllUser } from '../../action/user'
+import { getNameSet } from '../../action/deviceset'
 
 function createData(index, id, username, name, email, phoneNum, deviceSetName, role) {
     return { index, id, username, name, email, phoneNum, deviceSetName, role };
@@ -31,9 +32,11 @@ const initialState = {id: '', username: '', password: '', name: '', email:'', ph
 const AdminUsers = ({limitPerPage}) => {
     const classes = useStyles()
     const dispatch = useDispatch()
-    const totalItems = useSelector((state) => state.countuser)
 
+    const totalItems = useSelector((state) => state.countuser)
     let users = useSelector((state) => state.users)
+    const devicesetname = useSelector((state) => state.devicesetname)
+
     const [updateIndex, setUpdateIndex] = useState(null)
 
     const [open, setOpen] = useState(false);
@@ -43,23 +46,21 @@ const AdminUsers = ({limitPerPage}) => {
     const [page, setPage] = useState(1);
     const count = Math.ceil(totalItems/limitPerPage)
 
-    const deviceSetNames = [
-        'Oliver Hansen',
-        'Van Henry',
-        'April Tucker',
-        'Ralph Hubbard',
-        'Omar Alexander',
-        'Carlos Abbott',
-        'Miriam Wagner',
-        'Bradley Wilkerson',
-        'Virginia Andrews',
-        'Kelly Snyder',
-      ];
+    let deviceSetNames = ["None"];
+    if (!!devicesetname.length) {
+        for (let i = 0; i < devicesetname.length; i++) {
+            deviceSetNames.push(devicesetname[i].setName)
+        }
+    }
 
     useEffect(() => {
         dispatch(getCountAllUser());
         dispatch(getAdminUser({page: 1, limit: limitPerPage}))
     }, [])
+
+    useEffect(() => {
+        dispatch(getNameSet());
+    }, [open])
 
     const handleChangePage = (e, value) => {
         e.preventDefault()
@@ -71,7 +72,6 @@ const AdminUsers = ({limitPerPage}) => {
 
     const handleSubmit = (e) => {
         e.preventDefault();
-        console.log(form);
         if ((form.password !== form.confirmPassword) ) {
           alert("Password and confirm password must match")
           return
@@ -162,8 +162,35 @@ const AdminUsers = ({limitPerPage}) => {
                                 <TextField className={classes.text} autoComplete="false" fullWidth variant="outlined" name="name" label={rows[updateIndex].name} onChange={handleChange}/>
                                 <TextField className={classes.text} autoComplete="false" fullWidth variant="outlined" name="email" label={rows[updateIndex].email} onChange={handleChange} type="email" />
                                 <TextField className={classes.text} autoComplete="false" fullWidth variant="outlined" name="phoneNum" label={rows[updateIndex].phoneNum} onChange={handleChange} type="number"/>
-                                <TextField className={classes.text} autoComplete="false" fullWidth variant="outlined" name="deviceSetName" label={rows[updateIndex].deviceSetName} onChange={handleChange}/>
-                                <TextField className={classes.text} autoComplete="false" fullWidth variant="outlined" name="role" label={rows[updateIndex].role} onChange={handleChange}/>
+                                {/* <TextField className={classes.text} autoComplete="false" fullWidth variant="outlined" name="deviceSetName" label={rows[updateIndex].deviceSetName} onChange={handleChange}/> */}
+                                <FormControl fullWidth variant="outlined" className={classes.formControl}>
+                                    <InputLabel id="deviceSetName-new-label">{(updateIndex==null) ? "Device Set Name" : rows[updateIndex].deviceSetName}</InputLabel>
+                                    <Select
+                                    labelId="deviceSetName-new-label"
+                                    name="deviceSetName"
+                                    value={form.deviceSetName}
+                                    onChange={handleChange}
+                                    >
+                                    {deviceSetNames.map((Set) => (
+                                        <MenuItem key={Set} value={Set}>
+                                        {Set}
+                                        </MenuItem>
+                                    ))}
+                                    </Select>
+                                </FormControl>
+                                {/* <TextField className={classes.text} autoComplete="false" fullWidth variant="outlined" name="role" label={rows[updateIndex].role} onChange={handleChange}/> */}
+                                <FormControl fullWidth variant="outlined" className={classes.formControl}>
+                                    <InputLabel id="role-new-label">Role</InputLabel>
+                                    <Select
+                                    labelId="role-new-label"
+                                    name="role"
+                                    value={form.role}
+                                    onChange={handleChange}
+                                    >
+                                        <MenuItem value="User">User</MenuItem>
+                                        <MenuItem value="Admin">Admin</MenuItem>
+                                    </Select>
+                                </FormControl>
                                 <TextField className={classes.text} autoComplete="false" fullWidth variant="outlined" name="password" label={rows[updateIndex].password} onChange={handleChange}/>
                                 <TextField className={classes.text} autoComplete="false" fullWidth variant="outlined" name="confirmPassword" label={rows[updateIndex].confirmPassword} onChange={handleChange}/>
                             </Grid>
@@ -215,7 +242,7 @@ const AdminUsers = ({limitPerPage}) => {
                             </FormControl>
                             {/* <TextField required className={classes.text} autoComplete="false" fullWidth variant="outlined" name="role" label="Rol" onChange={handleChange}/> */}
                             <FormControl fullWidth variant="outlined" className={classes.formControl}>
-                                <InputLabel id="role-new-label">Type</InputLabel>
+                                <InputLabel id="role-new-label">Role</InputLabel>
                                 <Select
                                 labelId="role-new-label"
                                 name="role"

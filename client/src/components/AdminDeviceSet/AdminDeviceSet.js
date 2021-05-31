@@ -1,5 +1,5 @@
-import React, { useState } from 'react'
-import { Button, Container, Grid, Paper, TextField, Typography } from '@material-ui/core'
+import React, { useState, useEffect} from 'react'
+import { Button, Grid, Paper, TextField, Typography } from '@material-ui/core'
 import useStyles from "./styles"
 import { useDispatch, useSelector } from 'react-redux';
 import Table from '@material-ui/core/Table';
@@ -13,8 +13,12 @@ import CircularProgress from '@material-ui/core/CircularProgress';
 import Pagination from '@material-ui/lab/Pagination';
 import DeviceHubIcon from '@material-ui/icons/DeviceHub'
 import RefreshIcon from '@material-ui/icons/Refresh';
-
-import { deleteDeviceSet, getAdminDeviceSet } from '../../action/deviceset'
+import DevicesOtherIcon from '@material-ui/icons/DevicesOther';
+import MenuItem from '@material-ui/core/MenuItem';
+import Select from '@material-ui/core/Select';
+import InputLabel from '@material-ui/core/InputLabel';
+import FormControl from '@material-ui/core/FormControl';
+import { deleteDeviceSet, getAdminDeviceSet, getCountDeviceSet } from '../../action/deviceset'
 
 function createData(index, id, time, userId, trafficLightId, DHT11Id, lightId) {
     return { index, id, time, userId, trafficLightId, DHT11Id, lightId };
@@ -38,10 +42,15 @@ const AdminDeviceSet = ({limitPerPage}) => {
     const [page, setPage] = useState(1);
     const count = Math.ceil(totalItems/limitPerPage)
 
+    useEffect(() => {
+        dispatch(getAdminDeviceSet({page: 1, limit: limitPerPage}))
+        dispatch(getCountDeviceSet());
+    }, [])
+
     const handleChangePage = (e, value) => {
         e.preventDefault()
         setPage(value)
-        dispatch(getAdminDevice({page: value, limit: limitPerPage}))
+        dispatch(getAdminDeviceSet({page: value, limit: limitPerPage}))
     }
 
     const handleChange = (e) => setForm({ ...form, [e.target.name]: e.target.value });
@@ -98,7 +107,7 @@ const AdminDeviceSet = ({limitPerPage}) => {
         }
     }
 
-    return (rows.length == 0 && totalItems == 0) ? <CircularProgress /> : (
+    return (
         <div>
              {(updateIndex == null && isUpdate == true) ? 
              <Backdrop className={classes.backdrop} open={open}> <CircularProgress /> </Backdrop> : 
@@ -116,18 +125,41 @@ const AdminDeviceSet = ({limitPerPage}) => {
                                 <Typography className={classes.title1} align="right" variant="h6" gutterBottom>Topic: </Typography>
                             </Grid>
                             <Grid item xs={9}>
-                                <TextField className={classes.text} autoComplete="false" fullWidth variant="outlined" name="type" label={rows[updateIndex].type} onChange={handleChange}/>
-                                <TextField className={classes.text} autoComplete="false" fullWidth variant="outlined" name="name" label={rows[updateIndex].name} onChange={handleChange}/>
-                                <TextField className={classes.text} autoComplete="false" fullWidth variant="outlined" name="idServer" label={rows[updateIndex].idServer} onChange={handleChange}/>
-                                <TextField className={classes.text} autoComplete="false" fullWidth variant="outlined" name="unit" label={rows[updateIndex].unit} onChange={handleChange}/>
-                                <TextField className={classes.text} autoComplete="false" fullWidth variant="outlined" name="topic" label={rows[updateIndex].topic} onChange={handleChange}/>
+                                <FormControl fullWidth variant="outlined" className={classes.formControl}>
+                                    <InputLabel id="type-update-label">{(updateIndex==null) ? "Type" : rows[updateIndex].type}</InputLabel>
+                                    <Select
+                                    labelId="type-update-label"
+                                    name="type"
+                                    value={form.type}
+                                    onChange={handleChange}
+                                    >
+                                        <MenuItem value="Traffic Light">Traffic Light</MenuItem>
+                                        <MenuItem value="DHT11">DHT11</MenuItem>
+                                        <MenuItem value="Light">Light</MenuItem>
+                                    </Select>
+                                </FormControl>
+                                <TextField className={classes.text} autoComplete="false" fullWidth variant="outlined" name="name" value={form.name} label={rows[updateIndex].name} onChange={handleChange}/>
+                                <TextField className={classes.text} autoComplete="false" fullWidth variant="outlined" name="idServer" value={form.idServer} label={rows[updateIndex].idServer} onChange={handleChange}/>
+                                <FormControl fullWidth variant="outlined" className={classes.formControl}>
+                                    <Select
+                                    labelId="unit-label"
+                                    name="unit"
+                                    value={form.unit}
+                                    onChange={handleChange}
+                                    >
+                                        <MenuItem value="">None</MenuItem>
+                                        <MenuItem value="C-%">C-%</MenuItem>
+                                    </Select>
+                                </FormControl>
+                                <TextField className={classes.text} autoComplete="false" fullWidth variant="outlined" name="topic" value={form.topic} label={rows[updateIndex].topic} onChange={handleChange}/>
                             </Grid>
                         </Grid>
                         <Button variant="outlined" color="primary" size="large" type="submit" fullWidth>Update</Button>
                     </form>
                     &nbsp;
                     <Button variant="outlined" color="secondary" size="large" onClick={handleClose} fullWidth>Close</Button>
-                </Paper> :
+                </Paper> 
+                :
                 <Paper className={classes.paper}>
                 <Typography align="center" variant="h6" gutterBottom>New Device</Typography>
                 <form onSubmit={handleSubmit}>
@@ -140,11 +172,33 @@ const AdminDeviceSet = ({limitPerPage}) => {
                             <Typography className={classes.title1} align="right" variant="h6" gutterBottom>Topic: </Typography>
                         </Grid>
                         <Grid item xs={9}>
-                            <TextField className={classes.text} autoComplete="false" fullWidth variant="outlined" name="type" label="Type" onChange={handleChange}/>
-                            <TextField className={classes.text} autoComplete="false" fullWidth variant="outlined" name="name" label="Name" onChange={handleChange}/>
-                            <TextField className={classes.text} autoComplete="false" fullWidth variant="outlined" name="idServer" label="Id Server" onChange={handleChange}/>
-                            <TextField className={classes.text} autoComplete="false" fullWidth variant="outlined" name="unit" label="Unit" onChange={handleChange}/>
-                            <TextField className={classes.text} autoComplete="false" fullWidth variant="outlined" name="topic" label="Topic" onChange={handleChange}/>
+                            <FormControl fullWidth variant="outlined" className={classes.formControl}>
+                                <InputLabel id="type-new-label">Type</InputLabel>
+                                <Select
+                                labelId="type-new-label"
+                                name="type"
+                                value={form.type}
+                                onChange={handleChange}
+                                >
+                                    <MenuItem value="Traffic Light">Traffic Light</MenuItem>
+                                    <MenuItem value="DHT11">DHT11</MenuItem>
+                                    <MenuItem value="Light">Light</MenuItem>
+                                </Select>
+                            </FormControl>
+                            <TextField className={classes.text} autoComplete="false" fullWidth variant="outlined" name="name" label="Name" value={form.name} onChange={handleChange}/>
+                            <TextField className={classes.text} autoComplete="false" fullWidth variant="outlined" name="idServer" label="Id Server" value={form.idServer} onChange={handleChange}/>
+                            <FormControl fullWidth label="Unit" variant="outlined" className={classes.formControl}>
+                                <InputLabel id="unit-new-label">Unit</InputLabel>
+                                <Select
+                                labelId="unit-new-label"
+                                name="unit"
+                                value={form.unit}
+                                onChange={handleChange}>
+                                    <MenuItem value="">None</MenuItem>
+                                    <MenuItem value="C-%">C-%</MenuItem>
+                                </Select>
+                            </FormControl>
+                            <TextField className={classes.text} autoComplete="false" fullWidth variant="outlined" name="topic" label="Topic" value={form.topic} onChange={handleChange}/>
                         </Grid>
                     </Grid>
                     <Button variant="outlined" color="primary" size="large" type="submit" fullWidth>New Device</Button>
@@ -157,10 +211,10 @@ const AdminDeviceSet = ({limitPerPage}) => {
             <TableContainer className={classes.table} component={Paper}>
             <Grid container>
                 <Grid item xs={2}>
-                    <Button variant="outlined" fullWidth startIcon={<DeviceHubIcon />} color="primary" size="large" onClick={handleNewDevice}>New Device Set</Button>
+                    <Button variant="outlined" fullWidth startIcon={<DevicesOtherIcon />} color="primary" size="large" onClick={handleNewDevice}>New Device</Button>
                 </Grid>
                 <Grid item xs={8}>
-                    <Typography style={{color: "#20339c", fontWeight: '500', fontSize: '30px'}} align="center" gutterBottom>Device Set List</Typography>
+                    <Typography style={{color: "#20339c", fontWeight: '500', fontSize: '30px'}} align="center" gutterBottom>Device List</Typography>
                 </Grid>
                 <Grid item xs={2}>
                     <Button  variant="outlined" fullWidth startIcon={<RefreshIcon />} color="primary" size="large" onClick={handleRefresh}>Refresh</Button>
@@ -170,27 +224,25 @@ const AdminDeviceSet = ({limitPerPage}) => {
                     <TableHead>
                     <TableRow>
                         <TableCell align="left">Index</TableCell>
-                        {/* <TableCell align="left">Device Id</TableCell> */}
-                        {/* <TableCell align="left">Device Set Id</TableCell> */}
+                        <TableCell align="left">Type</TableCell>
+                        <TableCell align="left">Name</TableCell>
                         <TableCell align="left">Date Added</TableCell>
-                        <TableCell align="left">User Id</TableCell>
-                        <TableCell align="left">Traffic Light Id</TableCell>
-                        <TableCell align="left">DHT11 Id</TableCell>
-                        <TableCell align="left">Light Id</TableCell>
-                        <TableCell align="left"></TableCell>
+                        <TableCell align="left">Id Server</TableCell>
+                        <TableCell align="left">Unit</TableCell>
+                        <TableCell align="left">Topic</TableCell>
+                        <TableCell align="left">Actions</TableCell>
                     </TableRow>
                     </TableHead>
                     <TableBody>
                     {rows.map((row) => (
                         <TableRow key={row.id}>
                         <TableCell component="th" scope="row">{row.index}</TableCell>
-                        {/* <TableCell align="left">{row.id}</TableCell> */}
-                        {/* <TableCell align="left">{row.id}</TableCell> */}
+                        <TableCell align="left">{row.type}</TableCell>
+                        <TableCell align="left">{row.name}</TableCell>
                         <TableCell align="left">{row.time}</TableCell>
-                        <TableCell align="left">{row.userId}</TableCell>
-                        <TableCell align="left">{row.trafficLightId}</TableCell>
-                        <TableCell align="left">{row.DHT11Id}</TableCell>
-                        <TableCell align="left">{row.lightId}</TableCell>
+                        <TableCell align="left">{row.idServer}</TableCell>
+                        <TableCell align="left">{row.unit}</TableCell>
+                        <TableCell align="left">{row.topic}</TableCell>
                         <TableCell align="left">
                             <Button variant="outlined" color="primary" onClick={() => handleToggle(row.index - 1)}>Update</Button>
                             &nbsp;
@@ -200,6 +252,7 @@ const AdminDeviceSet = ({limitPerPage}) => {
                     ))}
                     </TableBody>
                 </Table>
+                <Typography style={{marginTop: '10px'}} variant="body1" align="center">Showing {rows.length} out of {totalItems} devices</Typography>
             </TableContainer>
             <div className={classes.pagination}>
                 <Pagination count={count} page={page} size="large" color="primary" onChange={handleChangePage}/>

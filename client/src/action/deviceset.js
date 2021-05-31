@@ -63,3 +63,14 @@ export const deleteDeviceSet = (id) => async (dispatch) => {
   }
 };
   
+export const getNameSet = () => async (dispatch) => {
+  try {
+    
+    const { data } = await api.getNameSet();
+
+    dispatch({ type: 'ADMIN_NAME_DEVICE_SET', payload: data });
+
+  } catch (error) {
+    console.log(error.response);
+  }
+};
