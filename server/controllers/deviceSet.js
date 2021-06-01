@@ -116,7 +116,7 @@ export const getAdminSet = async (req, res) => {
 }
 export const updateDeviceSet = async (req, res) => {
     
-    // req.body = {id: '', type: '', idServer: '', name: '', unit: '', topic: ''}
+
     let { trafficlight, DTH11, Light} = req.body;
     let { id } = req.params;
 
