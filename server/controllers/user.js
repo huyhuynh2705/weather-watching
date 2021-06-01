@@ -203,7 +203,8 @@ export const updateUser = async (req, res) => {
     if (name == '') {
       name = oldUser.name;
     }
-}
+  }
+  
   if (email != oldUser.email) {
     if (email == '') {
       email = oldUser.email;

@@ -199,7 +199,7 @@ export const updateDeviceSet = async (req, res) => {
 
 export const getNameSet = async (req, res) => {
     try {
-        const array = await DeviceSetModel.find({}, { _id: 0, setName: 1 });
+        const array = await DeviceSetModel.find({ "userID": "" }, { _id: 0, setName: 1 });
         let devicesetname = []
         for (let i = 0; i < array.length; i++) {
             devicesetname.push(array[i].setName)

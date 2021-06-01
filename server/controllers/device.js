@@ -2,6 +2,7 @@ import express from 'express';
 import mongoose from 'mongoose';
 
 import DeviceModel from '../models/device.js';
+import deviceSetModel from '../models/deviceSet.js'
 
 const router = express.Router();
 
@@ -142,5 +143,54 @@ export const deleteDevice = async (req, res) => {
         res.status(404).json({ message: error.message });
     }
 
+}
+
+//all name
+export const getTrafficlightName = async (req, res) => {
+    try {
+        const array = await DeviceModel.find({ "type": "Traffic Light" }, { _id: 1 , name: 1 } );
+        let devicename = []
+        for (let i = 0; i < array.length; i++) {
+            const device = await deviceSetModel.findOne( { 'trafficLightId': array[i].id } )
+            if (!device) {
+                devicename.push(array[i].name)
+            }
+        }
+        res.status(200).json(devicename);
+    } catch (error) {
+        res.status(404).json({ message: error.message });
+    }
+}
+
+export const getDHT11Name = async (req, res) => {
+    try {
+        const array = await DeviceModel.find({ "type": "DHT11" }, { _id: 1 , name: 1 } );
+        let devicename = []
+        for (let i = 0; i < array.length; i++) {
+            const device = await deviceSetModel.findOne( { 'DHT11Id': array[i].id } )
+            if (!device) {
+                devicename.push(array[i].name)
+            }
+        }
+        res.status(200).json(devicename);
+    } catch (error) {
+        res.status(404).json({ message: error.message });
+    }
+}
+
+export const getLightName = async (req, res) => {
+    try {
+        const array = await DeviceModel.find({ "type": "Light" }, { _id: 1 , name: 1 } );
+        let devicename = []
+        for (let i = 0; i < array.length; i++) {
+            const device = await deviceSetModel.findOne( { 'lightId': array[i].id } )
+            if (!device) {
+                devicename.push(array[i].name)
+            }
+        }
+        res.status(200).json(devicename);
+    } catch (error) {
+        res.status(404).json({ message: error.message });
+    }
 }
 
