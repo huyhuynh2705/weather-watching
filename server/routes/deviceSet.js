@@ -8,12 +8,11 @@ import auth from "../middleware/auth.js";
 router.get('/', getDeviceSet);
 router.post('/', addDeviceSet);
 router.post('/admin/all', getAdminDeviceSet);
-//router.get('/admin/count', getCountDeviceSet);
 router.delete('/admin/delete/:id', deleteDeviceSet);
 router.patch('/adduser', addUser);
 router.get('/admin/countDeviceSet', getCountDeviceSet);
 router.get('/admin/countUsedSet', getCountUsedSet);
 router.get('/admin/countUnusedSet', getCountUnusedSet);
-router.get('/admin/getNameSet', getNameSet); // tra ve mang cac ten cua device set [SET001, SET002, SET003...]
+router.get('/admin/getNameSet', getNameSet);
 
 export default router;

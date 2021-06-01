@@ -62,3 +62,38 @@ export const deleteDevice = (id) => async (dispatch) => {
   }
 };
   
+export const getTrafficlightName = () => async (dispatch) => {
+  try {
+    
+    const { data } = await api.getTrafficlightName();
+
+    dispatch({ type: 'ADMIN_NAME_TRAFFIC_LIGHT', payload: data });
+
+  } catch (error) {
+    console.log(error.response);
+  }
+};
+
+export const getDHT11Name = () => async (dispatch) => {
+  try {
+    
+    const { data } = await api.getDHT11Name();
+
+    dispatch({ type: 'ADMIN_NAME_DHT11', payload: data });
+
+  } catch (error) {
+    console.log(error.response);
+  }
+};
+
+export const getLightName = () => async (dispatch) => {
+  try {
+    
+    const { data } = await api.getLightName();
+
+    dispatch({ type: 'ADMIN_NAME_LIGHT', payload: data });
+
+  } catch (error) {
+    console.log(error.response);
+  }
+};

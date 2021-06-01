@@ -18,7 +18,17 @@ export const getDeviceSet = async (req, res) => {
     }
 }
 
+// export const updateDeviceSet = async (req, res) => {
+    //body: {id: '', setName: '', username: '', trafficLightName: '', DHT11Name: '', lightName: ''}
+    
+    //Dung ten cua device + username thay vi id
+// }
+
 export const addDeviceSet = async (req, res) => {
+
+    //body: {id: '', setName: '', username: '', trafficLightName: '', DHT11Name: '', lightName: ''}
+    
+    //Dung ten cua device + username thay vi id
 
     const deviceSet = req.body;
 
@@ -68,6 +78,7 @@ export const addUser = async (req, res) => {
 export const deleteDeviceSet = async (req, res) => {
     
     // req.params= {id: ''}
+    // Neu set co user thi khong cho xoa
     const { id } = req.params;
 
     try {
@@ -199,7 +210,7 @@ export const updateDeviceSet = async (req, res) => {
 
 export const getNameSet = async (req, res) => {
     try {
-        const array = await DeviceSetModel.find({ "userID": "" }, { _id: 0, setName: 1 });
+        const array = await DeviceSetModel.find({ userID: "" }, { _id: 0, setName: 1 });
         let devicesetname = []
         for (let i = 0; i < array.length; i++) {
             devicesetname.push(array[i].setName)

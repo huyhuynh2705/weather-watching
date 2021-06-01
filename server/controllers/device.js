@@ -148,7 +148,7 @@ export const deleteDevice = async (req, res) => {
 //all name
 export const getTrafficlightName = async (req, res) => {
     try {
-        const array = await DeviceModel.find({ "type": "Traffic Light" }, { _id: 1 , name: 1 } );
+        const array = await DeviceModel.find({ type: "Traffic Light" }, { _id: 1 , name: 1 } );
         let devicename = []
         for (let i = 0; i < array.length; i++) {
             const device = await deviceSetModel.findOne( { 'trafficLightId': array[i].id } )
@@ -164,7 +164,7 @@ export const getTrafficlightName = async (req, res) => {
 
 export const getDHT11Name = async (req, res) => {
     try {
-        const array = await DeviceModel.find({ "type": "DHT11" }, { _id: 1 , name: 1 } );
+        const array = await DeviceModel.find({ type: "DHT11" }, { _id: 1 , name: 1 } );
         let devicename = []
         for (let i = 0; i < array.length; i++) {
             const device = await deviceSetModel.findOne( { 'DHT11Id': array[i].id } )
@@ -180,7 +180,7 @@ export const getDHT11Name = async (req, res) => {
 
 export const getLightName = async (req, res) => {
     try {
-        const array = await DeviceModel.find({ "type": "Light" }, { _id: 1 , name: 1 } );
+        const array = await DeviceModel.find({ type: "Light" }, { _id: 1 , name: 1 } );
         let devicename = []
         for (let i = 0; i < array.length; i++) {
             const device = await deviceSetModel.findOne( { 'lightId': array[i].id } )

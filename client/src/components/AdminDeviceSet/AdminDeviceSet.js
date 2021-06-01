@@ -13,18 +13,19 @@ import CircularProgress from '@material-ui/core/CircularProgress';
 import Pagination from '@material-ui/lab/Pagination';
 import DeviceHubIcon from '@material-ui/icons/DeviceHub'
 import RefreshIcon from '@material-ui/icons/Refresh';
-import DevicesOtherIcon from '@material-ui/icons/DevicesOther';
 import MenuItem from '@material-ui/core/MenuItem';
 import Select from '@material-ui/core/Select';
 import InputLabel from '@material-ui/core/InputLabel';
 import FormControl from '@material-ui/core/FormControl';
-import { deleteDeviceSet, getAdminDeviceSet, getCountDeviceSet } from '../../action/deviceset'
 
-function createData(index, id, time, userId, trafficLightId, DHT11Id, lightId) {
-    return { index, id, time, userId, trafficLightId, DHT11Id, lightId };
+import { deleteDeviceSet, getAdminDeviceSet, getCountDeviceSet } from '../../action/deviceset'
+import { getTrafficlightName, getDHT11Name, getLightName } from '../../action/device'
+
+function createData(index, id, time, setName, userID, trafficLightId, DHT11Id, lightId) {
+    return { index, id, time, setName, userID, trafficLightId, DHT11Id, lightId };
 }
   
-const initialState = {id: '', type: '', idServer: '', name: '', unit: '', topic: ''}
+const initialState = {id: '', setName: '', username: '', trafficLightName: '', DHT11Name: '', lightName: ''}
 
 const AdminDeviceSet = ({limitPerPage}) => {
     const classes = useStyles()
@@ -32,6 +33,10 @@ const AdminDeviceSet = ({limitPerPage}) => {
     const totalItems = useSelector((state) => state.countdeviceset)
 
     let deviceset = useSelector((state) => state.deviceset)
+
+    let trafficlightname = useSelector((state) => state.trafficlightname)
+    let dht11name = useSelector((state) => state.dht11name)
+    let lightname = useSelector((state) => state.lightname)
 
     const [updateIndex, setUpdateIndex] = useState(null)
 
@@ -47,6 +52,12 @@ const AdminDeviceSet = ({limitPerPage}) => {
         dispatch(getCountDeviceSet());
     }, [])
 
+    useEffect(() => {
+        dispatch(getTrafficlightName());
+        dispatch(getDHT11Name());
+        dispatch(getLightName());
+    }, [open])
+
     const handleChangePage = (e, value) => {
         e.preventDefault()
         setPage(value)
@@ -58,9 +69,11 @@ const AdminDeviceSet = ({limitPerPage}) => {
     const handleSubmit = (e) => {
         e.preventDefault();
         if (form!=initialState) {
-            (isUpdate) ? dispatch(updateDevice(form)) : dispatch(addDevice(form));
+            console.log(form);
+            //(isUpdate) ? dispatch(updateDevice(form)) : dispatch(addDevice(form));
         }
         setIsUpdate(true);
+        setUpdateIndex(null)
         setOpen(!open);
     };
 
@@ -100,6 +113,7 @@ const AdminDeviceSet = ({limitPerPage}) => {
                 i+1, 
                 deviceset[i]._id, 
                 deviceset[i].time.slice(0, 10) + " " + deviceset[i].time.slice(11, 19), 
+                deviceset[i].setName, 
                 deviceset[i].userID, 
                 deviceset[i].trafficLightId, 
                 deviceset[i].DHT11Id, 
@@ -114,44 +128,79 @@ const AdminDeviceSet = ({limitPerPage}) => {
              <Backdrop className={classes.backdrop} open={open}>
                 {(isUpdate) ? 
                 <Paper className={classes.paper}>
-                    <Typography align="center" variant="h6" gutterBottom>Update Device</Typography>
+                    <Typography align="center" variant="h6" gutterBottom>Update Device Set</Typography>
                     <form onSubmit={handleSubmit}>
                         <Grid container spacing={2}>
                             <Grid item xs={3}>
-                                <Typography className={classes.title} align="right" variant="h6" gutterBottom>Type: </Typography>
-                                <Typography className={classes.title1} align="right" variant="h6" gutterBottom>Name: </Typography>
-                                <Typography className={classes.title1} align="right" variant="h6" gutterBottom>Id Server: </Typography>
-                                <Typography className={classes.title1} align="right" variant="h6" gutterBottom>Unit: </Typography>
-                                <Typography className={classes.title1} align="right" variant="h6" gutterBottom>Topic: </Typography>
+                                <Typography className={classes.title} align="right" variant="h6" gutterBottom>Set Name: </Typography>
+                                <Typography className={classes.title1} align="right" variant="h6" gutterBottom>User: </Typography>
+                                <Typography className={classes.title1} align="right" variant="h6" gutterBottom>Traffic Light: </Typography>
+                                <Typography className={classes.title1} align="right" variant="h6" gutterBottom>DHT11: </Typography>
+                                <Typography className={classes.title1} align="right" variant="h6" gutterBottom>Light: </Typography>
                             </Grid>
                             <Grid item xs={9}>
+                                <TextField className={classes.text} autoComplete="false" fullWidth variant="outlined" name="setName" label="Set Name" value={form.setName} onChange={handleChange}/>
                                 <FormControl fullWidth variant="outlined" className={classes.formControl}>
-                                    <InputLabel id="type-update-label">{(updateIndex==null) ? "Type" : rows[updateIndex].type}</InputLabel>
+                                    <InputLabel id="username-new-label">Username</InputLabel>
                                     <Select
-                                    labelId="type-update-label"
-                                    name="type"
-                                    value={form.type}
+                                    labelId="username-new-label"
+                                    name="username"
+                                    value={form.username}
                                     onChange={handleChange}
                                     >
-                                        <MenuItem value="Traffic Light">Traffic Light</MenuItem>
-                                        <MenuItem value="DHT11">DHT11</MenuItem>
-                                        <MenuItem value="Light">Light</MenuItem>
+                                        <MenuItem value="User 1">User 1</MenuItem>
+                                        <MenuItem value="User 2">User 2</MenuItem>
+                                        <MenuItem value="User 3">User 3</MenuItem>
                                     </Select>
                                 </FormControl>
-                                <TextField className={classes.text} autoComplete="false" fullWidth variant="outlined" name="name" value={form.name} label={rows[updateIndex].name} onChange={handleChange}/>
-                                <TextField className={classes.text} autoComplete="false" fullWidth variant="outlined" name="idServer" value={form.idServer} label={rows[updateIndex].idServer} onChange={handleChange}/>
                                 <FormControl fullWidth variant="outlined" className={classes.formControl}>
+                                    <InputLabel id="trafficLightName-new-label">Traffic Light</InputLabel>
                                     <Select
-                                    labelId="unit-label"
-                                    name="unit"
-                                    value={form.unit}
+                                    labelId="trafficLightName-new-label"
+                                    name="trafficLightName"
+                                    value={form.trafficLightName}
                                     onChange={handleChange}
                                     >
-                                        <MenuItem value="">None</MenuItem>
-                                        <MenuItem value="C-%">C-%</MenuItem>
+                                    <MenuItem key="None" value="None">None</MenuItem>
+                                    {trafficlightname.map((trafficlight) => (
+                                        <MenuItem key={trafficlight} value={trafficlight}>
+                                        {trafficlight}
+                                        </MenuItem>
+                                    ))}
                                     </Select>
                                 </FormControl>
-                                <TextField className={classes.text} autoComplete="false" fullWidth variant="outlined" name="topic" value={form.topic} label={rows[updateIndex].topic} onChange={handleChange}/>
+                                <FormControl fullWidth variant="outlined" className={classes.formControl}>
+                                    <InputLabel id="DHT11Name-new-label">DHT11</InputLabel>
+                                    <Select
+                                    labelId="DHT11Name-new-label"
+                                    name="DHT11Name"
+                                    value={form.DHT11Name}
+                                    onChange={handleChange}
+                                    >
+                                    <MenuItem key="None" value="None">None</MenuItem>
+                                    {dht11name.map((dht11) => (
+                                        <MenuItem key={dht11} value={dht11}>
+                                        {dht11}
+                                        </MenuItem>
+                                    ))}
+                                    </Select>
+                                </FormControl>
+                                <FormControl fullWidth variant="outlined" className={classes.formControl}>
+                                    <InputLabel id="lightName-new-label">Light</InputLabel>
+                                    <Select
+                                    labelId="lightName-new-label"
+                                    name="lightName"
+                                    value={form.lightName}
+                                    onChange={handleChange}
+                                    >
+                                    <MenuItem key="None" value="None">None</MenuItem>
+                                    {lightname.map((light) => (
+                                        <MenuItem key={light} value={light}>
+                                        {light}
+                                        </MenuItem>
+                                    ))}
+                                    </Select>
+                                </FormControl>
                             </Grid>
                         </Grid>
                         <Button variant="outlined" color="primary" size="large" type="submit" fullWidth>Update</Button>
@@ -161,47 +210,82 @@ const AdminDeviceSet = ({limitPerPage}) => {
                 </Paper> 
                 :
                 <Paper className={classes.paper}>
-                <Typography align="center" variant="h6" gutterBottom>New Device</Typography>
+                <Typography align="center" variant="h6" gutterBottom>New Device Set</Typography>
                 <form onSubmit={handleSubmit}>
                     <Grid container spacing={2}>
                         <Grid item xs={3}>
-                            <Typography className={classes.title} align="right" variant="h6" gutterBottom>Type: </Typography>
-                            <Typography className={classes.title1} align="right" variant="h6" gutterBottom>Name: </Typography>
-                            <Typography className={classes.title1} align="right" variant="h6" gutterBottom>Id Server: </Typography>
-                            <Typography className={classes.title1} align="right" variant="h6" gutterBottom>Unit: </Typography>
-                            <Typography className={classes.title1} align="right" variant="h6" gutterBottom>Topic: </Typography>
+                            <Typography className={classes.title} align="right" variant="h6" gutterBottom>Set Name: </Typography>
+                            <Typography className={classes.title1} align="right" variant="h6" gutterBottom>User: </Typography>
+                            <Typography className={classes.title1} align="right" variant="h6" gutterBottom>Traffic Light: </Typography>
+                            <Typography className={classes.title1} align="right" variant="h6" gutterBottom>DHT11: </Typography>
+                            <Typography className={classes.title1} align="right" variant="h6" gutterBottom>Light: </Typography>
                         </Grid>
                         <Grid item xs={9}>
+                            <TextField className={classes.text} autoComplete="false" fullWidth variant="outlined" name="setName" label="Set Name" value={form.setName} onChange={handleChange}/>
                             <FormControl fullWidth variant="outlined" className={classes.formControl}>
-                                <InputLabel id="type-new-label">Type</InputLabel>
+                                <InputLabel id="username-new-label">Username</InputLabel>
                                 <Select
-                                labelId="type-new-label"
-                                name="type"
-                                value={form.type}
+                                labelId="username-new-label"
+                                name="username"
+                                value={form.username}
                                 onChange={handleChange}
                                 >
-                                    <MenuItem value="Traffic Light">Traffic Light</MenuItem>
-                                    <MenuItem value="DHT11">DHT11</MenuItem>
-                                    <MenuItem value="Light">Light</MenuItem>
+                                    <MenuItem value="User 1">User 1</MenuItem>
+                                    <MenuItem value="User 2">User 2</MenuItem>
+                                    <MenuItem value="User 3">User 3</MenuItem>
                                 </Select>
                             </FormControl>
-                            <TextField className={classes.text} autoComplete="false" fullWidth variant="outlined" name="name" label="Name" value={form.name} onChange={handleChange}/>
-                            <TextField className={classes.text} autoComplete="false" fullWidth variant="outlined" name="idServer" label="Id Server" value={form.idServer} onChange={handleChange}/>
-                            <FormControl fullWidth label="Unit" variant="outlined" className={classes.formControl}>
-                                <InputLabel id="unit-new-label">Unit</InputLabel>
+                            <FormControl fullWidth variant="outlined" className={classes.formControl}>
+                                <InputLabel id="trafficLightName-new-label">Traffic Light</InputLabel>
                                 <Select
-                                labelId="unit-new-label"
-                                name="unit"
-                                value={form.unit}
-                                onChange={handleChange}>
-                                    <MenuItem value="">None</MenuItem>
-                                    <MenuItem value="C-%">C-%</MenuItem>
+                                labelId="trafficLightName-new-label"
+                                name="trafficLightName"
+                                value={form.trafficLightName}
+                                onChange={handleChange}
+                                >
+                                <MenuItem key="None" value="None">None</MenuItem>
+                                {trafficlightname.map((trafficlight) => (
+                                    <MenuItem key={trafficlight} value={trafficlight}>
+                                    {trafficlight}
+                                    </MenuItem>
+                                ))}
                                 </Select>
                             </FormControl>
-                            <TextField className={classes.text} autoComplete="false" fullWidth variant="outlined" name="topic" label="Topic" value={form.topic} onChange={handleChange}/>
+                            <FormControl fullWidth variant="outlined" className={classes.formControl}>
+                                <InputLabel id="DHT11Name-new-label">DHT11</InputLabel>
+                                <Select
+                                labelId="DHT11Name-new-label"
+                                name="DHT11Name"
+                                value={form.DHT11Name}
+                                onChange={handleChange}
+                                >
+                                <MenuItem key="None" value="None">None</MenuItem>
+                                {dht11name.map((dht11) => (
+                                    <MenuItem key={dht11} value={dht11}>
+                                    {dht11}
+                                    </MenuItem>
+                                ))}
+                                </Select>
+                            </FormControl>
+                            <FormControl fullWidth variant="outlined" className={classes.formControl}>
+                                <InputLabel id="lightName-new-label">Light</InputLabel>
+                                <Select
+                                labelId="lightName-new-label"
+                                name="lightName"
+                                value={form.lightName}
+                                onChange={handleChange}
+                                >
+                                <MenuItem key="None" value="None">None</MenuItem>
+                                {lightname.map((light) => (
+                                    <MenuItem key={light} value={light}>
+                                    {light}
+                                    </MenuItem>
+                                ))}
+                                </Select>
+                            </FormControl>
                         </Grid>
                     </Grid>
-                    <Button variant="outlined" color="primary" size="large" type="submit" fullWidth>New Device</Button>
+                    <Button variant="outlined" color="primary" size="large" type="submit" fullWidth>New Device Set</Button>
                 </form>
                 &nbsp;
                 <Button variant="outlined" color="secondary" size="large" onClick={handleClose} fullWidth>Close</Button>
@@ -211,10 +295,10 @@ const AdminDeviceSet = ({limitPerPage}) => {
             <TableContainer className={classes.table} component={Paper}>
             <Grid container>
                 <Grid item xs={2}>
-                    <Button variant="outlined" fullWidth startIcon={<DevicesOtherIcon />} color="primary" size="large" onClick={handleNewDevice}>New Device</Button>
+                    <Button variant="outlined" fullWidth startIcon={<DeviceHubIcon />} color="primary" size="large" onClick={handleNewDevice}>New Device Set</Button>
                 </Grid>
                 <Grid item xs={8}>
-                    <Typography style={{color: "#20339c", fontWeight: '500', fontSize: '30px'}} align="center" gutterBottom>Device List</Typography>
+                    <Typography style={{color: "#20339c", fontWeight: '500', fontSize: '30px'}} align="center" gutterBottom>Device Set List</Typography>
                 </Grid>
                 <Grid item xs={2}>
                     <Button  variant="outlined" fullWidth startIcon={<RefreshIcon />} color="primary" size="large" onClick={handleRefresh}>Refresh</Button>
@@ -224,25 +308,24 @@ const AdminDeviceSet = ({limitPerPage}) => {
                     <TableHead>
                     <TableRow>
                         <TableCell align="left">Index</TableCell>
-                        <TableCell align="left">Type</TableCell>
-                        <TableCell align="left">Name</TableCell>
                         <TableCell align="left">Date Added</TableCell>
-                        <TableCell align="left">Id Server</TableCell>
-                        <TableCell align="left">Unit</TableCell>
-                        <TableCell align="left">Topic</TableCell>
-                        <TableCell align="left">Actions</TableCell>
+                        <TableCell align="left">Set Name</TableCell>
+                        <TableCell align="left">User</TableCell>
+                        <TableCell align="left">Traffic Light</TableCell>
+                        <TableCell align="left">DHT11</TableCell>
+                        <TableCell align="left">Light</TableCell>
                     </TableRow>
                     </TableHead>
                     <TableBody>
                     {rows.map((row) => (
                         <TableRow key={row.id}>
                         <TableCell component="th" scope="row">{row.index}</TableCell>
-                        <TableCell align="left">{row.type}</TableCell>
-                        <TableCell align="left">{row.name}</TableCell>
                         <TableCell align="left">{row.time}</TableCell>
-                        <TableCell align="left">{row.idServer}</TableCell>
-                        <TableCell align="left">{row.unit}</TableCell>
-                        <TableCell align="left">{row.topic}</TableCell>
+                        <TableCell align="left">{row.setName}</TableCell>
+                        <TableCell align="left">{row.userID}</TableCell>
+                        <TableCell align="left">{row.trafficLightId}</TableCell>
+                        <TableCell align="left">{row.DHT11Id}</TableCell>
+                        <TableCell align="left">{row.lightId}</TableCell>
                         <TableCell align="left">
                             <Button variant="outlined" color="primary" onClick={() => handleToggle(row.index - 1)}>Update</Button>
                             &nbsp;
