@@ -1,7 +1,8 @@
-import {mongoose, mqtt_client} from '../helpers/index.js'
+import {mongoose, mqtt_client, mqtt_client2} from '../helpers/index.js'
 import DeviceModel from '../models/device.js'
 import DataModel from '../models/data.js'
 import DeviceSetModel from '../models/deviceSet.js'
+import {dht11_topic, light_watcher_topic, trafic_light_topic} from '../environments/index.js'
 
 let last_light_value
 let last_temp_value
@@ -9,6 +10,7 @@ let last_humid_value
 
 const subscribe_topics = async () => {
     try {
+        /*
         const devices = await DeviceModel.find({})
         for (const device of devices) {
             if (device.topic && device.type.toLowerCase() != "traffic light") {
@@ -16,6 +18,9 @@ const subscribe_topics = async () => {
                 mqtt_client.subscribe(device.topic) 
             }
         }
+        */
+        mqtt_client.subscribe(dht11_topic)
+        mqtt_client2.subscribe(light_watcher_topic)
     } catch (err) {
         console.log(err)
     }
@@ -141,7 +146,7 @@ const handle_event = async (topic, message) => {
         }
     }
 
-    await update_traffic_light(deviceSet)
+    //await update_traffic_light(deviceSet)
 }
 
 export {
