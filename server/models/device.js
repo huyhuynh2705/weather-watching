@@ -7,7 +7,7 @@ const deviceSchema = mongoose.Schema({
         default: new Date(),
     },
     idServer: String,
-    name: String,
+    name: { type: String, required: true, unique: true },
     unit: String,
     topic: String
 })

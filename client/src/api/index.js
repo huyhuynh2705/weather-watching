@@ -32,5 +32,8 @@ export const getCountAllUser = () => API.get('/user/admin/countAllUser');
 export const deleteUser = (id) => API.delete(`/user/admin/delete/${id}`);
 export const updateUser = (form) => API.post('/user/admin/update', form);
 export const getNameSet = () => API.get('/set/admin/getNameSet');
+export const getTrafficlightName = () => API.get('/device/admin/TrafficlightName');
+export const getDHT11Name = () => API.get('/device/admin/DHT11Name');
+export const getLightName = () => API.get('/device/admin/LightName');
 
 

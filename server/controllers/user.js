@@ -27,7 +27,7 @@ export const signin = async (req, res) => {
 };
 
 export const addUser = async (req, res) => {
-  const { username, password, name, email, phoneNum, deviceSetName, role } = req.body;
+  let { username, password, name, email, phoneNum, deviceSetName, role } = req.body;
   try {
     const oldUser = await UserModel.findOne({ username });
 
@@ -41,9 +41,19 @@ export const addUser = async (req, res) => {
 
     if (oldPhoneNum) return res.status(400).json({ message: "Phone number already exists" });
 
-    const hashedPassword = await bcrypt.hash(password, 12);
+    if (deviceSetName == 'None') {
+      deviceSetName = ''
+    }
 
+    const hashedPassword = await bcrypt.hash(password, 12);
     const result = await UserModel.create({ username, password: hashedPassword, name: name, email: email, phoneNum: phoneNum, deviceSetName: deviceSetName, role: role });
+
+    if (deviceSetName != '') {
+      const deviceSet = await DeviceSetModel.findOne( {setName: deviceSetName} )
+      if (!deviceSet) return res.status(404).json({ message: "Device set doesn't exist."}) 
+      if (deviceSet.userID != "") return res.status(404).json({ message: "Device set already has user."}) 
+      await DeviceSetModel.findByIdAndUpdate( deviceSet._id, { userID: result._id } , { new: true } )
+    }
 
     res.status(201).json(result);
   } catch (error) {
@@ -90,15 +100,19 @@ export const deleteUser = async (req, res) => {
   const { id } = req.params;
 
   try {
-      const oldDevice = await UserModel.findById(id);
-      if (!oldDevice) {
+      const oldUser= await UserModel.findById(id);
+      if (!oldUser) {
           return res.status(404).json({ message: "User doesn't exist." });
       }
-      else {
-          await UserModel.findByIdAndRemove(id);
 
-          return res.status(200).json({ message: "User is deleted."});            
+      const deviceSet = await DeviceSetModel.findOne( {setName: oldUser.deviceSetName} )
+      if (deviceSet) {
+        await DeviceSetModel.findByIdAndUpdate( deviceSet._id, { userID: '' } , { new: true } )
       }
+
+      await UserModel.findByIdAndRemove(id);
+
+      return res.status(200).json({ message: "User is deleted."});            
       
   } catch (error) {
       res.status(404).json({ message: error.message });
@@ -241,7 +255,12 @@ export const updateUser = async (req, res) => {
       if (!deviceSet) return res.status(404).json({ message: "Device set doesn't exist."}) 
       if (deviceSet.userID != "") return res.status(404).json({ message: "Device set already has user."}) 
       await DeviceSetModel.findByIdAndUpdate( deviceSet._id, { userID: id } , { new: true } )
-
+      if (oldUser.deviceSetName != '') {
+        const oldDeviceSet = await DeviceSetModel.findOne( {setName: oldUser.deviceSetName} )
+        if (oldDeviceSet.userID == id) {
+          await DeviceSetModel.findByIdAndUpdate( oldDeviceSet._id, { userID: '' } , { new: true } )
+        }
+      }
     }
   }
 

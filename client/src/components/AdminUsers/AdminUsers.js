@@ -18,7 +18,6 @@ import MenuItem from '@material-ui/core/MenuItem';
 import Select from '@material-ui/core/Select';
 import InputLabel from '@material-ui/core/InputLabel';
 import FormControl from '@material-ui/core/FormControl';
-import Input from '@material-ui/core/Input';
 
 import { addUser, updateUser, deleteUser, getAdminUser, getCountAllUser } from '../../action/user'
 import { getNameSet } from '../../action/deviceset'
@@ -35,7 +34,7 @@ const AdminUsers = ({limitPerPage}) => {
 
     const totalItems = useSelector((state) => state.countuser)
     let users = useSelector((state) => state.users)
-    const devicesetname = useSelector((state) => state.devicesetname)
+    let devicesetname = useSelector((state) => state.devicesetname)
 
     const [updateIndex, setUpdateIndex] = useState(null)
 
@@ -45,13 +44,6 @@ const AdminUsers = ({limitPerPage}) => {
 
     const [page, setPage] = useState(1);
     const count = Math.ceil(totalItems/limitPerPage)
-
-    let deviceSetNames = ["None"];
-    if (!!devicesetname.length) {
-        for (let i = 0; i < devicesetname.length; i++) {
-            deviceSetNames.push(devicesetname[i].setName)
-        }
-    }
 
     useEffect(() => {
         dispatch(getCountAllUser());
@@ -87,7 +79,8 @@ const AdminUsers = ({limitPerPage}) => {
         }
         setForm(initialState);
         setIsUpdate(true);
-        setOpen(!open);
+        setUpdateIndex(null)
+        setOpen(false);
     };
 
     const handleClose = () => {
@@ -171,9 +164,10 @@ const AdminUsers = ({limitPerPage}) => {
                                     value={form.deviceSetName}
                                     onChange={handleChange}
                                     >
-                                    {deviceSetNames.map((Set) => (
-                                        <MenuItem key={Set} value={Set}>
-                                        {Set}
+                                    <MenuItem key="None" value="None">None</MenuItem>
+                                    {devicesetname.map((set) => (
+                                        <MenuItem key={set} value={set}>
+                                        {set}
                                         </MenuItem>
                                     ))}
                                     </Select>
@@ -233,9 +227,10 @@ const AdminUsers = ({limitPerPage}) => {
                                 value={form.deviceSetName}
                                 onChange={handleChange}
                                 >
-                                {deviceSetNames.map((Set) => (
-                                    <MenuItem key={Set} value={Set}>
-                                    {Set}
+                                <MenuItem key="None" value="None">None</MenuItem>
+                                {devicesetname.map((set) => (
+                                    <MenuItem key={set} value={set}>
+                                    {set}
                                     </MenuItem>
                                 ))}
                                 </Select>

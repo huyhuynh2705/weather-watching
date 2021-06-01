@@ -10,7 +10,7 @@ export default makeStyles((theme) => ({
       color: '#fff',
     },
     paper: {
-      width: '500px',
+      width: '800px',
       padding: '20px'
     },
     title: {
@@ -26,5 +26,12 @@ export default makeStyles((theme) => ({
       '& > *': {
         marginTop: theme.spacing(2),
       },
+    },
+    formControl: {
+      marginBottom: theme.spacing(2),
+      minWidth: 120,
+    },
+    selectEmpty: {
+      marginTop: theme.spacing(2),
     },
 }))

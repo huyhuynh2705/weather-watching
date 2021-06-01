@@ -61,6 +61,7 @@ const AdminDevices = ({limitPerPage}) => {
             (isUpdate) ? dispatch(updateDevice(form)) : dispatch(addDevice(form));
         }
         setForm(initialState);
+        setUpdateIndex(null)
         setOpen(!open);
         setIsUpdate(true);
     };
