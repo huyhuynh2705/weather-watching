@@ -18,7 +18,7 @@ import Select from '@material-ui/core/Select';
 import InputLabel from '@material-ui/core/InputLabel';
 import FormControl from '@material-ui/core/FormControl';
 
-import { deleteDeviceSet, getAdminDeviceSet, getCountDeviceSet } from '../../action/deviceset'
+import { deleteDeviceSet, getAdminDeviceSet, getCountDeviceSet, addDeviceSet } from '../../action/deviceset'
 import { getTrafficlightName, getDHT11Name, getLightName } from '../../action/device'
 
 function createData(index, id, time, setName, userID, trafficLightId, DHT11Id, lightId) {
@@ -33,6 +33,7 @@ const AdminDeviceSet = ({limitPerPage}) => {
     const totalItems = useSelector((state) => state.countdeviceset)
 
     let deviceset = useSelector((state) => state.deviceset)
+    console.log(deviceset);
 
     let trafficlightname = useSelector((state) => state.trafficlightname)
     let dht11name = useSelector((state) => state.dht11name)
@@ -69,16 +70,23 @@ const AdminDeviceSet = ({limitPerPage}) => {
     const handleSubmit = (e) => {
         e.preventDefault();
         if (form!=initialState) {
-            console.log(form);
-            //(isUpdate) ? dispatch(updateDevice(form)) : dispatch(addDevice(form));
+            if (isUpdate) {
+                dispatch(updateDevice(form)) 
+            } else {
+                dispatch(addDeviceSet(form));
+                dispatch(getAdminDeviceSet({page: page, limit: limitPerPage})) 
+            }
         }
+        setForm(initialState);
         setIsUpdate(true);
         setUpdateIndex(null)
         setOpen(!open);
     };
 
     const handleClose = () => {
-      setOpen(false);
+        setForm(initialState);
+        setOpen(false);
+        setIsUpdate(true);
     };
 
     const handleToggle = (value) => {
@@ -93,7 +101,6 @@ const AdminDeviceSet = ({limitPerPage}) => {
     }
 
     const handleDelete = (value) => {
-        console.log(rows[value].id);
         dispatch(deleteDeviceSet(rows[value].id))
         setUpdateIndex(null)
         if (rows.length == 1 &&  totalItems != 0) {
@@ -222,7 +229,7 @@ const AdminDeviceSet = ({limitPerPage}) => {
                         </Grid>
                         <Grid item xs={9}>
                             <TextField className={classes.text} autoComplete="false" fullWidth variant="outlined" name="setName" label="Set Name" value={form.setName} onChange={handleChange}/>
-                            <FormControl fullWidth variant="outlined" className={classes.formControl}>
+                            {/* <FormControl fullWidth variant="outlined" className={classes.formControl}>
                                 <InputLabel id="username-new-label">Username</InputLabel>
                                 <Select
                                 labelId="username-new-label"
@@ -234,7 +241,8 @@ const AdminDeviceSet = ({limitPerPage}) => {
                                     <MenuItem value="User 2">User 2</MenuItem>
                                     <MenuItem value="User 3">User 3</MenuItem>
                                 </Select>
-                            </FormControl>
+                            </FormControl> */}
+                            <TextField className={classes.text} autoComplete="false" fullWidth variant="outlined" name="username" label="Username" value={form.username} onChange={handleChange}/>
                             <FormControl fullWidth variant="outlined" className={classes.formControl}>
                                 <InputLabel id="trafficLightName-new-label">Traffic Light</InputLabel>
                                 <Select

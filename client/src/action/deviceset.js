@@ -1,15 +1,15 @@
 import * as api from '../api/index'
 
-// export const addDeviceSet = (form) => async (dispatch) => {
-//     try {
-//       const { data } = await api.addDeviceSet(form)
+export const addDeviceSet = (form) => async (dispatch) => {
+    try {
+      const { data } = await api.addDeviceSet(form)
   
-//       dispatch({ type: "ADDDEVICESET", data })
+      dispatch({ type: 'ADD_DEVICE_SET', payload: data })
       
-//     } catch (error) {
-//       alert(error.response.data.message)
-//     }
-//   }
+    } catch (error) {
+      alert(error.response.data.message)
+    }
+  }
   
 export const getAdminDeviceSet = (form) => async (dispatch) => {
   try {
@@ -72,6 +72,7 @@ export const deleteDeviceSet = (id) => async (dispatch) => {
 
   } catch (error) {
     console.log(error);
+    alert(error.response.data.message)
   }
 };
   
