@@ -1,16 +1,19 @@
 import React, { useEffect, useState } from 'react';
-import { getAdminDevice, getCountDevice } from '../../action/device'
+// import { getAdminDevice, getCountDevice } from '../../action/device'
+// import { getAdminDeviceSet, getCountDeviceSet } from '../../action/deviceset'
+// import { getAdminUser, getCountAllUser } from '../../action/user'
 import { useDispatch } from 'react-redux';
 import useStyles from "./styles"
 import PropTypes from 'prop-types';
 import AppBar from '@material-ui/core/AppBar';
 import Tabs from '@material-ui/core/Tabs';
 import Tab from '@material-ui/core/Tab';
-import Typography from '@material-ui/core/Typography';
 import Box from '@material-ui/core/Box'
 import AppBarAdmin from '@components/AppBar/AppBarAdmin'
 import AdminDataBar from '@components/AdminDataBar/AdminDataBar'
 import AdminDevices from '@components/AdminDevices/AdminDevices'
+import AdminDeviceSet from '@components/AdminDeviceSet/AdminDeviceSet'
+import AdminUsers from '@components/AdminUsers/AdminUsers'
 import { Container, Paper } from '@material-ui/core';
 
 function TabPanel(props) {
@@ -60,10 +63,14 @@ function Admin() {
     setValue(newValue);
   };
 
-  useEffect(() => {
-    dispatch(getCountDevice())
-    dispatch(getAdminDevice({page: 1, limit: limitPerPage}))
-  }, [dispatch]);
+  // useEffect(() => {
+  //   dispatch(getCountAllUser())
+  //   dispatch(getAdminUser({page: 1, limit: limitPerPage}))
+  //   dispatch(getCountDeviceSet())
+  //   dispatch(getCountDevice())
+  //   dispatch(getAdminDeviceSet({page: 1, limit: limitPerPage}))
+  //   dispatch(getAdminDevice({page: 1, limit: limitPerPage}))
+  // }, [dispatch]);
 
 
   return (
@@ -79,13 +86,13 @@ function Admin() {
             </Tabs>
           </AppBar>
           <TabPanel value={value} index={0}>
-            <AdminDevices component={'span'} limitPerPage={limitPerPage}/>
+            <AdminDevices limitPerPage={limitPerPage}/>
           </TabPanel>
           <TabPanel value={value} index={1}>
-
+            <AdminDeviceSet limitPerPage={limitPerPage}/>
           </TabPanel>
           <TabPanel value={value} index={2}>
-
+            <AdminUsers limitPerPage={limitPerPage} />
           </TabPanel>
       </Container>
     </div>

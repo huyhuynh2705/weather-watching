@@ -4,13 +4,14 @@ export default makeStyles((theme) => ({
     table: {
       marginTop: '20px',
       padding: '10px'
+
     },
     backdrop: {
       zIndex: theme.zIndex.drawer + 1,
       color: '#fff',
     },
     paper: {
-      width: '500px',
+      width: '1000px',
       padding: '20px'
     },
     title: {

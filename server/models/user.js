@@ -6,7 +6,7 @@ const userSchema = mongoose.Schema({
   name: String,
   email: { type: String, unique: true },
   phoneNum: { type: String, unique: true },
-  deviceSetId: String,
+  deviceSetName: String,
   role: String, // User || Admin
 });
 

@@ -1,6 +1,7 @@
 import mongoose from 'mongoose';
 
 const deviceSetSchema = mongoose.Schema({
+    setName: { type: String, required: true, unique: true },
     userID: String,
     time: {
         type: Date,

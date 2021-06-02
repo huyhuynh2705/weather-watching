@@ -5,7 +5,7 @@ import { Button, Grid, Paper, Typography } from '@material-ui/core';
 import {Link} from 'react-router-dom';
 import useStyles from './styles'
 
-const User = () => {
+const Profile = () => {
     const classes = useStyles()
   // const dispatch = useDispatch();
     const user = JSON.parse(localStorage.getItem(TOKEN_NAME));
@@ -63,4 +63,4 @@ const User = () => {
     )
 }
 
-export default User
+export default Profile

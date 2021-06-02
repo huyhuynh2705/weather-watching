@@ -45,7 +45,7 @@ const UpdateProfile = () => {
                             <Typography className={classes.title} align="right" gutterBottom>Email: </Typography>
                         </Grid>
                         <Grid item xs={8} sm={7}>
-                            <TextField className={classes.text} autoComplete="false" variant="outlined" name="email" defaultValue={user.result.email} onChange={handleChange}/>
+                            <TextField className={classes.text} autoComplete="false" variant="outlined" name="email"  type="email" defaultValue={user.result.email} onChange={handleChange}/>
                         </Grid>
                         <Grid item xs={4} sm={5}>
                             <Typography className={classes.title} align="right" gutterBottom>Phone Number: </Typography>

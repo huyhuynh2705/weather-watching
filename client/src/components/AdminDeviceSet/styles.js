@@ -10,7 +10,7 @@ export default makeStyles((theme) => ({
       color: '#fff',
     },
     paper: {
-      width: '500px',
+      width: '800px',
       padding: '20px'
     },
     title: {

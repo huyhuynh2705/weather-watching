@@ -6,5 +6,15 @@ import devices from './devices';
 import deviceset from './deviceset';
 import alldevicedata from './alldevicedata';
 import countdevice from './countdevice';
+import countdeviceset from './countdeviceset';
+import users from './users';
+import countuser from './countuser';
+import devicesetname from './devicesetname';
+import trafficlightname from './trafficlightname';
+import dht11name from './dht11name';
+import lightname from './lightname';
 
-export default combineReducers({auth, data, devices, deviceset, alldevicedata, countdevice});
+export default combineReducers({
+    auth, data, devices, deviceset, alldevicedata, 
+    countdevice, countdeviceset, users, countuser, 
+    devicesetname, trafficlightname, dht11name, lightname});

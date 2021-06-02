@@ -69,8 +69,8 @@ export default function AppBarAdmin() {
       <AppBar position="static">
         <Toolbar>
           <Typography component={Link} to="/admin" className={classes.title}>WEATHER WATCHING</Typography>
-          <Button className={classes.button} variant="text" color="inherit" size="large" startIcon={<DeviceHubIcon />} component={Link} to="/admin/adddeviceset">Add Device Set</Button>
-          <Button className={classes.button} variant="text" color="inherit" size="large" startIcon={<PersonAddIcon />} component={Link} to="/admin/signup">Add User</Button>
+          {/* <Button className={classes.button} variant="text" color="inherit" size="large" startIcon={<DeviceHubIcon />} component={Link} to="/admin/adddeviceset">Add Device Set</Button> */}
+          {/* <Button className={classes.button} variant="text" color="inherit" size="large" startIcon={<PersonAddIcon />} component={Link} to="/admin/signup">Add User</Button> */}
           <Button className={classes.button} variant="text" color="inherit" size="large" startIcon={<AccountCircleIcon />} onClick={handleLogout}>Admin Logout</Button>
           <Popper open={open} anchorEl={anchorRef.current} role={undefined} transition >
             {({ TransitionProps, placement }) => (

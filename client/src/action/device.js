@@ -3,29 +3,16 @@ import * as api from '../api/index'
 export const addDevice = (form) => async (dispatch) => {
   try {
     const { data } = await api.addDevice(form)
-    console.log("data: ", data);
 
-    dispatch({ type: 'ADD_DEVICE', data })
+    dispatch({ type: 'ADD_DEVICE', payload: data })
     
   } catch (error) {
     console.log(error.message)
   }
 }
 
-export const addDeviceSet = (form) => async (dispatch) => {
-    try {
-      const { data } = await api.addDeviceSet(form)
-  
-      dispatch({ type: "ADDDEVICESET", data })
-      
-    } catch (error) {
-      alert(error.response.data.message)
-    }
-  }
-  
 export const getAdminDevice = (form) => async (dispatch) => {
   try {
-    
     const { data } = await api.getAdminDevice(form);
 
     dispatch({ type: 'ADMIN_DEVICE', payload: data });
@@ -75,3 +62,38 @@ export const deleteDevice = (id) => async (dispatch) => {
   }
 };
   
+export const getTrafficlightName = () => async (dispatch) => {
+  try {
+    
+    const { data } = await api.getTrafficlightName();
+
+    dispatch({ type: 'ADMIN_NAME_TRAFFIC_LIGHT', payload: data });
+
+  } catch (error) {
+    console.log(error.response);
+  }
+};
+
+export const getDHT11Name = () => async (dispatch) => {
+  try {
+    
+    const { data } = await api.getDHT11Name();
+
+    dispatch({ type: 'ADMIN_NAME_DHT11', payload: data });
+
+  } catch (error) {
+    console.log(error.response);
+  }
+};
+
+export const getLightName = () => async (dispatch) => {
+  try {
+    
+    const { data } = await api.getLightName();
+
+    dispatch({ type: 'ADMIN_NAME_LIGHT', payload: data });
+
+  } catch (error) {
+    console.log(error.response);
+  }
+};

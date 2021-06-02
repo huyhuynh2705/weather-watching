@@ -25,14 +25,3 @@ export const updateProfile = (id, form) => async (dispatch) => {
   }
 }
 
-
-export const signup = (form) => async (dispatch) => {
-  try {
-    const { data } = await api.signUp(form)
-
-    dispatch({ type: 'SIGNUP', data })
-
-  } catch (error) {
-    console.log(error)
-  }
-}
