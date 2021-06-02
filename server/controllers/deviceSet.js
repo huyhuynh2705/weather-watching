@@ -31,6 +31,8 @@ export const addDeviceSet = async (req, res) => {
     //Dung ten cua device + username thay vi id
 
     const deviceSet = req.body;
+    const setmodel = DeviceSetModel
+    if (setmodel.find({setName : deviceSet.setName})) return res.status(404).json({ message: "This deviceSet has existed" });
 
     const oldTL = await DeviceModel.find({name : deviceSet.trafficLightname});
     if (!oldTL) return res.status(404).json({ message: "Traffic Light doesn't exist" });
