@@ -8,12 +8,26 @@ import UserModel from "../models/user.js";
 const router = express.Router();
 
 export const getDeviceSet = async (req, res) => { 
-    
     try {
-        const deviceSetMessage = await DeviceSetModel.find();
-        console.log(deviceSetMessage);
+        const keys = ['DHT11Id', 'lightId', 'trafficLightId']
+        const deviceSetMessage = await DeviceSetModel.find().lean();
+        let result = []
+        for (const set of deviceSetMessage) {
+            let name = {}
+            for (let i = 0; i < keys.length; i++) {
+                const device = await DeviceModel.findOne({
+                    _id: set[keys[i]] 
+                })
+                
+                name[keys[i]] = device.name
+            }
+            result.push({
+                ...set,
+                ...name
+            })
+        }
 
-        res.status(200).json(deviceSetMessage);
+        res.status(200).json(result);
     } catch (error) {
         res.status(404).json({ message: error.message });
     }

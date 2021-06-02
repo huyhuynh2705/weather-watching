@@ -10,7 +10,7 @@ mongoose.Promise = global.Promise
 
 mongoose.connect(mongodb_url, connectionOptions)
 
-mongoose.set('debug', true)
+mongoose.set('debug', false)
 
 export { 
     mongoose 
