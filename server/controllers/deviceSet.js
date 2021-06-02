@@ -11,6 +11,7 @@ export const getDeviceSet = async (req, res) => {
     
     try {
         const deviceSetMessage = await DeviceSetModel.find();
+        console.log(deviceSetMessage);
 
         res.status(200).json(deviceSetMessage);
     } catch (error) {
@@ -130,18 +131,19 @@ export const addDeviceSet = async (req, res) => {
     const setmodel = await DeviceSetModel.findOne({setName : setName})
     if (setmodel) return res.status(404).json({ message: "This deviceSet has existed" });
 
-    const oldTL = await DeviceModel.find({name : trafficLightName});
+    const oldTL = await DeviceModel.findOne({name : trafficLightName});
     if (oldTL == null) return res.status(404).json({ message: "Traffic Light doesn't exist" });
-    const oldDHT = await DeviceModel.find({name : DHT11Name});
+    const oldDHT = await DeviceModel.findOne({name : DHT11Name});
     if (oldDHT == null) return res.status(404).json({ message: "DHT11 doesn't exist" });
-    const oldL = await DeviceModel.find({name : lightName});
+    const oldL = await DeviceModel.findOne({name : lightName});
     if (oldL == null) return res.status(404).json({ message: "Light doesn't exist" });
  
-    const oldUser = await UserModel.find({username : username})
+    const oldUser = await UserModel.findOne({username : username})
 
+    console.log(oldUser)
     console.log(oldUser._id)
     const newdeviceset = {
-        setName,
+        setName: setName,
         userID: oldUser._id,
         trafficLightId: oldTL._id,
         DHT11Id: oldDHT._id,
