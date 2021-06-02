@@ -80,3 +80,14 @@ export const addUser = (form) => async (dispatch) => {
     }
   };
   
+  export const getUserName = () => async (dispatch) => {
+    try {
+      
+      const { data } = await api.getUserName();
+  
+      dispatch({ type: 'ADMIN_USERNAME', payload: data });
+  
+    } catch (error) {
+      console.log(error.response);
+    }
+  }

@@ -18,9 +18,9 @@ import Select from '@material-ui/core/Select';
 import InputLabel from '@material-ui/core/InputLabel';
 import FormControl from '@material-ui/core/FormControl';
 
-import { deleteDeviceSet, getAdminDeviceSet, getCountDeviceSet, addDeviceSet } from '../../action/deviceset'
+import { deleteDeviceSet, getAdminDeviceSet, getCountDeviceSet, addDeviceSet, updateDeviceSet } from '../../action/deviceset'
 import { getTrafficlightName, getDHT11Name, getLightName } from '../../action/device'
-
+import { getUserName } from '../../action/user';
 function createData(index, id, time, setName, userID, trafficLightId, DHT11Id, lightId) {
     return { index, id, time, setName, userID, trafficLightId, DHT11Id, lightId };
 }
@@ -33,11 +33,11 @@ const AdminDeviceSet = ({limitPerPage}) => {
     const totalItems = useSelector((state) => state.countdeviceset)
 
     let deviceset = useSelector((state) => state.deviceset)
-    console.log(deviceset);
 
     let trafficlightname = useSelector((state) => state.trafficlightname)
     let dht11name = useSelector((state) => state.dht11name)
     let lightname = useSelector((state) => state.lightname)
+    let username = useSelector((state) => state.username)
 
     const [updateIndex, setUpdateIndex] = useState(null)
 
@@ -57,6 +57,7 @@ const AdminDeviceSet = ({limitPerPage}) => {
         dispatch(getTrafficlightName());
         dispatch(getDHT11Name());
         dispatch(getLightName());
+        dispatch(getUserName());
     }, [open])
 
     const handleChangePage = (e, value) => {
@@ -71,12 +72,12 @@ const AdminDeviceSet = ({limitPerPage}) => {
         e.preventDefault();
         if (form!=initialState) {
             if (isUpdate) {
-                dispatch(updateDevice(form)) 
+                dispatch(updateDeviceSet(form)) 
             } else {
                 dispatch(addDeviceSet(form));
-                dispatch(getAdminDeviceSet({page: page, limit: limitPerPage})) 
             }
         }
+        dispatch(getAdminDeviceSet({page: page, limit: limitPerPage})) 
         setForm(initialState);
         setIsUpdate(true);
         setUpdateIndex(null)
@@ -229,7 +230,7 @@ const AdminDeviceSet = ({limitPerPage}) => {
                         </Grid>
                         <Grid item xs={9}>
                             <TextField className={classes.text} autoComplete="false" fullWidth variant="outlined" name="setName" label="Set Name" value={form.setName} onChange={handleChange}/>
-                            {/* <FormControl fullWidth variant="outlined" className={classes.formControl}>
+                            <FormControl fullWidth variant="outlined" className={classes.formControl}>
                                 <InputLabel id="username-new-label">Username</InputLabel>
                                 <Select
                                 labelId="username-new-label"
@@ -237,12 +238,14 @@ const AdminDeviceSet = ({limitPerPage}) => {
                                 value={form.username}
                                 onChange={handleChange}
                                 >
-                                    <MenuItem value="User 1">User 1</MenuItem>
-                                    <MenuItem value="User 2">User 2</MenuItem>
-                                    <MenuItem value="User 3">User 3</MenuItem>
+                                <MenuItem key="None" value="None">None</MenuItem>
+                                {username.map((name) => (
+                                    <MenuItem key={name} value={name}>
+                                    {name}
+                                    </MenuItem>
+                                ))}
                                 </Select>
-                            </FormControl> */}
-                            <TextField className={classes.text} autoComplete="false" fullWidth variant="outlined" name="username" label="Username" value={form.username} onChange={handleChange}/>
+                            </FormControl>
                             <FormControl fullWidth variant="outlined" className={classes.formControl}>
                                 <InputLabel id="trafficLightName-new-label">Traffic Light</InputLabel>
                                 <Select
