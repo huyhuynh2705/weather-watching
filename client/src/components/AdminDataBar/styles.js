@@ -4,4 +4,9 @@ export default makeStyles(() => ({
     root: {
         marginTop: '20px',
     },
+    table: {
+        minWidth: 650,
+        marginTop: '20px',
+        marginBottom: '20px',
+      },
 }))

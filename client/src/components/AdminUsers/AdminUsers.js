@@ -2,7 +2,6 @@ import React, { useState, useEffect } from 'react'
 import { Button, Grid, Paper, TextField, Typography } from '@material-ui/core'
 import useStyles from "./styles"
 import { useDispatch, useSelector } from 'react-redux';
-import validator from 'validator' 
 import Table from '@material-ui/core/Table';
 import TableBody from '@material-ui/core/TableBody';
 import TableCell from '@material-ui/core/TableCell';
@@ -284,9 +283,9 @@ const AdminUsers = ({limitPerPage}) => {
                         <TableCell align="left">Name</TableCell>
                         <TableCell align="left">Email</TableCell>
                         <TableCell align="left">Phone Number</TableCell>
-                        <TableCell align="left">Device Set Id</TableCell>
+                        <TableCell align="left">Device Set Name</TableCell>
                         <TableCell align="left">Role</TableCell>
-                        <TableCell align="left"></TableCell>
+                        <TableCell align="left">Actions</TableCell>
                     </TableRow>
                     </TableHead>
                     <TableBody>

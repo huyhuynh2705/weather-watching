@@ -35,6 +35,18 @@ export const getCountDeviceSet = () => async (dispatch) => {
   }
 };
 
+export const getCountUnusedSet = () => async (dispatch) => {
+  try {
+    
+    const { data } = await api.getCountUnusedSet();
+
+    dispatch({ type: 'UNUSED_DEVICE_SET_COUNT', payload: data });
+
+  } catch (error) {
+    console.log(error);
+  }
+};
+
 // export const updateDeviceSet = (form) => async (dispatch) => {
 //   try {
     
