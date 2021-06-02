@@ -5,11 +5,25 @@ import Typography from '@material-ui/core/Typography'
 import useStyles from "./styles"
 import { CardActionArea, Grid } from '@material-ui/core'
 
-import icon from './hud.png'
+import hud from './hud.png'
+import hudlow from './hudlow.png'
+import hudmed from './hudmed.png'
+import hudhigh from './hudhigh.png'
 
 function Humidity({ data }) {
   const classes = useStyles()
+  let icon = hud
   
+  if (Number(data) <= 33) {
+    icon = hudlow;
+  }
+  else if (Number(data) > 33 && Number(data) < 66) {
+    icon = hudmed;
+  }
+  else if (Number(data) >= 66){
+    icon = hudhigh;
+  }
+
   return (
     <Card>
       <CardActionArea>

@@ -4,7 +4,7 @@ const path = process.env.NODE_ENV == 'production' ? '.env.production': '.env.dev
 dotenv.config({ path })
 
 const server = process.env.SERVER || "io.adafruit.com"
-const server_port = process.env.SERVER_PORT || 8883
+const server_port = process.env.SERVER_PORT || 8883<<<<<<< HEAD
 const username = process.env.USERNAME_ADAFUIRT || ""
 const key = process.env.KEY_ADAFUIRT || ""
 const username2 = process.env.USERNAME_ADAFUIRT_2 || ""

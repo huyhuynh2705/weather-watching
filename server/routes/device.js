@@ -1,11 +1,19 @@
 import express from 'express';
 
-import { addDevice, getDevice } from '../controllers/device.js';
+import { addDevice, getDevice, getAdminDevice, getCountDevice, updateDevice, deleteDevice, getTrafficlightName, getDHT11Name, getLightName } from '../controllers/device.js';
 
 const router = express.Router();
 import auth from "../middleware/auth.js";
 
 router.get('/', getDevice);
 router.post('/', addDevice);
+router.post('/admin/all', getAdminDevice);
+router.get('/admin/count', getCountDevice);
+router.post('/admin/update', updateDevice);
+router.delete('/admin/delete/:id', deleteDevice);
+
+router.get('/admin/TrafficlightName', getTrafficlightName);
+router.get('/admin/DHT11Name', getDHT11Name);
+router.get('/admin/LightName', getLightName);
 
 export default router;

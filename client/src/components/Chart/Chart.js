@@ -1,5 +1,5 @@
 import React, { useState } from 'react'
-import { Container, Grid } from '@material-ui/core'
+import { Container, Grid, Typography } from '@material-ui/core'
 import Paper from '@material-ui/core/Paper';
 import useStyles from "./styles"
 import { Line } from 'react-chartjs-2';
@@ -9,18 +9,21 @@ import { useSelector } from 'react-redux'
 const Chart = () => {
     const classes = useStyles()
     const devicedata = useSelector((state) => state.alldevicedata)
-    console.log("chart", devicedata)
     let tldata = [];
     let tllabels = [];
 
     if (!!devicedata.tlvalues) {
-        for (let i = 0; i < devicedata.tlvalues.length; i++) {
+        for (let i = devicedata.tlvalues.length - 1 ; i >= 0 ; i--) {
             tldata.push(devicedata.tlvalues[i].value)
             tllabels.push(devicedata.tlvalues[i].time.slice(11, 16) + " " + devicedata.tlvalues[i].time.slice(8, 10)+ "/" + devicedata.tlvalues[i].time.slice(5, 7))
         }
     }
-    console.log("tlvalues", tldata)
 
+    for (let i = 0; i < tldata.length; i++) {
+        if (tldata[i] == '10') { tldata[i] = '-1'}
+        else if (tldata[i] == '11') { tldata[i] = '0'}
+        else if (tldata[i] == '01') { tldata[i] = '1'}
+    }
 
     let tempdata = [];
     let templabels = [];    
@@ -28,7 +31,7 @@ const Chart = () => {
     let humlabels = [];
 
     if (!!devicedata.dhtvalues) {
-        for (let i = 0; i < devicedata.dhtvalues.length; i++) {
+        for (let i = devicedata.dhtvalues.length - 1 ; i >= 0 ; i--) {
             tempdata.push(devicedata.dhtvalues[i].value)
             humdata.push(devicedata.dhtvalues[i].value2)
             templabels.push(devicedata.dhtvalues[i].time.slice(11, 16) + " " + devicedata.dhtvalues[i].time.slice(8, 10)+ "/" + devicedata.dhtvalues[i].time.slice(5, 7))
@@ -38,6 +41,13 @@ const Chart = () => {
 
     let lightdata = [];
     let lightlabels = [];
+
+    if (!!devicedata.lvalues) {
+        for (let i = devicedata.lvalues.length - 1 ; i >= 0 ; i--) {
+            lightdata.push(devicedata.lvalues[i].value)
+            lightlabels.push(devicedata.lvalues[i].time.slice(11, 16) + " " + devicedata.lvalues[i].time.slice(8, 10)+ "/" + devicedata.lvalues[i].time.slice(5, 7))
+        }
+    }
 
     const tlChartData = {
         labels: tllabels,
@@ -89,15 +99,19 @@ const Chart = () => {
                 <Grid container spacing={3}>
                     <Grid item xs={false} sm={6}>
                         <Line data={tlChartData} height={200} />
+                        <Typography align="center" variant="h6">Condition Chart</Typography>
                     </Grid>
                     <Grid item xs={false} sm={6}>
                         <Line data={tempChartData} height={200} />
+                        <Typography align="center" variant="h6">Temperature Chart</Typography>
                     </Grid>
                     <Grid item xs={false} sm={6}>
-                        <Line data={humChartData} height={400} width={600} />
+                        <Line data={humChartData} height={200} />
+                        <Typography align="center" variant="h6">Humidity Chart</Typography>
                     </Grid>
                     <Grid item xs={false} sm={6}>
-                        <Line data={lightChartData} height={400} width={600} />
+                        <Line data={lightChartData} height={200} />
+                        <Typography align="center" variant="h6">Light Chart</Typography>
                     </Grid>
                 </Grid>
             </Paper>

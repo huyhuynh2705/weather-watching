@@ -14,7 +14,7 @@ function Device() {
 
   return data.length == 0 ? <CircularProgress /> : (
     <Container>
-      <Grid className={classes.root} container justify="space-between" alignItems="stretch" spacing={3}>
+      <Grid className={classes.root} container justify="space-between" alignItems="stretch" spacing={2}>
         <Grid item xs={12}>
           <TrafficLight data={data.tlvalues}/>
         </Grid>

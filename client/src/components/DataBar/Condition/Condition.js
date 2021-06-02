@@ -11,16 +11,20 @@ import tl from './tl.png'
 
 function Condition({ data }) {
   const classes = useStyles()
+  let condition
   let icon = tl
   switch (data) {
-    case 'Bad':
+    case '11':
       icon = tlr;
+      condition = 'Bad'
       break;
-    case 'Normal':
+    case '10':
       icon = tly;
+      condition = 'Normal'
       break;
-    case 'Fine':
+    case '01':
       icon = tlg;
+      condition = 'Fine'
       break;
     default:
       break;
@@ -35,7 +39,7 @@ function Condition({ data }) {
             </Grid>
             <Grid item xs={9} sm={9}>
               <Typography variant="h5" component="h2" align="center">Condition</Typography>
-              <Typography variant="h6" component="h2" align="center">{ data }</Typography>
+              <Typography variant="h6" component="h2" align="center">{ condition }</Typography>
             </Grid>
           </Grid>
         </CardContent>

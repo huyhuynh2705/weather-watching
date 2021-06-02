@@ -69,7 +69,7 @@ export default function AppBarUser() {
         <Toolbar>
           <Typography component={Link} to="/" className={classes.title}>WEATHER WATCHING</Typography>
           <Button className={classes.button} variant="text" color="inherit" size="large" startIcon={<DeviceHubIcon />} component={Link} to="/devices">Devices</Button>
-          <Button className={classes.button} variant="text" color="inherit" size="large" startIcon={<AccountCircleIcon />} ref={anchorRef}onClick={handleToggle}>Hi {user.result.name}</Button>
+          <Button className={classes.button} variant="text" color="inherit" size="large" startIcon={<AccountCircleIcon />} ref={anchorRef} onClick={handleToggle}>Hi {user.result.name}</Button>
           <Popper open={open} anchorEl={anchorRef.current} role={undefined} transition >
             {({ TransitionProps, placement }) => (
               <Grow

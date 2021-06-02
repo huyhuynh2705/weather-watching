@@ -21,17 +21,7 @@ export const updateProfile = (id, form) => async (dispatch) => {
     
   } catch (error) {
     console.log(error.response)
+    alert(error.response.data.message)
   }
 }
 
-
-export const signup = (form) => async (dispatch) => {
-  try {
-    const { data } = await api.signUp(form)
-
-    dispatch({ type: 'SIGNUP', data })
-
-  } catch (error) {
-    console.log(error)
-  }
-}

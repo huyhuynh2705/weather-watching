@@ -8,8 +8,8 @@ import TableHead from '@material-ui/core/TableHead';
 import TableRow from '@material-ui/core/TableRow';
 import tl from './tl.png'
 
-function createData(time, deviceId, type, condition) {
-  return { time, deviceId, type, condition };
+function createData(time, date, deviceId, type, condition) {
+  return { time, date, deviceId, type, condition };
 }
 
 function TrafficLight({ data }) {
@@ -34,29 +34,40 @@ function TrafficLight({ data }) {
   }
 
   for (let i = 0; i < data.length/2 ; i++) {
-    rows1.push(createData(data[i].time.slice(11, 19) + " " + data[i].time.slice(0, 10), data[i].deviceId, data[i].type, data[i].value))
+    rows1.push(createData(data[i].time.slice(11, 19), data[i].time.slice(0, 10), data[i].deviceId, data[i].type, data[i].value))
   }
 
   for (let i = divide; i < data.length ; i++) {
-    rows2.push(createData(data[i].time.slice(11, 19) + " " + data[i].time.slice(0, 10), data[i].deviceId, data[i].type, data[i].value))
+    rows2.push(createData(data[i].time.slice(11, 19), data[i].time.slice(0, 10), data[i].deviceId, data[i].type, data[i].value))
   }
 
-  console.log(data.length)
+  for (let i = 0; i < rows1.length; i++) {
+    if (rows1[i].condition == '10') { rows1[i].condition = 'Bad'}
+    else if (rows1[i].condition == '11') { rows1[i].condition = 'Normal'}
+    else if (rows1[i].condition == '01') { rows1[i].condition = 'Fine'}
+  }
+
+  for (let i = 0; i < rows2.length; i++) {
+    if (rows2[i].condition == '10') { rows2[i].condition = 'Bad'}
+    else if (rows2[i].condition == '11') { rows2[i].condition = 'Normal'}
+    else if (rows2[i].condition == '01') { rows2[i].condition = 'Fine'}
+  }
 
   return (
     <Paper className={classes.root}>
-      <Typography align="center" variant="h6" gutterBottom>Traffic Light</Typography>
+      <Typography align="center" variant="h6">Traffic Light</Typography>
+      <Typography align="center" variant="body1" gutterBottom>Device ID: {data[0].deviceId}</Typography>
       <Grid container spacing={3}>
         {/* <Grid item xs={false} sm={12} md={2}>
           <img className={classes.media} src={tl} alt="tl" />
           <Typography align="center">Traffic Light</Typography>
         </Grid> */}
         <Grid item xs={12} sm={12} md={6}>
-          <Table className={classes.table} size="small" aria-label="a dense table">
+          <Table size="small" aria-label="a dense table">
             <TableHead>
               <TableRow>
+                <TableCell align="left">Date</TableCell>
                 <TableCell align="left">Time</TableCell>
-                <TableCell align="left">Device Id</TableCell>
                 <TableCell align="left">Type</TableCell>
                 <TableCell align="left">Condition</TableCell>
               </TableRow>
@@ -64,8 +75,8 @@ function TrafficLight({ data }) {
             <TableBody>
               {rows1.map((row1) => (
                 <TableRow key={row1.time}>
-                  <TableCell component="th" scope="row">{row1.time}</TableCell>
-                  <TableCell align="left">{row1.deviceId}</TableCell>
+                  <TableCell component="th" scope="row">{row1.date}</TableCell>
+                  <TableCell align="left">{row1.time}</TableCell>
                   <TableCell align="left">{row1.type}</TableCell>
                   <TableCell align="left">{row1.condition}</TableCell>
                 </TableRow>
@@ -74,11 +85,11 @@ function TrafficLight({ data }) {
           </Table>
         </Grid>
         <Grid item xs={12} sm={12} md={6}>
-          <Table className={classes.table} size="small" aria-label="a dense table">
+          <Table size="small" aria-label="a dense table">
             <TableHead>
               <TableRow>
+                <TableCell align="left">Date</TableCell>
                 <TableCell align="left">Time</TableCell>
-                <TableCell align="left">Device Id</TableCell>
                 <TableCell align="left">Type</TableCell>
                 <TableCell align="left">Condition</TableCell>
               </TableRow>
@@ -86,8 +97,8 @@ function TrafficLight({ data }) {
             <TableBody>
               {rows2.map((row2) => (
                 <TableRow key={row2.time}>
-                  <TableCell component="th" scope="row">{row2.time}</TableCell>
-                  <TableCell align="left">{row2.deviceId}</TableCell>
+                  <TableCell component="th" scope="row">{row2.date}</TableCell>
+                  <TableCell align="left">{row2.time}</TableCell>
                   <TableCell align="left">{row2.type}</TableCell>
                   <TableCell align="left">{row2.condition}</TableCell>
                 </TableRow>

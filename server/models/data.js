@@ -6,9 +6,10 @@ const dataSchema = mongoose.Schema({
         type: Date,
         default: new Date(),
     },
-    type: String, //Traffic Light || DHT11 || Light 
-    value: String, // Temperature || Traffic Light
-    value2: String //Humidity
+    transactionHash: String,
+    type: String,  // Traffic Light || DHT11 || Light 
+    value: String, // Temperature || Traffic Light || Light
+    value2: String // Humidity if type DHT11
 })
 
 var DataModel = mongoose.model('DataModel', dataSchema);
