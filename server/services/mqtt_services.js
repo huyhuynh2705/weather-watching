@@ -21,6 +21,10 @@ const subscribe_topics = async () => {
         */
         mqtt_client.subscribe(dht11_topic)
         mqtt_client2.subscribe(light_watcher_topic)
+
+        console.log("dht11 topic", dht11_topic)
+        console.log("light watcher topic", light_watcher_topic)
+        console.log("trafic light topic", trafic_light_topic)
     } catch (err) {
         console.log(err)
     }
@@ -83,15 +87,21 @@ const update_traffic_light = async (deviceSet) => {
     let last_data
     if (!last_light_value) {
         last_data = await DataModel.findOne({ deviceId: deviceSet.lightId }).sort({ _id: -1 })
-        last_light_value = last_data.value 
+        if (last_data) {
+            last_light_value = last_data.value 
+        }
     }
     if (!last_temp_value) {
         last_data = await DataModel.findOne({ deviceId: deviceSet.DHT11Id }).sort({ _id: -1 })
-        last_temp_value = last_data.value 
+        if (last_data) {
+            last_temp_value = last_data.value 
+        }
     }
     if (!last_humid_value) {
         last_data = await DataModel.findOne({ deviceId: deviceSet.DHT11Id }).sort({ _id: -1 })
-        last_humid_value = last_data.value2 
+        if (last_data) {
+            last_humid_value = last_data.value2 
+        }
     }
 
     const traffic_light_color = calculate_lightc_color(last_light_value, last_temp_value, last_humid_value)
@@ -99,15 +109,15 @@ const update_traffic_light = async (deviceSet) => {
     const traffic_light_device = await DeviceModel.findOne({
         _id: deviceSet.trafficLightId
     })
-
-    await mqtt_client.publish(traffic_light_device.topic, `
+    const dataPublish =  `
         {
             "id": "${traffic_light_device.idServer}",
             "name": "${traffic_light_device.name}",
             "data": "${traffic_light_color}",
             "unit": ""
         }
-    `)
+    `
+    await mqtt_client.publish(traffic_light_device.topic, dataPublish)
 
     const traffic_light_data = new DataModel({
         deviceId: traffic_light_device._id,
@@ -117,19 +127,19 @@ const update_traffic_light = async (deviceSet) => {
     })
 
     await traffic_light_data.save()
+
+    console.log("New data handled", dataPublish)
 }
 
 const handle_event = async (topic, message) => {
     const device = await get_device(topic)
     const parsed_message = JSON.parse(message.toString())
     const { type } = device
-    console.log("light", last_light_value)
-    console.log("temp", last_temp_value)
-    console.log("humid", last_humid_value)
-
-    console.log(type)
 
     let deviceSet
+
+    console.log("Receive data from", device)
+
     switch (type.toLowerCase()) {
         case "light": {
             deviceSet = await DeviceSetModel.findOne({ lightId: device._id })
@@ -146,7 +156,7 @@ const handle_event = async (topic, message) => {
         }
     }
 
-    //await update_traffic_light(deviceSet)
+    await update_traffic_light(deviceSet)
 }
 
 export {

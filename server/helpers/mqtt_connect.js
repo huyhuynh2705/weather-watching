@@ -1,5 +1,5 @@
 import mqtt from 'mqtt'
-import { url, url2, server_port, dht11_topic, trafic_light_topic, light_watcher_topic } from "./environments/index.js"
+import { url, url2, server_port, dht11_topic, trafic_light_topic, light_watcher_topic } from "../environments/index.js"
 
 const create_connect = (url) => {
     console.log(url)

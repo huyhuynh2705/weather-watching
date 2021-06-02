@@ -1,5 +1,7 @@
 import dotenv from 'dotenv'
-dotenv.config()
+console.log(process.env.NODE_ENV)
+const path = process.env.NODE_ENV == 'production' ? '.env.production': '.env.development'
+dotenv.config({ path })
 
 const server = process.env.SERVER || "io.adafruit.com"
 const server_port = process.env.SERVER_PORT || 8883
@@ -18,6 +20,7 @@ const trafic_light_topic = process.env.TRAFIC_LIGHT_TOPIC || "buiduchuy/feeds/hh
 
 export {
     url,
+    url2,
     server_port,
     mongodb_url,
     dht11_topic,
