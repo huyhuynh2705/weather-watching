@@ -6,6 +6,7 @@ const dataSchema = mongoose.Schema({
         type: Date,
         default: new Date(),
     },
+    transactionHash: String,
     type: String,  // Traffic Light || DHT11 || Light 
     value: String, // Temperature || Traffic Light || Light
     value2: String // Humidity if type DHT11

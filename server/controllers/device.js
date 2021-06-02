@@ -18,16 +18,17 @@ export const getDevice = async (req, res) => {
 }
 
 export const addDevice = async (req, res) => {
+    console.log(req.body);
 
     //const device = req.body;
     const {type, idServer, name, unit, topic} = req.body;
     
     const device = {type, idServer, name, unit, topic}
 
-    const oldDevice = await DeviceModel.findOne({ name: name });
-    if (oldDevice) {
-        return res.status(400).json({message: "Device's name already exists."})
-    }
+    // const oldDevice = await DeviceModel.findOne({ name: name });
+    // if (oldDevice) {
+    //     return res.status(400).json({message: "Device's name already exists."})
+    // }
     
     const newDeviceMessage = new DeviceModel({...device, time: new Date().toUTCString()})
     
