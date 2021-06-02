@@ -44,7 +44,7 @@ const Chart = () => {
 
     if (!!devicedata.lvalues) {
         for (let i = devicedata.lvalues.length - 1 ; i >= 0 ; i--) {
-            lightdata.push(devicedata.lvalues[i].value)
+            lightdata.push((devicedata.lvalues[i].value*100)/1023)
             lightlabels.push(devicedata.lvalues[i].time.slice(11, 16) + " " + devicedata.lvalues[i].time.slice(8, 10)+ "/" + devicedata.lvalues[i].time.slice(5, 7))
         }
     }
@@ -66,7 +66,21 @@ const Chart = () => {
             label: 'Temperature',
             data: tempdata,
             fill: false,
-            borderColor: 'rgb(75, 192, 192)',
+            borderColor: 'rgb(100, 192, 250)',
+            tension: 0.1
+        }, 
+        {
+            label: 'Humidity',
+            data: humdata,
+            fill: false,
+            borderColor: 'rgb(75, 19, 255)',
+            tension: 0.1
+        }, 
+        {
+            label: 'Light',
+            data: lightdata,
+            fill: false,
+            borderColor: 'rgb(255, 255, 100)',
             tension: 0.1
         }]
     };
@@ -103,16 +117,16 @@ const Chart = () => {
                     </Grid>
                     <Grid item xs={false} sm={6}>
                         <Line data={tempChartData} height={200} />
-                        <Typography align="center" variant="h6">Temperature Chart</Typography>
+                        <Typography align="center" variant="h6">Data Chart</Typography>
                     </Grid>
-                    <Grid item xs={false} sm={6}>
+                    {/* <Grid item xs={false} sm={6}>
                         <Line data={humChartData} height={200} />
                         <Typography align="center" variant="h6">Humidity Chart</Typography>
                     </Grid>
                     <Grid item xs={false} sm={6}>
                         <Line data={lightChartData} height={200} />
                         <Typography align="center" variant="h6">Light Chart</Typography>
-                    </Grid>
+                    </Grid> */}
                 </Grid>
             </Paper>
         </Container>

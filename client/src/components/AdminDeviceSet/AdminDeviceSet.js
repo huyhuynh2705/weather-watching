@@ -77,7 +77,7 @@ const AdminDeviceSet = ({limitPerPage}) => {
                 dispatch(addDeviceSet(form));
             }
         }
-        dispatch(getAdminDeviceSet({page: page, limit: limitPerPage})) 
+        //dispatch(getAdminDeviceSet({page: page, limit: limitPerPage})) 
         setForm(initialState);
         setIsUpdate(true);
         setUpdateIndex(null)
@@ -156,9 +156,12 @@ const AdminDeviceSet = ({limitPerPage}) => {
                                     value={form.username}
                                     onChange={handleChange}
                                     >
-                                        <MenuItem value="User 1">User 1</MenuItem>
-                                        <MenuItem value="User 2">User 2</MenuItem>
-                                        <MenuItem value="User 3">User 3</MenuItem>
+                                    <MenuItem key="None" value="None">None</MenuItem>
+                                    {username.map((name) => (
+                                        <MenuItem key={name} value={name}>
+                                        {name}
+                                        </MenuItem>
+                                    ))}
                                     </Select>
                                 </FormControl>
                                 <FormControl fullWidth variant="outlined" className={classes.formControl}>
