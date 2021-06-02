@@ -49,10 +49,10 @@ export const updateDeviceSet = async (req, res) => {
         return res.status(404).json({ message: "DeviceSet doesn't exist."});
     }
 
-    // if (( setName=='' && username=='' && trafficLightName == '' &&  DHT11Name == '' && lightName == '' ) || 
-    //     (trafficlight==oldDevice.trafficLightId && DHT11==oldDevice.DHT11Id && Light==oldDevice.lightId && setName==oldDevice.setName)) {
-    //     return res.status(200).json({ message: "Nothing was changed."});
-    // }
+    if (( setName=='' && username=='' && trafficLightName == '' &&  DHT11Name == '' && lightName == '' ) || 
+        (trafficlight==oldDevice.trafficLightId && DHT11==oldDevice.DHT11Id && Light==oldDevice.lightId && setName==oldDevice.setName)) {
+        return res.status(200).json({ message: "Nothing was changed."});
+    }
 
     if (setName != oldSet.setName) {
         if (setName == '') {
@@ -141,7 +141,6 @@ export const addDeviceSet = async (req, res) => {
     //Dung ten cua device + username thay vi id
 
     const {setName, username, trafficLightName, DHT11Name, lightName } = req.body;
-    console.log(req.body)
     const setmodel = await DeviceSetModel.findOne({setName : setName})
     if (setmodel) return res.status(404).json({ message: "This deviceSet has existed" });
 
@@ -154,8 +153,6 @@ export const addDeviceSet = async (req, res) => {
  
     const oldUser = await UserModel.findOne({username : username})
 
-    console.log(oldUser)
-    console.log(oldUser._id)
     const newdeviceset = {
         setName: setName,
         userID: oldUser._id,
@@ -163,12 +160,12 @@ export const addDeviceSet = async (req, res) => {
         DHT11Id: oldDHT._id,
         lightId: oldL._id
     }
-    console.log(newdeviceset)
-    let newDeviceSetMessage
-    newDeviceSetMessage = new DeviceSetModel(newdeviceset)
+
+    let newDeviceSetMessage = new DeviceSetModel(newdeviceset)
+
     if (oldUser) {
         let user = UserModel
-        user.findOneAndUpdate({username : deviceSet.username }, {deviceSetName : deviceSet.setName}, {new: true},(error, data) =>{
+        user.findOneAndUpdate({username : username }, {deviceSetName : setName}, {new: true},(error, data) =>{
             if (error) {
                 console.log(error)
             }
@@ -208,7 +205,6 @@ export const deleteDeviceSet = async (req, res) => {
     // req.params= {id: ''}
     // Neu set co user thi khong cho xoa
     const { id } = req.params;
-    
 
     try {
         const oldDeviceSet = await DeviceSetModel.findById(id);
@@ -220,7 +216,7 @@ export const deleteDeviceSet = async (req, res) => {
             await DeviceSetModel.findByIdAndRemove(id);
             return res.status(200).json({ message: "DeviceSet is deleted."});            
         }
-        else return res.status(200).json({ message: "DeviceSet is belong to an user and cant be deleted"});
+        else return res.status(404).json({ message: "DeviceSet is belong to an user and can't be deleted"});
         
     } catch (error) {
         res.status(404).json({ message: error.message });
@@ -280,65 +276,6 @@ export const getCountUnusedSet = async (req, res) => {
     }
 }
         
-// export const updateDeviceSet = async (req, res) => {
-    
-//     // req.body = {id: '', setName: '', trafficLightId: '', DHT11Id: '', lightId: ''}
-
-//     //Them setName nen sua lai
-    
-//     // const hay let ?????????
-//     let { id, setName, trafficlight, DTH11, Light} = req.body;
-
-//     const oldDevice = await DeviceSetModel.findById(id);
-
-//     //san pham khong ton tai
-//     if (!oldDevice) {
-//         return res.status(404).json({ message: "DeviceSet doesn't exist."});
-//     }
-
-//     if ((trafficlight == '' &&  DTH11 == '' && Light == '' && setName=='') || 
-//         (trafficlight==oldDevice.trafficLightId && DTH11==oldDevice.DHT11Id && Light==oldDevice.lightId && setName==oldDevice.setName)) {
-//         return res.status(200).json({ message: "Nothing was changed."});
-//     }
-
-//     if (trafficlight != oldDevice.trafficLightId) {
-//         if (trafficlight == '') {
-//             trafficlight = oldDevice.trafficLightId;
-//         }
-//     }
-    
-//     if (DTH11 != oldDevice.DHT11Id) {
-//         if (DTH11 == '') {
-//             DTH11 = oldDevice.DHT11Id;
-//         }
-//     }
-
-//     if (Light != oldDevice.lightId) {
-//         if (Light == '') {
-//             Light = oldDevice.lightId;
-//         }
-//     }
-
-//     if (setName != oldDevice.setName) {
-//         if (setName == '') {
-//             setName = oldDevice.setName;
-//         }
-//         else {
-//             const oldSetName = await DeviceSetModel.findOne({ setName });
-//             if (oldSetName) return res.status(400).json({ message: "Set Name already exists" })
-//         }
-//     }
-
-//     let updateDeviceSet = { setName, trafficlight, DTH11, Light };
-
-//     try {
-//         const updatedDeviceSet = await DeviceSetModel.findByIdAndUpdate(id, updateDeviceSet, { new: true });
-//         res.status(200).json(updatedDeviceSet);
-//     } catch (error) {
-//         res.status(404).json({ message: error.message });
-//     }
-// }
-
 export const getNameSet = async (req, res) => {
     try {
         const array = await DeviceSetModel.find({ userID: "" }, { _id: 0, setName: 1 });

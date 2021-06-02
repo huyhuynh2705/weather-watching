@@ -69,7 +69,6 @@ const AdminUsers = ({limitPerPage}) => {
         }
         if (form!=initialState ) {
          if (isUpdate) { 
-            dispatch(updateUser(form))
         } 
         else {
             dispatch(addUser(form))
