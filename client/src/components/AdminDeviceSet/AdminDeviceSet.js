@@ -314,6 +314,7 @@ const AdminDeviceSet = ({limitPerPage}) => {
                         <TableCell align="left">Traffic Light</TableCell>
                         <TableCell align="left">DHT11</TableCell>
                         <TableCell align="left">Light</TableCell>
+                        <TableCell align="left">Actions</TableCell>
                     </TableRow>
                     </TableHead>
                     <TableBody>

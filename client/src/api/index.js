@@ -35,5 +35,7 @@ export const getNameSet = () => API.get('/set/admin/getNameSet');
 export const getTrafficlightName = () => API.get('/device/admin/TrafficlightName');
 export const getDHT11Name = () => API.get('/device/admin/DHT11Name');
 export const getLightName = () => API.get('/device/admin/LightName');
+export const getCountUnusedSet = () => API.get('/set/admin/countUnusedSet');
+export const countSubscriber = () => API.get('/user/admin/countSubscriber');
 
 

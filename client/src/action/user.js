@@ -38,6 +38,18 @@ export const addUser = (form) => async (dispatch) => {
       console.log(error.response);
     }
   };
+
+  export const countSubscriber = () => async (dispatch) => {
+    try {
+      
+      const { data } = await api.countSubscriber();
+  
+      dispatch({ type: 'SUBSCRIBE_USER_COUNT', payload: data });
+  
+    } catch (error) {
+      console.log(error.response);
+    }
+  };
   
   export const deleteUser = (id) => async (dispatch) => {
     try {
