@@ -119,6 +119,7 @@ export const deleteUser = async (req, res) => {
   }
 
 }
+
 export const getAdminUser = async (req, res) => {
     
   const { page, limit } = req.body;
@@ -280,4 +281,18 @@ export const updateUser = async (req, res) => {
   const updatedUser = await UserModel.findByIdAndUpdate(id, updateUser, { new: true });
   res.json(updatedUser);
  
+}
+
+//return all usernames that have no deviceSet
+export const getUserName = async (req, res) => {
+  try {
+      const array = await UserModel.find({ deviceSetName: "", role: "User" }, { username: 1 } );
+      let username = []
+      for (let i = 0; i < array.length; i++) {
+          username.push(array[i].username);
+      }
+      res.status(200).json(username);
+  } catch (error) {
+      res.status(404).json({ message: error.message });
+  }
 }
