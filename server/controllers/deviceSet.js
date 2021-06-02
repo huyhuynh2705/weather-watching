@@ -40,11 +40,12 @@ export const addDeviceSet = async (req, res) => {
     if (!oldL) return res.status(404).json({ message: "Light doesn't exist" });
  
     const oldUser = deviceSet.username
-    if( !oldUser ) let newDeviceSetMessage = new DeviceSetModel(deviceSet.setName,"","", oldTL.trafficLightId, oldDHT.DHT11Id, oldL.lightId)
-    else {
+    if( !oldUser ){ 
+        let newDeviceSetMessage = new DeviceSetModel(deviceSet.setName,"","", oldTL.trafficLightId, oldDHT.DHT11Id, oldL.lightId)
+    }else {
         let newDeviceSetMessage = new DeviceSetModel(deviceSet.setName,deviceSet.userID,"",oldTL.trafficLightId, oldDHT.DHT11Id, oldL.lightId)
         let user = UserModel
-        user.findOneAndUpdate({username : deviceSet.username }, {devicesetname = deviceSet.setName},{new: true},(error, data) =>{
+        user.findOneAndUpdate({username : deviceSet.username }, {deviceSetName : deviceSet.setName},{new: true},(error, data) =>{
             if (error) {
                 console.log(error)
             }
