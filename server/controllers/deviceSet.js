@@ -47,8 +47,7 @@ export const updateDeviceSet = async (req, res) => {
             //cái này có bug ko
             const oldSetName = await DeviceSetModel.findOne({ id, setName });
             if (oldSetName) return res.status(400).json({ message: "Set Name already exists" });
-            //tước set của user khác?
-            await UserModel.findOneAndUpdate({ deviceSetName: oldSet.setName }, {deviceSetName: ""}, {new: true})
+            await UserModel.findByIdAndUpdate(oldSet.userID, {deviceSetName: setName}, {new: true})
         }
     }
 
