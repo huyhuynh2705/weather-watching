@@ -31,7 +31,7 @@ function AdminDataBar() {
     dispatch(getCountDevice())
     dispatch(getCountDeviceSet())
     dispatch(getCountUnusedSet())
-  }, [])
+  }, [dispatch])
 
   return (
     <Container >

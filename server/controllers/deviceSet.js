@@ -9,25 +9,10 @@ const router = express.Router();
 
 export const getDeviceSet = async (req, res) => { 
     try {
-        const keys = ['DHT11Id', 'lightId', 'trafficLightId']
-        const deviceSetMessage = await DeviceSetModel.find().lean();
-        let result = []
-        for (const set of deviceSetMessage) {
-            let name = {}
-            for (let i = 0; i < keys.length; i++) {
-                const device = await DeviceModel.findOne({
-                    _id: set[keys[i]] 
-                })
-                
-                name[keys[i]] = device.name
-            }
-            result.push({
-                ...set,
-                ...name
-            })
-        }
+        const deviceSetMessage = await DeviceSetModel.find();
+        console.log(deviceSetMessage);
 
-        res.status(200).json(result);
+        res.status(200).json(deviceSetMessage);
     } catch (error) {
         res.status(404).json({ message: error.message });
     }
@@ -49,10 +34,10 @@ export const updateDeviceSet = async (req, res) => {
         return res.status(404).json({ message: "DeviceSet doesn't exist."});
     }
 
-    if (( setName=='' && username=='' && trafficLightName == '' &&  DHT11Name == '' && lightName == '' ) || 
-        (trafficlight==oldDevice.trafficLightId && DHT11==oldDevice.DHT11Id && Light==oldDevice.lightId && setName==oldDevice.setName)) {
-        return res.status(200).json({ message: "Nothing was changed."});
-    }
+    // if (( setName=='' && username=='' && trafficLightName == '' &&  DHT11Name == '' && lightName == '' ) || 
+    //     (trafficlight==oldDevice.trafficLightId && DHT11==oldDevice.DHT11Id && Light==oldDevice.lightId && setName==oldDevice.setName)) {
+    //     return res.status(200).json({ message: "Nothing was changed."});
+    // }
 
     if (setName != oldSet.setName) {
         if (setName == '') {
@@ -151,15 +136,25 @@ export const addDeviceSet = async (req, res) => {
     const oldL = await DeviceModel.findOne({name : lightName});
     if (oldL == null) return res.status(404).json({ message: "Light doesn't exist" });
  
-    const oldUser = await UserModel.findOne({username : username})
-
-    const newdeviceset = {
+    let newdeviceset = {
         setName: setName,
-        userID: oldUser._id,
+        userID: '',
         trafficLightId: oldTL._id,
         DHT11Id: oldDHT._id,
         lightId: oldL._id
     }
+    
+    const oldUser = await UserModel.findOne({username : username})
+
+    if (oldUser) {
+        newdeviceset = {
+            setName: setName,
+            userID: oldUser._id,
+            trafficLightId: oldTL._id,
+            DHT11Id: oldDHT._id,
+            lightId: oldL._id
+        }
+    } 
 
     let newDeviceSetMessage = new DeviceSetModel(newdeviceset)
 
@@ -225,18 +220,28 @@ export const deleteDeviceSet = async (req, res) => {
 }
 
 export const getAdminDeviceSet = async (req, res) => {
-    
     const { page, limit } = req.body;
     const skipIndex = (page - 1) * limit;
-    let deviceSetMessage = [];
-
     try {
-        deviceSetMessage = await DeviceSetModel.find()
-        .sort({ _id: 1 })
-        .skip(skipIndex)
-        .limit(limit)
+        const keys = ['DHT11Id', 'lightId', 'trafficLightId']
+        const deviceSetMessage = await DeviceSetModel.find().sort({ _id: 1 }).skip(skipIndex).limit(limit).lean();
+        let result = []
+        for (const set of deviceSetMessage) {
+            let name = {}
+            for (let i = 0; i < keys.length; i++) {
+                const device = await DeviceModel.findOne({
+                    _id: set[keys[i]] 
+                })
+                
+                name[keys[i]] = device.name
+            }
+            result.push({
+                ...set,
+                ...name
+            })
+        }
 
-        res.status(200).json(deviceSetMessage);
+        res.status(200).json(result);
     } catch (error) {
         res.status(404).json({ message: error.message });
     }

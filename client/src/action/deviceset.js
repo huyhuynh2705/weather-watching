@@ -47,17 +47,17 @@ export const getCountUnusedSet = () => async (dispatch) => {
   }
 };
 
-// export const updateDeviceSet = (form) => async (dispatch) => {
-//   try {
+export const updateDeviceSet = (form) => async (dispatch) => {
+  try {
     
-//     const { data } = await api.updateDeviceSet(form);
+    const { data } = await api.updateDeviceSet(form);
 
-//     dispatch({ type: 'UPDATE_DEVICE', payload: data });
+    dispatch({ type: 'UPDATE_DEVICE_SET', payload: data });
 
-//   } catch (error) {
-//     console.log(error);
-//   }
-// };
+  } catch (error) {
+    console.log(error.response);
+  }
+};
 
 export const deleteDeviceSet = (id) => async (dispatch) => {
   try {
