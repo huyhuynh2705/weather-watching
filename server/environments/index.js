@@ -1,10 +1,10 @@
 import dotenv from 'dotenv'
 console.log(process.env.NODE_ENV)
-const path = process.env.NODE_ENV == 'production' ? '.env.production': '.env.development'
+const path = process.env.NODE_ENV == 'production' ? '.env.production' : '.env.development'
 dotenv.config({ path })
 
 const server = process.env.SERVER || "io.adafruit.com"
-const server_port = process.env.SERVER_PORT || 8883<<<<<<< HEAD
+const server_port = process.env.SERVER_PORT || ""
 const username = process.env.USERNAME_ADAFUIRT || ""
 const key = process.env.KEY_ADAFUIRT || ""
 const username2 = process.env.USERNAME_ADAFUIRT_2 || ""

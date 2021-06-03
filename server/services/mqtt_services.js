@@ -1,12 +1,45 @@
-import {mongoose, mqtt_client, mqtt_client2} from '../helpers/index.js'
+import { mongoose, mqtt_client, mqtt_client2 } from '../helpers/index.js'
 import DeviceModel from '../models/device.js'
 import DataModel from '../models/data.js'
 import DeviceSetModel from '../models/deviceSet.js'
-import {dht11_topic, light_watcher_topic, trafic_light_topic} from '../environments/index.js'
+import { dht11_topic, light_watcher_topic, trafic_light_topic } from '../environments/index.js'
+import SaveContract from '../SaveData.js'
+import Web3 from 'web3'
+
+const web3 = new Web3('https://ropsten.infura.io/v3/4a310c6e551440a39716fc664d8e5021')
+const saveContract = new web3.eth.Contract(SaveContract, "0x8A0E0d8F4799A9e7E85f3Ab78D6D30F12ADB535C")
 
 let last_light_value
 let last_temp_value
 let last_humid_value
+
+const public_key = '0x7465FED2f2d9071B0279107204bFd6D562ba4a97'
+const private_key = 'ef6dfc6ceb389da29a3b2467a4d4d5c90f722860b0e0438a1150e6796d3e36e5'
+
+const sendTransaction = async (id, name, topic, unit, data) => {
+    const tx = saveContract.methods.addData(id, name, topic, unit, data)
+    const gas = await tx.estimateGas({ from: public_key });
+    const gasPrice = await web3.eth.getGasPrice();
+    const networkId = await web3.eth.net.getId();
+    const tx_data = tx.encodeABI();
+    const nonce = await web3.eth.getTransactionCount(public_key);
+
+    const signedTx = await web3.eth.accounts.signTransaction(
+        {
+            to: saveContract.options.address,
+            data: tx_data,
+            gas,
+            gasPrice,
+            nonce,
+            chainId: networkId
+        },
+        private_key
+    );
+
+    const receipt = await web3.eth.sendSignedTransaction(signedTx.rawTransaction);
+    console.log(receipt)
+    return receipt.transactionHash
+}
 
 const subscribe_topics = async () => {
     try {
@@ -56,10 +89,12 @@ const get_device = async (topic) => {
 
 const handle_dht11_data = async (topic, data, device) => {
     const values = data.split("-")
+    const tx_hash = await sendTransaction(device.idServer, device.name, device.topic, device.unit, data)
     const new_data = new DataModel({
         deviceId: device._id,
         time: new Date(),
         type: device.type,
+        transactionHash: tx_hash,
         value: values[0],
         value2: values[1]
     })
@@ -71,9 +106,11 @@ const handle_dht11_data = async (topic, data, device) => {
 }
 
 const handle_light_data = async (topic, data, device) => {
+    const tx_hash = await sendTransaction(device.idServer, device.name, device.topic, device.unit, data)
     const new_data = new DataModel({
         deviceId: device._id,
         time: new Date(),
+        transactionHash: tx_hash,
         type: device.type,
         value: data
     })
@@ -88,19 +125,19 @@ const update_traffic_light = async (deviceSet) => {
     if (!last_light_value) {
         last_data = await DataModel.findOne({ deviceId: deviceSet.lightId }).sort({ _id: -1 })
         if (last_data) {
-            last_light_value = last_data.value 
+            last_light_value = last_data.value
         }
     }
     if (!last_temp_value) {
         last_data = await DataModel.findOne({ deviceId: deviceSet.DHT11Id }).sort({ _id: -1 })
         if (last_data) {
-            last_temp_value = last_data.value 
+            last_temp_value = last_data.value
         }
     }
     if (!last_humid_value) {
         last_data = await DataModel.findOne({ deviceId: deviceSet.DHT11Id }).sort({ _id: -1 })
         if (last_data) {
-            last_humid_value = last_data.value2 
+            last_humid_value = last_data.value2
         }
     }
 
@@ -109,7 +146,7 @@ const update_traffic_light = async (deviceSet) => {
     const traffic_light_device = await DeviceModel.findOne({
         _id: deviceSet.trafficLightId
     })
-    const dataPublish =  `
+    const dataPublish = `
         {
             "id": "${traffic_light_device.idServer}",
             "name": "${traffic_light_device.name}",
@@ -119,9 +156,12 @@ const update_traffic_light = async (deviceSet) => {
     `
     await mqtt_client.publish(traffic_light_device.topic, dataPublish)
 
+    const tx_hash = await sendTransaction(traffic_light_device.idServer, traffic_light_device.name, traffic_light_device.topic, traffic_light_device.unit, traffic_light_color)
+
     const traffic_light_data = new DataModel({
         deviceId: traffic_light_device._id,
         time: new Date(),
+        transactionHash: tx_hash,
         type: traffic_light_device.type,
         value: traffic_light_color,
     })
