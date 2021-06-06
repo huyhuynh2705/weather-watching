@@ -81,9 +81,7 @@ const Login = () => {
             </Button>
             <Grid container>
               <Grid item xs>
-                <Typography component={Link} to="/" variant="body2">
-                  Forgot password?
-                </Typography>
+                <Button color="primary" href="/forgotpassword">Forgot password?</Button>
               </Grid>
             </Grid>
           </form>

@@ -6,9 +6,8 @@ export default (deviceset = [], action) => {
         return deviceset.map((set) => (set._id === action.payload._id ? action.payload : set));
       case 'DELETE_DEVICE_SET':
         return deviceset.filter((set) => set._id !== action.payload);
-      case 'ADD_DEVICE_SET':
-        console.log(action.payload);
-        if (deviceset.length < 5 ) {return [...deviceset, action.payload]}
+      // case 'ADD_DEVICE_SET':
+      //   if (deviceset.length < 5 ) {return [...deviceset, action.payload]}
       default:
         return deviceset;
     }

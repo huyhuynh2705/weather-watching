@@ -1,20 +1,19 @@
-import React, { useState } from 'react'
-import { Container, Grid, Button, CircularProgress } from '@material-ui/core'
+import React from 'react'
+import { Container, Grid, CircularProgress } from '@material-ui/core'
 import useStyles from "./styles"
 import Condition from './Condition/Condition'
 import Temperature from './Temperature/Temperature'
 import Humidity from './Humidity/Humidity'
 import Light from './Light/Light'
-// import { useDispatch } from 'react-redux';
 import { useSelector } from 'react-redux';
-// import { getData } from '../../action/auth'
 
 function DataBar() {
   const classes = useStyles()
 
   let data = useSelector((state) => state.data)
 
-  console.log("data from databar: ", data)
+  // console.log("data from databar: ", data)
+
   if (data.length == 0) {
     data = {condition: "null", temperature: "null", humidity: "null", light:"null"}
   }

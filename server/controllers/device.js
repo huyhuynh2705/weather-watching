@@ -2,6 +2,7 @@ import express from 'express';
 import mongoose from 'mongoose';
 
 import DeviceModel from '../models/device.js';
+import DeviceSetModel from '../models/deviceSet.js';
 import deviceSetModel from '../models/deviceSet.js'
 
 const router = express.Router();
@@ -18,8 +19,6 @@ export const getDevice = async (req, res) => {
 }
 
 export const addDevice = async (req, res) => {
-    console.log(req.body);
-
     //const device = req.body;
     const {type, idServer, name, unit, topic} = req.body;
     
@@ -145,11 +144,28 @@ export const deleteDevice = async (req, res) => {
         if (!oldDevice) {
             return res.status(404).json({ message: "Device doesn't exist." });
         }
-        else {
-            await DeviceModel.findByIdAndRemove(id);
-
-            return res.status(200).json({ message: "Device is deleted."});            
+        let deviceId
+        switch (oldDevice.type) {
+            case 'Traffic Light':
+                deviceId = {trafficLightId: id}
+                break;
+            case 'DHT11':
+                deviceId = {DHT11Id: id}
+            break;
+            case 'Light':
+                deviceId = {lightId: id}
+                break;
+            default:
+                break;
         }
+        const oldSet = await DeviceSetModel.findOne(deviceId)
+        if (oldSet) {
+            return res.status(404).json({ message: "Device belongs to a set." });
+        }
+
+        await DeviceModel.findByIdAndRemove(id);
+
+        return res.status(200).json({ message: "Device is deleted."});            
         
     } catch (error) {
         res.status(404).json({ message: error.message });

@@ -38,10 +38,10 @@ const Profile = () => {
                         <Typography className={classes.title} gutterBottom>{user.result.phoneNum}</Typography>
                     </Grid>
                     <Grid item xs={4} sm={6}>
-                        <Typography className={classes.title} align="right" gutterBottom>Device Set ID: </Typography>
+                        <Typography className={classes.title} align="right" gutterBottom>Device Set Name: </Typography>
                     </Grid>
                     <Grid item xs={8} sm={6}>
-                    <Typography className={classes.title} gutterBottom>{user.result.deviceSetId}</Typography>
+                    <Typography className={classes.title} gutterBottom>{user.result.deviceSetName}</Typography>
                     </Grid>
                     <Grid item xs={4} sm={6}>
                         <Typography className={classes.title} align="right" gutterBottom>Username: </Typography>

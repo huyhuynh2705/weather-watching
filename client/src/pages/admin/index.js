@@ -1,7 +1,4 @@
-import React, { useEffect, useState } from 'react';
-// import { getAdminDevice, getCountDevice } from '../../action/device'
-// import { getAdminDeviceSet, getCountDeviceSet } from '../../action/deviceset'
-// import { getAdminUser, getCountAllUser } from '../../action/user'
+import React, { useState } from 'react';
 import { useDispatch } from 'react-redux';
 import useStyles from "./styles"
 import PropTypes from 'prop-types';
@@ -14,11 +11,13 @@ import AdminDataBar from '@components/AdminDataBar/AdminDataBar'
 import AdminDevices from '@components/AdminDevices/AdminDevices'
 import AdminDeviceSet from '@components/AdminDeviceSet/AdminDeviceSet'
 import AdminUsers from '@components/AdminUsers/AdminUsers'
-import { Container, Paper } from '@material-ui/core';
+import { Container } from '@material-ui/core';
+import { useSelector } from 'react-redux'
 
 function TabPanel(props) {
   const { children, value, index, ...other } = props;
-
+  const store = useSelector((state) => state);
+  //console.log(store);
   return (
     <div
       role="tabpanel"

@@ -31,9 +31,9 @@ const AdminUsers = ({limitPerPage}) => {
     const classes = useStyles()
     const dispatch = useDispatch()
 
-    const totalItems = useSelector((state) => state.countuser)
+    const totalItems = useSelector((state) => state.count.users)
     let users = useSelector((state) => state.users)
-    let devicesetname = useSelector((state) => state.devicesetname)
+    let devicesetname = useSelector((state) => state.names.setnames)
 
     const [updateIndex, setUpdateIndex] = useState(null)
 
