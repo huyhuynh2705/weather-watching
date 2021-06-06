@@ -28,7 +28,7 @@ const initialState = {id: '', type: '', idServer: '', name: '', unit: '', topic:
 const AdminDevices = ({limitPerPage}) => {
     const classes = useStyles()
     const dispatch = useDispatch()
-    const totalItems = useSelector((state) => state.countdevice)
+    const totalItems = useSelector((state) => state.count.devices)
 
     let devices = useSelector((state) => state.devices)
     const [updateIndex, setUpdateIndex] = useState(null)

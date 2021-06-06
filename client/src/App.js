@@ -3,6 +3,7 @@ import { hot } from 'react-hot-loader'
 import { PrivateRoute, PublicRoute } from '@helpers'
 import { Switch } from 'react-router-dom'
 import Login from '@pages/login/index.js'
+import ForgotPassword from '@pages/forgotpassword/index.js'
 import Root from '@pages/root/index.js'
 import Devices from '@pages/user/devices/index.js'
 import Profile from '@pages/user/profile/index.js'
@@ -12,6 +13,7 @@ function App() {
   return (
     <Switch>
       <PublicRoute path="/login" component={Login} />
+      <PublicRoute path="/forgotpassword" component={ForgotPassword} />
       <PrivateRoute exact path="/" component={Root} />
       <PrivateRoute path="/devices" component={Devices} />
       <PrivateRoute path="/user" component={Profile} />

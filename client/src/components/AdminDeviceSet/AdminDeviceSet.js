@@ -30,14 +30,14 @@ const initialState = {id: '', setName: '', username: '', trafficLightName: '', D
 const AdminDeviceSet = ({limitPerPage}) => {
     const classes = useStyles()
     const dispatch = useDispatch()
-    const totalItems = useSelector((state) => state.countdeviceset)
+    const totalItems = useSelector((state) => state.count.devicesets)
 
     let deviceset = useSelector((state) => state.deviceset)
 
-    let trafficlightname = useSelector((state) => state.trafficlightname)
-    let dht11name = useSelector((state) => state.dht11name)
-    let lightname = useSelector((state) => state.lightname)
-    let username = useSelector((state) => state.username)
+    let trafficlightname = useSelector((state) => state.names.tlnames)
+    let dht11name = useSelector((state) => state.names.dhtnames)
+    let lightname = useSelector((state) => state.names.lnames)
+    let username = useSelector((state) => state.names.usernames)
 
     const [updateIndex, setUpdateIndex] = useState(null)
 

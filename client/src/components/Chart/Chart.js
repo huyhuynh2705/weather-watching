@@ -44,7 +44,8 @@ const Chart = () => {
 
     if (!!devicedata.lvalues) {
         for (let i = devicedata.lvalues.length - 1 ; i >= 0 ; i--) {
-            lightdata.push((devicedata.lvalues[i].value*100)/1023)
+            //lightdata.push((devicedata.lvalues[i].value*100)/1023)
+            lightdata.push(devicedata.lvalues[i].value)
             lightlabels.push(devicedata.lvalues[i].time.slice(11, 16) + " " + devicedata.lvalues[i].time.slice(8, 10)+ "/" + devicedata.lvalues[i].time.slice(5, 7))
         }
     }
@@ -76,13 +77,14 @@ const Chart = () => {
             borderColor: 'rgb(75, 19, 255)',
             tension: 0.1
         }, 
-        {
-            label: 'Light',
-            data: lightdata,
-            fill: false,
-            borderColor: 'rgb(255, 255, 100)',
-            tension: 0.1
-        }]
+        // {
+        //     label: 'Light',
+        //     data: lightdata,
+        //     fill: false,
+        //     borderColor: 'rgb(255, 255, 100)',
+        //     tension: 0.1
+        // }
+        ]
     };
 
     const humChartData = {
@@ -117,16 +119,16 @@ const Chart = () => {
                     </Grid>
                     <Grid item xs={false} sm={6}>
                         <Line data={tempChartData} height={200} />
-                        <Typography align="center" variant="h6">Data Chart</Typography>
+                        <Typography align="center" variant="h6">Temperature and Humidity Chart</Typography>
                     </Grid>
                     {/* <Grid item xs={false} sm={6}>
                         <Line data={humChartData} height={200} />
                         <Typography align="center" variant="h6">Humidity Chart</Typography>
-                    </Grid>
+                    </Grid>*/}
                     <Grid item xs={false} sm={6}>
                         <Line data={lightChartData} height={200} />
                         <Typography align="center" variant="h6">Light Chart</Typography>
-                    </Grid> */}
+                    </Grid> 
                 </Grid>
             </Paper>
         </Container>

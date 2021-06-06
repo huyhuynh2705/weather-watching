@@ -5,6 +5,8 @@ export const addDeviceSet = (form) => async (dispatch) => {
       const { data } = await api.addDeviceSet(form)
   
       dispatch({ type: 'ADD_DEVICE_SET', payload: data })
+
+      alert("Device Set Added")
       
     } catch (error) {
       alert(error.response.data.message)
@@ -64,10 +66,6 @@ export const deleteDeviceSet = (id) => async (dispatch) => {
     
     await api.deleteDeviceSet(id);
 
-    const { data } = await api.getCountDeviceSet();
-    
-    dispatch({ type: 'DEVICE_SET_COUNT', payload: data });
-    
     dispatch({ type: 'DELETE_DEVICE_SET', payload: id });
 
   } catch (error) {

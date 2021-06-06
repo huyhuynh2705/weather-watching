@@ -27,7 +27,7 @@ export default function AppBarAdmin() {
   const handleLogout = async (e) => {
     e.preventDefault();
     
-    dispatch({ type: 'LOGOUT' })
+    dispatch({ type: 'USER_LOGOUT' })
 
     logout()
   };

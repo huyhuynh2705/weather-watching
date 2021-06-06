@@ -56,10 +56,6 @@ export const addUser = (form) => async (dispatch) => {
       
       await api.deleteUser(id);
   
-      const { data } = await api.getCountAllUser();
-      
-      dispatch({ type: 'USER_COUNT', payload: data });
-      
       dispatch({ type: 'DELETE_USER', payload: id });
   
     } catch (error) {
