@@ -21,4 +21,15 @@ export const getData = (id) => async (dispatch) => {
       console.log(error.response);
     }
   };
+
+  export const getChartData = (id) => async (dispatch) => {
+    try {
+      const { data } = await api.getChartData(id);
+
+      dispatch({ type: 'GET_CHART_DATA', payload: data });
+
+    } catch (error) {
+      console.log(error.response);
+    }
+  };
   

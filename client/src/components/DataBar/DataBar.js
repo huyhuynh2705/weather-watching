@@ -1,5 +1,5 @@
 import React from 'react'
-import { Container, Grid, CircularProgress } from '@material-ui/core'
+import { Container, Grid } from '@material-ui/core'
 import useStyles from "./styles"
 import Condition from './Condition/Condition'
 import Temperature from './Temperature/Temperature'
@@ -10,16 +10,15 @@ import { useSelector } from 'react-redux';
 function DataBar() {
   const classes = useStyles()
 
-  let data = useSelector((state) => state.data)
+  let data = useSelector((state) => state.data.dataBar)
 
   // console.log("data from databar: ", data)
 
-  if (data.length == 0) {
+  if (data == null) {
     data = {condition: "null", temperature: "null", humidity: "null", light:"null"}
   }
 
   return (
-    data.length == 0 ? <CircularProgress /> : (
     <Container>
       <Grid className={classes.root} container justify="space-between" alignItems="stretch" spacing={3}>
         <Grid item xs={12} sm={6} md={3}>
@@ -36,7 +35,6 @@ function DataBar() {
         </Grid>
       </Grid>
     </Container>
-    )
   )
 }
 

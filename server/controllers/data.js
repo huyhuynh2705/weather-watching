@@ -89,7 +89,6 @@ export const getData = async (req, res) => {
     const DHT11Id =  {deviceId: oldDeviceSet.DHT11Id}
     const lightId =  {deviceId: oldDeviceSet.lightId}
     
-    // Trafic light tạm thời để giá trị, sau này sẽ tính toán từ 3 giá trị kia rồi trả về sau
     const trafficLightValue = await DataModel.find( trafficLightId )
     const DHT11Value = await DataModel.find( DHT11Id )
     const lightValue = await DataModel.find( lightId )
@@ -121,5 +120,22 @@ export const addData = async (req, res) => {
         res.status(201).json(newDataMessage);
     } catch (error) {
         res.status(409).json({ message: error.message });
+    }
+}
+
+export const getChartData = async (req, res) => {
+    // Lay du lieu den giao thong trong x gio gan day, dem xem co bao nhieu gia tri den xanh (01), vang (10), do (11) roi tra
+    // ve object {trafficLight: [ soluong01, soluong10, soluong11 ], temperature: ..., humidity:..., light: ...} 
+    const { id } = req.params;
+    try {
+        // Hint:
+        const trafficLight = [1, 2, 4]
+        const temperature = {min:[1, 1, 1, 1, 1, 1, 1], max:[5, 5, 5, 5, 5, 5, 5], avg:[3, 3, 3, 3, 3, 3, 3]}
+        const humidity = {min:[1, 1, 1, 1, 1, 1, 1], max:[5, 5, 5, 5, 5, 5, 5], avg:[3, 3, 3, 3, 3, 3, 3]}
+        const light = {min:[1, 1, 1, 1, 1, 1, 1], max:[5, 5, 5, 5, 5, 5, 5], avg:[3, 3, 3, 3, 3, 3, 3]}
+        const result = {trafficLight: trafficLight, temperature: temperature, humidity: humidity, light: light}
+        res.status(200).json(result);
+    } catch (error) {
+        res.status(404).json({ message: error.message });
     }
 }
