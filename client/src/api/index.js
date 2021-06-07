@@ -13,6 +13,7 @@ const API = axios.create({ baseURL: 'http://localhost:5000' });
 
 
 export const fetchData = (id) => API.get(`/data/${id}`);
+export const getChartData = (id) => API.get(`/data/chart/${id}`);
 export const getAllDeviceData = (id) => API.get(`/data/all/${id}`);
 
 export const signIn = (form) => API.post('/user/signin', form);
