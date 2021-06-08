@@ -126,15 +126,57 @@ export const addData = async (req, res) => {
 export const getChartData = async (req, res) => {
     // Lay du lieu den giao thong trong x gio gan day, dem xem co bao nhieu gia tri den xanh (01), vang (10), do (11) roi tra
     // ve object {trafficLight: [ soluong01, soluong10, soluong11 ], temperature: ..., humidity:..., light: ...} 
-    const { id } = req.params;
+    const { id } = req.params;// tim theo DeviceSetId
     try {
+        const Set = DeviceSetModel.findById(id)
+        const trafficLight = await DataModel.findById(Set.trafficLightId)
+        const DHT11 = await DataModel.findById(Set.DHT11Id)
+        const Light = await DataModel.findById(Set.lightId)
+        let TLvalues = []
+        let tempvalues = []
+        let humidvalues = []
+        let lightvalues = []
+        //Traffic
+        let timenow = new date()
+        for (let i = trafficLight.length; timenow -7 > trafficLight[i].time ;i--){
+            TLvalues.push(trafficLight[i].value);
+        }
+        TLvalues.reverse()
+        //DHT
+        for (let i = DHT11.length; timenow -7 > DHT11[i].time ;i--){
+            tempvalues.push(DHT11[i].value);
+            humidvalues.push(DHT11[i].value2);
+        }
+        tempvalues.reverse()
+        humidvalues.reverse()
+        // Light
+        for (let i = Light.length; timenow -7 > Light[i].time ;i--){
+            lightvalues.push(Light[i].value);
+        }
+        lightvalues.reverse()
+        
+        let traffic = [ soluong01=0, soluong10=0, soluong11=0 ]
+
+        for ( let i = 0; i < TLvalues.length; i++){
+            if (TLvalues[i].value == "01") traffic.soluong01++;
+            else if (TLvalues[i].value == "10") traffic.soluong10++;
+            else traffic.soluong11++;
+        }
+
+        let temp = [ min = min(tempvalues), max = max(tempvalues), average = reduce(tempvalues)/tempvalues.length ]
+        let humid = [ min = min(humidvalues), max = max(humidvalues), average = reduce(humidvalues)/humidvalues.length ]
+        let lgiht = [ min = min(lightvalues), max = max(lightvalues), average = reduce(lightvalues)/lightvalues.length ]
+
+        return {traffic, temp, humid, light}
+        
+        
         // Hint:
-        const trafficLight = [1, 2, 4]
-        const temperature = {min:[1, 1, 1, 1, 1, 1, 1], max:[5, 5, 5, 5, 5, 5, 5], avg:[3, 3, 3, 3, 3, 3, 3]}
-        const humidity = {min:[1, 1, 1, 1, 1, 1, 1], max:[5, 5, 5, 5, 5, 5, 5], avg:[3, 3, 3, 3, 3, 3, 3]}
-        const light = {min:[1, 1, 1, 1, 1, 1, 1], max:[5, 5, 5, 5, 5, 5, 5], avg:[3, 3, 3, 3, 3, 3, 3]}
-        const result = {trafficLight: trafficLight, temperature: temperature, humidity: humidity, light: light}
-        res.status(200).json(result);
+        // const trafficLight = [1, 2, 4]
+        // const temperature = {min:[1, 1, 1, 1, 1, 1, 1], max:[5, 5, 5, 5, 5, 5, 5], avg:[3, 3, 3, 3, 3, 3, 3]}
+        // const humidity = {min:[1, 1, 1, 1, 1, 1, 1], max:[5, 5, 5, 5, 5, 5, 5], avg:[3, 3, 3, 3, 3, 3, 3]}
+        // const light = {min:[1, 1, 1, 1, 1, 1, 1], max:[5, 5, 5, 5, 5, 5, 5], avg:[3, 3, 3, 3, 3, 3, 3]}
+        // const result = {trafficLight: trafficLight, temperature: temperature, humidity: humidity, light: light}
+        // res.status(200).json(result);
     } catch (error) {
         res.status(404).json({ message: error.message });
     }
