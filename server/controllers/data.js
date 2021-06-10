@@ -136,7 +136,7 @@ export const getChartData = async (req, res) => {
         let humidvalues = []
         let lightvalues = []
         //Traffic
-        let timenow = new date()
+        let timenow = new Date()
         for (let i = trafficLight.length; timenow -7 > trafficLight[i].time ;i--){
             TLvalues.push(trafficLight[i].value);
         }

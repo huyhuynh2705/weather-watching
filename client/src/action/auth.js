@@ -26,3 +26,12 @@ export const updateProfile = (id, form) => async (dispatch) => {
   }
 }
 
+export const forgotPassword = (form) => async (dispatch) => {
+  try {
+
+    await api.forgotPassword(form)
+
+  } catch (error) {
+    console.log(error.response)
+  }
+}
