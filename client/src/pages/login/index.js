@@ -32,8 +32,8 @@ const Login = () => {
   return (
     <Grid container component="main" className={classes.root}>
       <CssBaseline />
-      <Grid item xs={false} sm={4} md={6} className={classes.image} />
-      <Grid item xs={12} sm={8} md={6} component={Paper} elevation={6} square>
+      <Grid item xs={false} sm={3} md={5} className={classes.image} />
+      <Grid item xs={12} sm={9} md={7} component={Paper} elevation={6} square>
         <div className={classes.paper}>
           <Avatar className={classes.avatar}>
             <LockOutlinedIcon />
@@ -77,8 +77,11 @@ const Login = () => {
               Sign In
             </Button>
             <Grid container>
-              <Grid item xs>
-                <Button color="primary" href="/forgotpassword">Forgot password?</Button>
+              <Grid item xs={false} sm={4}>
+                <Button color="primary" href="/forgotpassword" fullWidth align="center">Forgot password?</Button>
+              </Grid>
+              <Grid item xs={false} sm={8}>
+                <Button color="primary" href="/contact" fullWidth align="center">Don't have an account? Contact us!</Button>
               </Grid>
             </Grid>
           </form>

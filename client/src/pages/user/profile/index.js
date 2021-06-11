@@ -38,6 +38,12 @@ const Profile = () => {
                         <Typography className={classes.title} gutterBottom>{user.result.phoneNum}</Typography>
                     </Grid>
                     <Grid item xs={4} sm={6}>
+                        <Typography className={classes.title} align="right" gutterBottom>Address: </Typography>
+                    </Grid>
+                    <Grid item xs={8} sm={6}>
+                        <Typography className={classes.title} gutterBottom>{user.result.address}</Typography>
+                    </Grid>
+                    <Grid item xs={4} sm={6}>
                         <Typography className={classes.title} align="right" gutterBottom>Device Set Name: </Typography>
                     </Grid>
                     <Grid item xs={8} sm={6}>
