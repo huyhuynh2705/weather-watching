@@ -86,6 +86,7 @@
     "core-js": "^3.12.1",
     "express": "^4.17.1",
     "i18next": "^19.3.4",
+    "jwt-decode": "^3.1.2",
     "material-ui-image": "^3.3.2",
     "moment": "^2.29.1",
     "react": "^16.13.1",

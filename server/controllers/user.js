@@ -8,7 +8,7 @@ import dotenv from 'dotenv';
 import UserModel from "../models/user.js";
 
 dotenv.config();
-const secret = 'test';
+const secret = 'hqh';
 
 export const signin = async (req, res) => {
   const { username, password } = req.body;
@@ -21,7 +21,7 @@ export const signin = async (req, res) => {
 
     if (!isPasswordCorrect) return res.status(400).json({ message: "Invalid credentials" });
 
-    const token = jwt.sign({ username: oldUser.username, id: oldUser._id }, secret, { expiresIn: "1h" });
+    const token = jwt.sign({ username: oldUser.username, id: oldUser._id }, secret, { expiresIn: "0.5h" });
 
     res.status(200).json({ result: oldUser, token });
   } catch (err) {
