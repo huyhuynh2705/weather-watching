@@ -3,13 +3,13 @@ import axios from 'axios'
 
 const API = axios.create({ baseURL: 'http://localhost:5000' });
 
-// API.interceptors.request.use((req) => {
-//     if (localStorage.getItem('profile')) {
-//       req.headers.Authorization = `Bearer ${JSON.parse(localStorage.getItem(TOKEN_NAME)).token}`;
-//     }
+API.interceptors.request.use((req) => {
+    if (localStorage.getItem(TOKEN_NAME)) {
+      req.headers.Authorization = `Bearer ${JSON.parse(localStorage.getItem(TOKEN_NAME)).token}`;
+    }
   
-//     return req;
-//   });
+    return req;
+  });
 
 
 export const fetchData = (id) => API.get(`/data/${id}`);
@@ -17,6 +17,7 @@ export const getChartData = (id) => API.get(`/data/chart/${id}`);
 export const getAllDeviceData = (id) => API.get(`/data/all/${id}`);
 
 export const signIn = (form) => API.post('/user/signin', form);
+export const forgotPassword = (form) => API.post('/user/forgotpassword', form);
 export const addUser = (form) => API.post('/user/admin/adduser', form);
 export const updateProfile = (id, form) => API.post(`/user/updateprofile/${id}`, form);
 export const addDevice = (form) => API.post('/device', form);

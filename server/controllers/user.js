@@ -2,10 +2,13 @@ import bcrypt from "bcryptjs";
 import e from "express";
 import jwt from "jsonwebtoken";
 import DeviceSetModel from "../models/deviceSet.js";
+import nodemailer from 'nodemailer';
+import dotenv from 'dotenv';
 
 import UserModel from "../models/user.js";
 
-const secret = 'test';
+dotenv.config();
+const secret = 'hqh';
 
 export const signin = async (req, res) => {
   const { username, password } = req.body;
@@ -18,7 +21,7 @@ export const signin = async (req, res) => {
 
     if (!isPasswordCorrect) return res.status(400).json({ message: "Invalid credentials" });
 
-    const token = jwt.sign({ username: oldUser.username, id: oldUser._id }, secret, { expiresIn: "1h" });
+    const token = jwt.sign({ username: oldUser.username, id: oldUser._id }, secret, { expiresIn: "0.5h" });
 
     res.status(200).json({ result: oldUser, token });
   } catch (err) {
@@ -292,6 +295,43 @@ export const getUserName = async (req, res) => {
           username.push(array[i].username);
       }
       res.status(200).json(username);
+  } catch (error) {
+      res.status(404).json({ message: error.message });
+  }
+}
+
+export const forgotPassword = async (req, res) => {
+  const {email} = req.body
+  try {
+    const oldUser = await UserModel.findOne({email: email})
+    if (!oldUser) return res.status(404).json({ message: "User doesn't exist." });
+    const newPassword = oldUser.password.slice(10, 20)
+
+    let transporter = nodemailer.createTransport({
+      service: 'gmail',
+      auth: {
+        user: process.env.EMAIL,
+        pass: process.env.PASSWORD
+      }
+    });
+    
+    let mailOptions = {
+      from: '"Weather Watching"',
+      to: email,
+      subject: 'Weather Watching - Forgot Password',
+      text: `Hello ${oldUser.name}, this is your new password: ${newPassword}. Use this password to log in to account ${oldUser.username}.`,
+    };
+    
+    transporter.sendMail(mailOptions, (err, data) => {
+      if (err) {
+          return console.log('Error occurs', err);
+      }
+  });
+
+  const hashedPassword = await bcrypt.hash(newPassword, 12);
+  const updatedProfile = await UserModel.findByIdAndUpdate(oldUser._id, {password: hashedPassword}, { new: true });
+  
+  res.status(200).json(updatedProfile)
   } catch (error) {
       res.status(404).json({ message: error.message });
   }

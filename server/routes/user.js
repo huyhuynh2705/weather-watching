@@ -1,21 +1,24 @@
 import express from "express";
+import auth from "../middleware/auth.js";
+
+import { signin, addUser, updateProfile, getAdminUser, getCountUser, deleteUser, updateUser, getCountAdmin, getCountAllUser, getCountSubscriber, getUserName, forgotPassword } from "../controllers/user.js";
 const router = express.Router();
 
-import { signin, addUser, updateProfile, getAdminUser, getCountUser, deleteUser, updateUser, getCountAdmin, getCountAllUser, getCountSubscriber, getUserName } from "../controllers/user.js";
-
 router.post("/signin", signin);
-router.post("/admin/adduser", addUser);
-router.post("/updateprofile/:id", updateProfile);
+router.post("/forgotpassword", forgotPassword);
 
-router.get('/admin/countAdmin', getCountAdmin);
-router.get('/admin/countUser', getCountUser);
-router.get('/admin/countAllUser', getCountAllUser);
-router.get('/admin/countSubscriber', getCountSubscriber);
+router.post("/admin/adduser", auth, addUser);
+router.post("/updateprofile/:id", auth, updateProfile);
 
-router.get('/admin/username', getUserName)
+router.get('/admin/countAdmin', auth, getCountAdmin);
+router.get('/admin/countUser', auth, getCountUser);
+router.get('/admin/countAllUser', auth, getCountAllUser);
+router.get('/admin/countSubscriber', auth, getCountSubscriber); 
 
-router.post('/admin/all', getAdminUser);
-router.delete('/admin/delete/:id', deleteUser);
-router.post('/admin/update', updateUser);
+router.get('/admin/username', auth, getUserName)
+
+router.post('/admin/all', auth, getAdminUser);
+router.delete('/admin/delete/:id', auth, deleteUser);
+router.post('/admin/update', auth, updateUser);
 
 export default router;
