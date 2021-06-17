@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import AppBar from '@components/AppBar/AppBarUser'
+import AppBar from '@components/AppBar/AppBar'
 import { useDispatch } from 'react-redux';
 import { updateProfile } from '../../../action/auth'
 import { TOKEN_NAME } from '@environments';
@@ -14,7 +14,7 @@ const UpdateProfile = () => {
     const user = JSON.parse(localStorage.getItem(TOKEN_NAME));
     const history = useHistory();
 
-    const initialState = { name: user.result.name, email: user.result.email, phoneNum: user.result.phoneNum, deviceSetName: user.result.deviceSetName, password: '', confirmPassword: ''};
+    const initialState = { name: user.result.name, email: user.result.email, phoneNum: user.result.phoneNum, address: user.result.address, deviceSetName: user.result.deviceSetName, password: '', confirmPassword: ''};
     
     const [form, setForm] = useState(initialState);
 
@@ -52,6 +52,12 @@ const UpdateProfile = () => {
                         </Grid>
                         <Grid item xs={8} sm={7}>
                             <TextField className={classes.text} autoComplete="false" variant="outlined" name="phoneNum" defaultValue={user.result.phoneNum} onChange={handleChange}/>
+                        </Grid>
+                        <Grid item xs={4} sm={5}>
+                            <Typography className={classes.title} align="right" gutterBottom>Address: </Typography>
+                        </Grid>
+                        <Grid item xs={8} sm={7}>
+                            <TextField className={classes.text} autoComplete="false" variant="outlined" name="address" defaultValue={user.result.address} onChange={handleChange}/>
                         </Grid>
                         <Grid item xs={4} sm={5}>
                             <Typography className={classes.title} align="right" gutterBottom>Device Set Name: </Typography>

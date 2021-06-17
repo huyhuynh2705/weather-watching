@@ -1,10 +1,10 @@
 import React, { useEffect } from 'react';
 // import { Button } from '@material-ui/core'
-import AppBarUser from '../../components/AppBar/AppBarUser'
+import NavBar from '../../components/AppBar/AppBar'
 import DataBar from '../../components/DataBar/DataBar'
 import Chart from '../../components/Chart/Chart'
 import { useDispatch } from 'react-redux';
-import { getData, getAllDeviceData, getChartData } from '../../action/data'
+import { getData, getChartData } from '../../action/data'
 import { TOKEN_NAME } from '@environments';
 import { useSelector } from 'react-redux'
 import { Button } from '@material-ui/core';
@@ -22,7 +22,7 @@ function User() {
 
   return (
     <div>
-      <AppBarUser />
+      <NavBar />
       {/* <Button>Refresh</Button> */}
       <DataBar />
       <Chart />

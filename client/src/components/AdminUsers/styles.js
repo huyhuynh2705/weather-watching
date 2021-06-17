@@ -15,10 +15,10 @@ export default makeStyles((theme) => ({
       padding: '20px'
     },
     title: {
-      marginTop: '10px',
+      marginTop: '2px',
     },
     title1: {
-      marginTop: '40px',
+      marginTop: '23.5px',
     },
     text: {
       marginBottom: '15px',

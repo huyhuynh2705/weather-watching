@@ -11,6 +11,7 @@ import Container from '@material-ui/core/Container';
 import useStyles from "./styles"
 import { useDispatch } from 'react-redux';
 import { forgotPassword } from '../../action/auth'
+import { Paper } from '@material-ui/core';
 
 const ForgotPassword = () => {
   const classes = useStyles()
@@ -30,13 +31,15 @@ const ForgotPassword = () => {
   return (
     <Container component="main" maxWidth="sm">
       <CssBaseline />
-      <div className={classes.paper}>
+      <Paper className={classes.paper}>
+        <Typography variant="h4" style={{fontWeight: '600', color:'#20339c'}}> WEATHER WATCHING </Typography>
         <Avatar className={classes.avatar}>
           <LockOutlinedIcon />
         </Avatar>
         <Typography component="h1" variant="h5">
           Forgot Password
         </Typography>
+        <Typography variant="body1" >Type in your email then we will send you your new account password.</Typography>
         {(sent == false) ? 
         <form className={classes.form} onSubmit={handleSubmit}>
           <TextField autoComplete="false" variant="outlined" required name="email" label="Email" fullWidth onChange={handleChange} type="email"/>
@@ -61,7 +64,7 @@ const ForgotPassword = () => {
           <Button fullWidth variant="contained" color="primary" href="/">Back to Sign In</Button>
         </div>
         }
-      </div>
+      </Paper>
     </Container>
   );
 }

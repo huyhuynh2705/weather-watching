@@ -13,7 +13,6 @@ import useStyles from "./styles"
 import { signIn } from '../../action/auth';
 import { useDispatch } from 'react-redux'
 import { useAuth } from '@contexts'
-
 const initialState = { username: '', password: '' }
 
 const Login = () => {
@@ -30,18 +29,20 @@ const Login = () => {
   const handleChange = (e) => setForm({ ...form, [e.target.name]: e.target.value })
 
   return (
+    <div>
     <Grid container component="main" className={classes.root}>
-      <CssBaseline />
-      <Grid item xs={false} sm={4} md={6} className={classes.image} />
-      <Grid item xs={12} sm={8} md={6} component={Paper} elevation={6} square>
+      {/* <CssBaseline /> */}
+      <Grid item xs={false} sm={3} md={5} className={classes.image} />
+      <Grid item xs={12} sm={9} md={7} component={Paper} elevation={6} square>
         <div className={classes.paper}>
+          <Typography variant="h4" style={{fontWeight: '600', color:'#20339c'}}> WEATHER WATCHING </Typography>
           <Avatar className={classes.avatar}>
             <LockOutlinedIcon />
           </Avatar>
           <Typography component="h1" variant="h5">
             Sign in
           </Typography>
-          <form className={classes.form} noValidate onSubmit={handleSubmit}>
+          <form className={classes.form} onSubmit={handleSubmit}>
             <TextField
               variant="outlined"
               margin="normal"
@@ -77,14 +78,18 @@ const Login = () => {
               Sign In
             </Button>
             <Grid container>
-              <Grid item xs>
-                <Button color="primary" href="/forgotpassword">Forgot password?</Button>
+              <Grid item xs={false} sm={4}>
+                <Button color="primary" href="/forgotpassword" fullWidth align="center">Forgot password?</Button>
+              </Grid>
+              <Grid item xs={false} sm={8}>
+                <Button color="primary" href="/contact" fullWidth align="center">Don't have an account? Contact us!</Button>
               </Grid>
             </Grid>
           </form>
         </div>
       </Grid>
     </Grid>
+    </div>
   )
 }
 

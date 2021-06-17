@@ -1,10 +1,11 @@
 import express from "express";
 import auth from "../middleware/auth.js";
 
-import { signin, addUser, updateProfile, getAdminUser, getCountUser, deleteUser, updateUser, getCountAdmin, getCountAllUser, getCountSubscriber, getUserName, forgotPassword } from "../controllers/user.js";
+import { signIn, signUp, addUser, updateProfile, getAdminUser, getCountUser, deleteUser, updateUser, getCountAdmin, getCountAllUser, getCountSubscriber, getUserName, forgotPassword } from "../controllers/user.js";
 const router = express.Router();
 
-router.post("/signin", signin);
+router.post("/signIn", signIn);
+router.post("/signUp", signUp);
 router.post("/forgotpassword", forgotPassword);
 
 router.post("/admin/adduser", auth, addUser);

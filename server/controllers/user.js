@@ -10,7 +10,7 @@ import UserModel from "../models/user.js";
 dotenv.config();
 const secret = 'hqh';
 
-export const signin = async (req, res) => {
+export const signIn = async (req, res) => {
   const { username, password } = req.body;
   try {
     const oldUser = await UserModel.findOne({ username });
@@ -21,7 +21,7 @@ export const signin = async (req, res) => {
 
     if (!isPasswordCorrect) return res.status(400).json({ message: "Invalid credentials" });
 
-    const token = jwt.sign({ username: oldUser.username, id: oldUser._id }, secret, { expiresIn: "0.5h" });
+    const token = jwt.sign({ username: oldUser.username, id: oldUser._id }, secret, { expiresIn: "0.5m" });
 
     res.status(200).json({ result: oldUser, token });
   } catch (err) {
@@ -29,8 +29,31 @@ export const signin = async (req, res) => {
   }
 };
 
+export const signUp = async (req, res) => {
+  let { username, password, name, email, phoneNum, address } = req.body;
+  try {
+    const oldUser = await UserModel.findOne({ username });
+    if (oldUser) return res.status(400).json({ message: "User already exists" });
+
+    const oldEmail = await UserModel.findOne({ email });
+    if (oldEmail) return res.status(400).json({ message: "Email already exists" });
+
+    const oldPhoneNum = await UserModel.findOne({ phoneNum });
+    if (oldPhoneNum) return res.status(400).json({ message: "Phone number already exists" });
+
+    const hashedPassword = await bcrypt.hash(password, 12);
+    const result = await UserModel.create({ username, password: hashedPassword, name: name, email: email, phoneNum: phoneNum, address: address, deviceSetName: '', role: '' });
+    
+    res.status(201).json(result);
+  } catch (error) {
+    res.status(500).json({ message: "Something went wrong" });
+    
+    console.log(error);
+  }
+}
+
 export const addUser = async (req, res) => {
-  let { username, password, name, email, phoneNum, deviceSetName, role } = req.body;
+  let { username, password, name, email, phoneNum, address, deviceSetName, role } = req.body;
   try {
     const oldUser = await UserModel.findOne({ username });
 
@@ -49,7 +72,7 @@ export const addUser = async (req, res) => {
     }
 
     const hashedPassword = await bcrypt.hash(password, 12);
-    const result = await UserModel.create({ username, password: hashedPassword, name: name, email: email, phoneNum: phoneNum, deviceSetName: deviceSetName, role: role });
+    const result = await UserModel.create({ username, password: hashedPassword, name: name, email: email, phoneNum: phoneNum, address: address, deviceSetName: deviceSetName, role: role });
 
     if (deviceSetName != '') {
       const deviceSet = await DeviceSetModel.findOne( {setName: deviceSetName} )
@@ -68,7 +91,7 @@ export const addUser = async (req, res) => {
 
 export const updateProfile = async (req, res) => {
   const { id } = req.params;
-  const { name, email, phoneNum, deviceSetName, password } = req.body;
+  const { name, email, phoneNum, address, deviceSetName, password } = req.body;
 
   const oldUser = await UserModel.findById(id)
   if (!oldUser) return res.status(404).json({ message: "User doesn't exist" });
@@ -83,14 +106,14 @@ export const updateProfile = async (req, res) => {
     if (oldPhoneNum) return res.status(400).json({ message: "Phone number already exists" });
   }
   
-  let updateProfile = { name, email, phoneNum, deviceSetName };
+  let updateProfile = { name, email, phoneNum, address, deviceSetName };
 
   if (password) {
     const hashedPassword = await bcrypt.hash(password, 12);
-    updateProfile = { name, email, phoneNum, deviceSetName, password: hashedPassword };
+    updateProfile = { name, email, phoneNum, address, deviceSetName, password: hashedPassword };
   }
 
-  const token = jwt.sign({ username: oldUser.username, id: oldUser._id }, secret, { expiresIn: "1h" });
+  const token = jwt.sign({ username: oldUser.username, id: oldUser._id }, secret, { expiresIn: "0.5h" });
   
   const updatedProfile = await UserModel.findByIdAndUpdate(id, updateProfile, { new: true });
 
@@ -196,14 +219,14 @@ export const getCountSubscriber = async (req, res) => {
 
 export const updateUser = async (req, res) => {
 
-  let { id, username, password, name, email, phoneNum, deviceSetName, role } = req.body;
+  let { id, username, password, name, email, phoneNum, address, deviceSetName, role } = req.body;
 
   const oldUser = await UserModel.findById(id)
   if (!oldUser) return res.status(404).json({ message: "User doesn't exist." });
   
-  if ((password == '' &&  deviceSetName == '' && role == '' && username == '' && name=='' && email=='' && phoneNum=='') || 
+  if ((password == '' &&  deviceSetName == '' && role == '' && username == '' && name=='' && email=='' && phoneNum=='' && address=='') || 
         (password==oldUser.password && deviceSetName==oldUser.deviceSetName && role==oldUser.role && username==oldUser.username
-          && username==oldUser.username && name==oldUser.name && email==oldUser.email && phoneNum==oldUser.phoneNum)) {
+          && username==oldUser.username && name==oldUser.name && email==oldUser.email && phoneNum==oldUser.phoneNum && address==oldUser.address)) {
         return res.status(200).json({ message: "User is up to date."});
   }
 
@@ -220,6 +243,12 @@ export const updateUser = async (req, res) => {
   if (name != oldUser.name) {
     if (name == '') {
       name = oldUser.name;
+    }
+  }
+
+  if (address != oldUser.address) {
+    if (address == '') {
+      address = oldUser.address;
     }
   }
   
@@ -274,11 +303,11 @@ export const updateUser = async (req, res) => {
     }
   }
 
-  let updateUser = { username, deviceSetName, name, email, phoneNum, deviceSetName, role };
+  let updateUser = { username, deviceSetName, name, email, phoneNum, address, deviceSetName, role };
 
   if (password) {
     const hashedPassword = await bcrypt.hash(password, 12);
-    updateUser = { username, password: hashedPassword, name, email, phoneNum, deviceSetName, role };
+    updateUser = { username, password: hashedPassword, name, email, phoneNum, address, deviceSetName, role };
   }
 
   const updatedUser = await UserModel.findByIdAndUpdate(id, updateUser, { new: true });
