@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import AppBar from '@components/AppBar/AppBarUser'
+import AppBar from '@components/AppBar/AppBar'
 import { useDispatch } from 'react-redux';
 import { updateProfile } from '../../../action/auth'
 import { TOKEN_NAME } from '@environments';

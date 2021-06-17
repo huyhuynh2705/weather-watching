@@ -1,5 +1,5 @@
 import React, { useEffect } from 'react';
-import AppBarUser from '@components/AppBar/AppBarUser'
+import AppBar from '@components/AppBar/AppBar'
 import DataBar from '@components/DataBar/DataBar'
 import Device from '@components/Device/Device'
 import { useDispatch } from 'react-redux';
@@ -17,7 +17,7 @@ const Devices = () => {
 
     return (
       <div>
-        <AppBarUser />
+        <AppBar />
         <DataBar />
         <Device />
       </div>

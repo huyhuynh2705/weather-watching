@@ -2,13 +2,10 @@
 import React, { useState } from 'react';
 import Avatar from '@material-ui/core/Avatar';
 import Button from '@material-ui/core/Button';
-import CssBaseline from '@material-ui/core/CssBaseline';
 import TextField from '@material-ui/core/TextField';
-import FormControlLabel from '@material-ui/core/FormControlLabel';
 import Checkbox from '@material-ui/core/Checkbox';
-import Link from '@material-ui/core/Link';
 import Grid from '@material-ui/core/Grid';
-import Box from '@material-ui/core/Box';
+import Paper from '@material-ui/core/Paper';
 import LockOutlinedIcon from '@material-ui/icons/LockOutlined';
 import Typography from '@material-ui/core/Typography';
 import useStyles from "./styles"
@@ -37,7 +34,8 @@ const Contact = () => {
 
   return (
     <Container component="main" maxWidth="sm">
-      <div className={classes.paper}>
+      <Paper className={classes.paper}>
+        <Typography variant="h4" style={{fontWeight: '600', color:'#20339c'}}> WEATHER WATCHING </Typography>
         <Avatar className={classes.avatar}>
           <LockOutlinedIcon />
         </Avatar>
@@ -81,7 +79,7 @@ const Contact = () => {
         <Button fullWidth variant="contained" color="primary" href="/">Back to homepage</Button>
         </>
         }
-      </div>
+      </Paper>
     </Container>
   );
 }

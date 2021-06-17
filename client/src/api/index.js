@@ -7,7 +7,6 @@ API.interceptors.request.use((req) => {
     if (localStorage.getItem(TOKEN_NAME)) {
       req.headers.Authorization = `Bearer ${JSON.parse(localStorage.getItem(TOKEN_NAME)).token}`;
     }
-  
     return req;
   });
 

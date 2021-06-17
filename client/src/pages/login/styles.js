@@ -3,7 +3,7 @@ import bg from '../../images/bg.png'
 
 export default makeStyles((theme) => ({
     root: {
-        height: '100vh',
+        height: '97vh',
       },
       image: {
         backgroundImage: `url(${bg})`,
@@ -14,7 +14,7 @@ export default makeStyles((theme) => ({
         backgroundPosition: 'center',
       },
       paper: {
-        margin: theme.spacing(8, 4),
+        margin: theme.spacing(8, 6),
         display: 'flex',
         flexDirection: 'column',
         alignItems: 'center',

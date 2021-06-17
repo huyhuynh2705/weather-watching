@@ -6,17 +6,17 @@ import AppBar from '@material-ui/core/AppBar';
 import Tabs from '@material-ui/core/Tabs';
 import Tab from '@material-ui/core/Tab';
 import Box from '@material-ui/core/Box'
-import AppBarAdmin from '@components/AppBar/AppBarAdmin'
 import AdminDataBar from '@components/AdminDataBar/AdminDataBar'
 import AdminDevices from '@components/AdminDevices/AdminDevices'
 import AdminDeviceSet from '@components/AdminDeviceSet/AdminDeviceSet'
 import AdminUsers from '@components/AdminUsers/AdminUsers'
 import { Container } from '@material-ui/core';
+import NavBar from '../../components/AppBar/AppBar'
 import { useSelector } from 'react-redux'
 
 function TabPanel(props) {
   const { children, value, index, ...other } = props;
-  const store = useSelector((state) => state);
+  // const store = useSelector((state) => state);
   //console.log(store);
   return (
     <div
@@ -51,7 +51,7 @@ TabPanel.propTypes = {
 };
 
 
-function Admin() {
+const Admin = () => {
   const classes = useStyles();
   const dispatch = useDispatch();
   const limitPerPage = 5;
@@ -62,19 +62,9 @@ function Admin() {
     setValue(newValue);
   };
 
-  // useEffect(() => {
-  //   dispatch(getCountAllUser())
-  //   dispatch(getAdminUser({page: 1, limit: limitPerPage}))
-  //   dispatch(getCountDeviceSet())
-  //   dispatch(getCountDevice())
-  //   dispatch(getAdminDeviceSet({page: 1, limit: limitPerPage}))
-  //   dispatch(getAdminDevice({page: 1, limit: limitPerPage}))
-  // }, [dispatch]);
-
-
   return (
     <div>
-      <AppBarAdmin />
+      <NavBar />
       <AdminDataBar />
       <Container>
           <AppBar position="static">

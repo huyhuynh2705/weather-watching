@@ -1,5 +1,5 @@
 import React from 'react';
-import AppBarUser from '@components/AppBar/AppBarUser'
+import AppBar from '@components/AppBar/AppBar'
 import { TOKEN_NAME } from '@environments';
 import { Button, Grid, Paper, Typography } from '@material-ui/core';
 import {Link} from 'react-router-dom';
@@ -16,7 +16,7 @@ const Profile = () => {
 
     return (
         <div>
-            <AppBarUser />
+            <AppBar />
             <Paper className={classes.root}>
                 <Grid container spacing={3}>
                     <Grid item xs={4} sm={6}>
