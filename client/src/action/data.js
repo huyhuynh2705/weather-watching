@@ -7,7 +7,7 @@ export const getData = (id) => async (dispatch) => {
       dispatch({ type: 'GET_DATA', payload: data });
 
     } catch (error) {
-      console.log(error.response);
+      console.log(error);
     }
   };
 
