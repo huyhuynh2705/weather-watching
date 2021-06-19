@@ -64,6 +64,7 @@ const subscribe_topics = async () => {
 }
 
 const calculate_lightc_color = (light, temp, humid) => {
+    return "10"
     if (light >= 600) {
         return "11"
     }
@@ -90,6 +91,7 @@ const get_device = async (topic) => {
 const handle_dht11_data = async (topic, data, device) => {
     const values = data.split("-")
     const tx_hash = await sendTransaction(device.idServer, device.name, device.topic, device.unit, data)
+    //const tx_hash = ""
     const new_data = new DataModel({
         deviceId: device._id,
         time: new Date(),
@@ -107,6 +109,7 @@ const handle_dht11_data = async (topic, data, device) => {
 
 const handle_light_data = async (topic, data, device) => {
     const tx_hash = await sendTransaction(device.idServer, device.name, device.topic, device.unit, data)
+    //const tx_hash = ""
     const new_data = new DataModel({
         deviceId: device._id,
         time: new Date(),
@@ -157,6 +160,8 @@ const update_traffic_light = async (deviceSet) => {
     await mqtt_client.publish(traffic_light_device.topic, dataPublish)
 
     const tx_hash = await sendTransaction(traffic_light_device.idServer, traffic_light_device.name, traffic_light_device.topic, traffic_light_device.unit, traffic_light_color)
+    
+    //const tx_hash = ""
 
     const traffic_light_data = new DataModel({
         deviceId: traffic_light_device._id,
