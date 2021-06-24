@@ -32,7 +32,6 @@ function TrafficLight({ data }) {
   } else {
     divide = data.length / 2
   }
-
   for (let i = 0; i < data.length/2 ; i++) {
     rows1.push(createData(i, data[i].time.slice(11, 19), data[i].time.slice(0, 10), data[i].deviceId, data[i].type, data[i].value))
   }

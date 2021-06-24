@@ -85,8 +85,8 @@ const AdminDeviceSet = ({limitPerPage}) => {
     };
 
     const handleClose = () => {
-        setForm(initialState);
         setOpen(false);
+        setForm(initialState);
         setIsUpdate(true);
     };
 
@@ -214,10 +214,16 @@ const AdminDeviceSet = ({limitPerPage}) => {
                                 </FormControl>
                             </Grid>
                         </Grid>
-                        <Button variant="outlined" color="primary" size="large" type="submit" fullWidth>Update</Button>
+                        <Grid container spacing={2}>
+                            <Grid item xs={6}>
+                                <Button variant="outlined" color="secondary" size="large" onClick={handleClose} fullWidth>Close</Button>
+                            </Grid>
+                            <Grid item xs={6}>
+                                <Button variant="outlined" color="primary" size="large" type="submit" fullWidth>Update</Button>
+                            </Grid>
+                        </Grid>
                     </form>
                     &nbsp;
-                    <Button variant="outlined" color="secondary" size="large" onClick={handleClose} fullWidth>Close</Button>
                 </Paper> 
                 :
                 <Paper className={classes.paper}>
@@ -225,14 +231,60 @@ const AdminDeviceSet = ({limitPerPage}) => {
                 <form onSubmit={handleSubmit}>
                     <Grid container spacing={2}>
                         <Grid item xs={3}>
-                            <Typography className={classes.title} align="right" variant="h6" gutterBottom>Set Name: </Typography>
-                            <Typography className={classes.title1} align="right" variant="h6" gutterBottom>User: </Typography>
-                            <Typography className={classes.title1} align="right" variant="h6" gutterBottom>Traffic Light: </Typography>
+                            <Typography className={classes.title} align="right" variant="h6" gutterBottom>Traffic Light: </Typography>
                             <Typography className={classes.title1} align="right" variant="h6" gutterBottom>DHT11: </Typography>
                             <Typography className={classes.title1} align="right" variant="h6" gutterBottom>Light: </Typography>
+                            <Typography className={classes.title1} align="right" variant="h6" gutterBottom>User: </Typography>
                         </Grid>
                         <Grid item xs={9}>
-                            <TextField className={classes.text} autoComplete="false" fullWidth variant="outlined" name="setName" label="Set Name" value={form.setName} onChange={handleChange}/>
+                            <FormControl fullWidth variant="outlined" required className={classes.formControl}>
+                                <InputLabel id="trafficLightName-new-label">Traffic Light</InputLabel>
+                                <Select
+                                labelId="trafficLightName-new-label"
+                                name="trafficLightName"
+                                value={form.trafficLightName}
+                                onChange={handleChange}
+                                >
+                                <MenuItem key="None" value="None">None</MenuItem>
+                                {trafficlightname.map((trafficlight) => (
+                                    <MenuItem key={trafficlight} value={trafficlight}>
+                                    {trafficlight}
+                                    </MenuItem>
+                                ))}
+                                </Select>
+                            </FormControl>
+                            <FormControl fullWidth required variant="outlined" className={classes.formControl}>
+                                <InputLabel id="DHT11Name-new-label">DHT11</InputLabel>
+                                <Select
+                                labelId="DHT11Name-new-label"
+                                name="DHT11Name"
+                                value={form.DHT11Name}
+                                onChange={handleChange}
+                                >
+                                <MenuItem key="None" value="None">None</MenuItem>
+                                {dht11name.map((dht11) => (
+                                    <MenuItem key={dht11} value={dht11}>
+                                    {dht11}
+                                    </MenuItem>
+                                ))}
+                                </Select>
+                            </FormControl>
+                            <FormControl fullWidth required variant="outlined" className={classes.formControl}>
+                                <InputLabel id="lightName-new-label">Light</InputLabel>
+                                <Select
+                                labelId="lightName-new-label"
+                                name="lightName"
+                                value={form.lightName}
+                                onChange={handleChange}
+                                >
+                                <MenuItem key="None" value="None">None</MenuItem>
+                                {lightname.map((light) => (
+                                    <MenuItem key={light} value={light}>
+                                    {light}
+                                    </MenuItem>
+                                ))}
+                                </Select>
+                            </FormControl>
                             <FormControl fullWidth variant="outlined" className={classes.formControl}>
                                 <InputLabel id="username-new-label">Username</InputLabel>
                                 <Select
@@ -249,60 +301,18 @@ const AdminDeviceSet = ({limitPerPage}) => {
                                 ))}
                                 </Select>
                             </FormControl>
-                            <FormControl fullWidth variant="outlined" className={classes.formControl}>
-                                <InputLabel id="trafficLightName-new-label">Traffic Light</InputLabel>
-                                <Select
-                                labelId="trafficLightName-new-label"
-                                name="trafficLightName"
-                                value={form.trafficLightName}
-                                onChange={handleChange}
-                                >
-                                <MenuItem key="None" value="None">None</MenuItem>
-                                {trafficlightname.map((trafficlight) => (
-                                    <MenuItem key={trafficlight} value={trafficlight}>
-                                    {trafficlight}
-                                    </MenuItem>
-                                ))}
-                                </Select>
-                            </FormControl>
-                            <FormControl fullWidth variant="outlined" className={classes.formControl}>
-                                <InputLabel id="DHT11Name-new-label">DHT11</InputLabel>
-                                <Select
-                                labelId="DHT11Name-new-label"
-                                name="DHT11Name"
-                                value={form.DHT11Name}
-                                onChange={handleChange}
-                                >
-                                <MenuItem key="None" value="None">None</MenuItem>
-                                {dht11name.map((dht11) => (
-                                    <MenuItem key={dht11} value={dht11}>
-                                    {dht11}
-                                    </MenuItem>
-                                ))}
-                                </Select>
-                            </FormControl>
-                            <FormControl fullWidth variant="outlined" className={classes.formControl}>
-                                <InputLabel id="lightName-new-label">Light</InputLabel>
-                                <Select
-                                labelId="lightName-new-label"
-                                name="lightName"
-                                value={form.lightName}
-                                onChange={handleChange}
-                                >
-                                <MenuItem key="None" value="None">None</MenuItem>
-                                {lightname.map((light) => (
-                                    <MenuItem key={light} value={light}>
-                                    {light}
-                                    </MenuItem>
-                                ))}
-                                </Select>
-                            </FormControl>
                         </Grid>
                     </Grid>
-                    <Button variant="outlined" color="primary" size="large" type="submit" fullWidth>New Device Set</Button>
+                    <Grid container spacing={2}>
+                        <Grid item xs={6}>
+                            <Button variant="outlined" color="secondary" size="large" onClick={handleClose} fullWidth>Close</Button>
+                        </Grid>
+                        <Grid item xs={6}>
+                            <Button variant="outlined" color="primary" size="large" type="submit" fullWidth>New Device Set</Button>
+                        </Grid>
+                    </Grid>
                 </form>
                 &nbsp;
-                <Button variant="outlined" color="secondary" size="large" onClick={handleClose} fullWidth>Close</Button>
             </Paper>
                 }
              </Backdrop>}
@@ -342,9 +352,14 @@ const AdminDeviceSet = ({limitPerPage}) => {
                         <TableCell align="left">{row.DHT11Id}</TableCell>
                         <TableCell align="left">{row.lightId}</TableCell>
                         <TableCell align="left">
-                            <Button variant="outlined" color="primary" onClick={() => handleToggle(row.index - 1)}>Update</Button>
-                            &nbsp;
-                            <Button variant="outlined" color="secondary" onClick={() => handleDelete(row.index - 1)}>Delete</Button>
+                            <Grid container spacing={1}>
+                                <Grid item md={false} lg={6}>
+                                    <Button variant="outlined" fullWidth color="primary" onClick={() => handleToggle(row.index - 1)}>Update</Button>
+                                </Grid>
+                                <Grid item md={false} lg={6}>
+                                    <Button variant="outlined" fullWidth color="secondary" onClick={() => handleDelete(row.index - 1)}>Delete</Button>
+                                </Grid>
+                            </Grid>
                         </TableCell>
                         </TableRow>
                     ))}

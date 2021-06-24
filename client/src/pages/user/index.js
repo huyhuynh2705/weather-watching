@@ -18,11 +18,11 @@ function User() {
   useEffect(() => {
     dispatch(getData(user.result._id))
     dispatch(getChartData(user.result._id))
-    const interval = setInterval(() =>{ 
-      dispatch(getData(user.result._id))
-      dispatch(getChartData(user.result._id))
-    }, 5000);
-    return () => clearInterval(interval);
+    // const interval = setInterval(() =>{ 
+    //   dispatch(getData(user.result._id))
+    //   dispatch(getChartData(user.result._id))
+    // }, 5000);
+    // return () => clearInterval(interval);
   }, []);
 
   return (

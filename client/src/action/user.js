@@ -69,7 +69,7 @@ export const addUser = (form) => async (dispatch) => {
       const { data } = await api.updateUser(form);
   
       dispatch({ type: 'UPDATE_USER', payload: data });
-  
+
     } catch (error) {
       alert(error.response.data.message);
       console.log(error.response);
@@ -85,5 +85,14 @@ export const addUser = (form) => async (dispatch) => {
   
     } catch (error) {
       console.log(error.response);
+    }
+  }
+
+  export const confirmUser = (id) => async (dispatch) => {
+    try {
+      await api.confirmUser(id)
+  
+    } catch (error) {
+      console.log(error.response)
     }
   }

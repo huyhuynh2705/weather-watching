@@ -23,7 +23,7 @@ function createData(index, id, type, name, time, idServer, unit, topic) {
     return { index, id, type, name, time, idServer, unit, topic };
 }
   
-const initialState = {id: '', type: '', idServer: '', name: '', unit: '', topic: ''}
+const initialState = {id: '', type: '', name: '', idServer: '', unit: '', topic: ''}
 
 const AdminDevices = ({limitPerPage}) => {
     const classes = useStyles()
@@ -164,13 +164,12 @@ const AdminDevices = ({limitPerPage}) => {
                     <Grid container spacing={2}>
                         <Grid item xs={3}>
                             <Typography className={classes.title} align="right" variant="h6" gutterBottom>Type: </Typography>
-                            <Typography className={classes.title1} align="right" variant="h6" gutterBottom>Name: </Typography>
                             <Typography className={classes.title1} align="right" variant="h6" gutterBottom>Id Server: </Typography>
                             <Typography className={classes.title1} align="right" variant="h6" gutterBottom>Unit: </Typography>
                             <Typography className={classes.title1} align="right" variant="h6" gutterBottom>Topic: </Typography>
                         </Grid>
                         <Grid item xs={9}>
-                            <FormControl fullWidth variant="outlined" className={classes.formControl}>
+                            <FormControl fullWidth variant="outlined" required className={classes.formControl}>
                                 <InputLabel id="type-new-label">Type</InputLabel>
                                 <Select
                                 labelId="type-new-label"
@@ -183,8 +182,7 @@ const AdminDevices = ({limitPerPage}) => {
                                     <MenuItem value="Light">Light</MenuItem>
                                 </Select>
                             </FormControl>
-                            <TextField className={classes.text} autoComplete="false" fullWidth variant="outlined" name="name" label="Name" value={form.name} onChange={handleChange}/>
-                            <TextField className={classes.text} autoComplete="false" fullWidth variant="outlined" name="idServer" label="Id Server" value={form.idServer} onChange={handleChange}/>
+                            <TextField className={classes.text} required autoComplete="false" fullWidth variant="outlined" name="idServer" label="Id Server" value={form.idServer} onChange={handleChange}/>
                             <FormControl fullWidth label="Unit" variant="outlined" className={classes.formControl}>
                                 <InputLabel id="unit-new-label">Unit</InputLabel>
                                 <Select
@@ -196,7 +194,7 @@ const AdminDevices = ({limitPerPage}) => {
                                     <MenuItem value="C-%">C-%</MenuItem>
                                 </Select>
                             </FormControl>
-                            <TextField className={classes.text} autoComplete="false" fullWidth variant="outlined" name="topic" label="Topic" value={form.topic} onChange={handleChange}/>
+                            <TextField className={classes.text} required autoComplete="false" fullWidth variant="outlined" name="topic" label="Topic" value={form.topic} onChange={handleChange}/>
                         </Grid>
                     </Grid>
                     <Button variant="outlined" color="primary" size="large" type="submit" fullWidth>New Device</Button>
@@ -242,9 +240,14 @@ const AdminDevices = ({limitPerPage}) => {
                         <TableCell align="left">{row.unit}</TableCell>
                         <TableCell align="left">{row.topic}</TableCell>
                         <TableCell align="left">
-                            <Button variant="outlined" color="primary" onClick={() => handleToggle(row.index - 1)}>Update</Button>
-                            &nbsp;
-                            <Button variant="outlined" color="secondary" onClick={() => handleDelete(row.index - 1)}>Delete</Button>
+                            <Grid container spacing={1}>
+                                <Grid item md={false} lg={6}>
+                                    <Button variant="outlined" fullWidth color="primary" onClick={() => handleToggle(row.index - 1)}>Update</Button>
+                                </Grid>
+                                <Grid item md={false} lg={6}>
+                                    <Button variant="outlined" fullWidth color="secondary" onClick={() => handleDelete(row.index - 1)}>Delete</Button>
+                                </Grid>
+                            </Grid>
                         </TableCell>
                         </TableRow>
                     ))}

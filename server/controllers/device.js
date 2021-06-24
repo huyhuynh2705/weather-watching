@@ -19,19 +19,30 @@ export const getDevice = async (req, res) => {
 }
 
 export const addDevice = async (req, res) => {
-    //const device = req.body;
-    const {type, idServer, name, unit, topic} = req.body;
-    
-    const device = {type, idServer, name, unit, topic}
-
-    // const oldDevice = await DeviceModel.findOne({ name: name });
-    // if (oldDevice) {
-    //     return res.status(400).json({message: "Device's name already exists."})
-    // }
-    
-    const newDeviceMessage = new DeviceModel({...device, time: new Date().toUTCString()})
-    
     try {
+
+        const {type, idServer, unit, topic} = req.body;
+        let index, name
+        switch (type) {
+            case 'Traffic Light':
+                index = await DeviceModel.countDocuments({type: "Traffic Light"})
+                name = 'TRAFFIC' + index
+                break;
+            case 'DHT11':
+                index = await DeviceModel.countDocuments({type: "DHT11"})
+                name = 'TEMP-HUMID' + index
+                break;
+            case 'Light':
+                index = await DeviceModel.countDocuments({type: "Light"})
+                name = 'LIGHT' + index
+                break;
+            default:
+                break;
+        }
+        const device = {type, idServer, name, unit, topic}
+
+        const newDeviceMessage = new DeviceModel({...device, time: new Date().toUTCString()})
+    
         await newDeviceMessage.save();
 
         res.status(201).json(newDeviceMessage);

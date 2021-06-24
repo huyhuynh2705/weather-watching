@@ -64,7 +64,7 @@ const Contact = () => {
               <TextField variant="outlined" required fullWidth name="password" label="Password" type="password" onChange={handleChange} />
             </Grid>
             <Grid item xs={6}>
-              <TextField variant="outlined" required fullWidth name="confirmPassword" label="Confirm Password" type="confirmPassword" onChange={handleChange}/>
+              <TextField variant="outlined" required fullWidth name="confirmPassword" label="Confirm Password" type="password" onChange={handleChange}/>
             </Grid>
           </Grid>
           <Button type="submit" fullWidth variant="contained" color="primary" className={classes.submit}>Sign Up</Button>

@@ -20,6 +20,7 @@ import FormControl from '@material-ui/core/FormControl';
 
 import { addUser, updateUser, deleteUser, getAdminUser, getCountAllUser } from '../../action/user'
 import { getNameSet } from '../../action/deviceset'
+import { confirmUser } from '../../action/user'
 
 function createData(index, id, username, name, email, phoneNum, address, deviceSetName, role) {
     return { index, id, username, name, email, phoneNum, address, deviceSetName, role };
@@ -40,7 +41,7 @@ const AdminUsers = ({limitPerPage}) => {
     const [open, setOpen] = useState(false);
     const [form, setForm] = useState(initialState);
     const [isUpdate, setIsUpdate] = useState(true);
-
+    const [confirm, setConfirm] = useState(false);
     const [page, setPage] = useState(1);
     const count = Math.ceil(totalItems/limitPerPage)
 
@@ -68,24 +69,30 @@ const AdminUsers = ({limitPerPage}) => {
           return
         }
         if (form!=initialState ) {
-         if (isUpdate) { 
-             dispatch(updateUser(form))
-        } 
-        else {
-            dispatch(addUser(form))
-            dispatch(getAdminUser({page: page, limit: limitPerPage})) 
+            if (isUpdate && !confirm) { 
+                dispatch(updateUser(form))
+            } 
+            else if(isUpdate && confirm) {
+                dispatch(updateUser(form))
+                dispatch(confirmUser(form.id))
+            }
+            else {
+                dispatch(addUser(form))
+                dispatch(getAdminUser({page: page, limit: limitPerPage})) 
             };
         }
         setForm(initialState);
         setIsUpdate(true);
         setUpdateIndex(null)
         setOpen(false);
+        setConfirm(false)
     };
 
     const handleClose = () => {
         setForm(initialState);
         setOpen(false);
         setIsUpdate(true);
+        setConfirm(false)
     };
 
     const handleToggle = (value) => {
@@ -93,6 +100,13 @@ const AdminUsers = ({limitPerPage}) => {
       setForm({ ...form, id: rows[value].id });
       setOpen(!open);
     };
+
+    const handleConfirm = (value) => {
+        setUpdateIndex(value)
+        setForm({ ...form, id: rows[value].id });
+        setOpen(!open);
+        setConfirm(true)
+    }
 
     const handleNewUser = () => {
         setIsUpdate(false)
@@ -141,18 +155,18 @@ const AdminUsers = ({limitPerPage}) => {
                     <form onSubmit={handleSubmit}>
                         <Grid container spacing={2}>
                             <Grid item xs={3}>
-                                <Typography className={classes.title} align="right" variant="h6" gutterBottom>Username: </Typography>
-                                <Typography className={classes.title1} align="right" variant="h6" gutterBottom>Name: </Typography>
+                                {/* <Typography className={classes.title} align="right" variant="h6" gutterBottom>Username: </Typography> */}
+                                <Typography className={classes.title} align="right" variant="h6" gutterBottom>Name: </Typography>
                                 <Typography className={classes.title1} align="right" variant="h6" gutterBottom>Email: </Typography>
                                 <Typography className={classes.title1} align="right" variant="h6" gutterBottom>Phone Number: </Typography>
                                 <Typography className={classes.title1} align="right" variant="h6" gutterBottom>Address: </Typography>
-                                <Typography className={classes.title1} align="right" variant="h6" gutterBottom>Device Set Id: </Typography>
+                                <Typography className={classes.title1} align="right" variant="h6" gutterBottom>Device Set Name: </Typography>
                                 <Typography className={classes.title1} align="right" variant="h6" gutterBottom>Role: </Typography>
                                 <Typography className={classes.title1} align="right" variant="h6" gutterBottom>Password: </Typography>
                                 <Typography className={classes.title1} align="right" variant="h6" gutterBottom>Confirm Password: </Typography>
                             </Grid>
                             <Grid item xs={9}>
-                                <TextField className={classes.text} autoComplete="false" size="small" fullWidth variant="outlined" name="username" label={rows[updateIndex].username} onChange={handleChange}/>
+                                {/* <TextField className={classes.text} autoComplete="false" size="small" fullWidth variant="outlined" name="username" label={rows[updateIndex].username} onChange={handleChange}/> */}
                                 <TextField className={classes.text} autoComplete="false" size="small" fullWidth variant="outlined" name="name" label={rows[updateIndex].name} onChange={handleChange}/>
                                 <TextField className={classes.text} autoComplete="false" size="small" fullWidth variant="outlined" name="email" label={rows[updateIndex].email} onChange={handleChange} type="email" />
                                 <TextField className={classes.text} autoComplete="false" size="small" fullWidth variant="outlined" name="phoneNum" label={rows[updateIndex].phoneNum} onChange={handleChange} type="number"/>
@@ -300,9 +314,16 @@ const AdminUsers = ({limitPerPage}) => {
                         <TableCell align="left">{row.deviceSetName}</TableCell>
                         <TableCell align="left">{row.role}</TableCell>
                         <TableCell align="left">
-                            <Button variant="outlined" color="primary" onClick={() => handleToggle(row.index - 1)}>Update</Button>
-                            &nbsp;
-                            <Button variant="outlined" color="secondary" onClick={() => handleDelete(row.index - 1)}>Delete</Button>
+                            <Grid container spacing={1}>
+                                <Grid item md={false} lg={6}>
+                                    {(row.role)?
+                                    <Button variant="outlined" fullWidth color="primary" onClick={() => handleToggle(row.index - 1)}>Update</Button>:
+                                    <Button variant="outlined" fullWidth variant="contained" color="primary" onClick={() => handleConfirm(row.index - 1)}>Confirm</Button>}
+                                </Grid>
+                                <Grid item md={false} lg={6}>
+                                    <Button variant="outlined" fullWidth color="secondary" onClick={() => handleDelete(row.index - 1)}>Delete</Button>
+                                </Grid>
+                            </Grid>
                         </TableCell>
                         </TableRow>
                     ))}

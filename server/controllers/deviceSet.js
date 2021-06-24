@@ -21,15 +21,11 @@ export const getDeviceSet = async (req, res) => {
 export const updateDeviceSet = async (req, res) => {
     //body: {id: '', setName: '', username: '', trafficLightName: '', DHT11Name: '', lightName: ''}
     
-    //Dung ten cua device + username thay vi id
-    
     let { id, setName, username, trafficLightName, DHT11Name, lightName} = req.body;
 
     let { userID, trafficLightId, DHT11Id, lightId } = '';
 
     const oldSet = await DeviceSetModel.findById(id);
-
-    //san pham khong ton tai
     if (!oldSet) {
         return res.status(404).json({ message: "DeviceSet doesn't exist."});
     }
@@ -44,10 +40,8 @@ export const updateDeviceSet = async (req, res) => {
             setName = oldSet.setName;
         }
         else {
-            //cái này có bug ko
-            const oldSetName = await DeviceSetModel.findOne({ id, setName });
+            const oldSetName = await DeviceSetModel.findOne({ setName: setName });
             if (oldSetName) return res.status(400).json({ message: "Set Name already exists" });
-            await UserModel.findByIdAndUpdate(oldSet.userID, {deviceSetName: setName}, {new: true})
         }
     }
 
@@ -121,12 +115,20 @@ export const updateDeviceSet = async (req, res) => {
 export const addDeviceSet = async (req, res) => {
 
     //body: {id: '', setName: '', username: '', trafficLightName: '', DHT11Name: '', lightName: ''}
-    
-    //Dung ten cua device + username thay vi id
 
-    const {setName, username, trafficLightName, DHT11Name, lightName } = req.body;
-    const setmodel = await DeviceSetModel.findOne({setName : setName})
-    if (setmodel) return res.status(404).json({ message: "This deviceSet has existed" });
+    const { username, trafficLightName, DHT11Name, lightName } = req.body;
+
+    const index = await DeviceSetModel.estimatedDocumentCount()
+
+    let setName
+
+    if (index < 10) {
+        setName = 'SET00' + index
+    } else if (index > 10 && index <100) {
+        setName = 'SET0' + index
+    } else {
+        setName = 'SET' + index
+    }
 
     const oldTL = await DeviceModel.findOne({name : trafficLightName});
     if (oldTL == null) return res.status(404).json({ message: "Traffic Light doesn't exist" });
@@ -134,7 +136,7 @@ export const addDeviceSet = async (req, res) => {
     if (oldDHT == null) return res.status(404).json({ message: "DHT11 doesn't exist" });
     const oldL = await DeviceModel.findOne({name : lightName});
     if (oldL == null) return res.status(404).json({ message: "Light doesn't exist" });
- 
+    
     let newdeviceset = {
         setName: setName,
         userID: '',

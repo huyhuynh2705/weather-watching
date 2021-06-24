@@ -1,4 +1,4 @@
-import React, { useState } from 'react'
+import React from 'react'
 import { Container, Grid, Typography, CircularProgress } from '@material-ui/core'
 import Paper from '@material-ui/core/Paper';
 import useStyles from "./styles"
@@ -8,7 +8,22 @@ import ReactApexChart  from 'react-apexcharts'
 const Chart = () => {
     const classes = useStyles()
     const dataChart = useSelector((state) => state.data.dataChart)
-    // console.log(dataChart);
+    let dhtlabel = []
+    let llabel = []
+    if (dataChart) {
+      for (let i = 0; i < 7; i++) {
+        if ((Number(dataChart.dhtTime.slice(0, 2)) - i) >=0 ) {
+          dhtlabel.push((Number(dataChart.dhtTime.slice(0, 2)) - i) + dataChart.dhtTime.slice(2))  
+        } else {
+          dhtlabel.push((24 + Number(dataChart.dhtTime.slice(0, 2)) - i) + dataChart.dhtTime.slice(2))  
+        }
+        if ((Number(dataChart.lightTime.slice(0, 2)) - i) >=0 ) {
+          llabel.push((Number(dataChart.lightTime.slice(0, 2)) - i) + dataChart.lightTime.slice(2))  
+        } else {
+          llabel.push((24 + Number(dataChart.lightTime.slice(0, 2)) - i) + dataChart.lightTime.slice(2))  
+        }
+      }
+    }
     const temperatureChartData = {
         series: [{
             name: 'Min temperature',
@@ -45,7 +60,7 @@ const Chart = () => {
                 }
             },
             xaxis: {
-              categories: ['1', '2', '3', '4', '5', '6', '7'],
+              categories: dhtlabel,
               title: {
                 text: 'Hour(s) ago'
               }
@@ -59,7 +74,8 @@ const Chart = () => {
                   return val + "°C"
                 }
               }
-            }
+            },
+            colors:['#80def2', '#fdd728', '#27f749'],
         }
     }
 
@@ -99,7 +115,7 @@ const Chart = () => {
                 }
             },
             xaxis: {
-              categories: ['1', '2', '3', '4', '5', '6', '7'],
+              categories: dhtlabel,
               title: {
                 text: 'Hour(s) ago'
               }
@@ -113,7 +129,8 @@ const Chart = () => {
                   return val + "%"
                 }
               }
-            }
+            },
+            colors:['#80def2', '#fdd728', '#27f749']
         }
     }
 
@@ -153,7 +170,7 @@ const Chart = () => {
                 }
             },
             xaxis: {
-              categories: ['1', '2', '3', '4', '5', '6', '7'],
+              categories: llabel,
               title: {
                 text: 'Hour(s) ago'
               }
@@ -167,7 +184,8 @@ const Chart = () => {
                   return val + "unit"
                 }
               }
-            }
+            },
+            colors:['#80def2', '#fdd728', '#27f749']
         }
     }
 
@@ -189,12 +207,26 @@ const Chart = () => {
                     position: 'bottom'
                 }
             }
-            }]
+            }],
+            colors:['#00ed00', '#fff726', '#ff0000'],
+            stroke: {
+              show: true,
+              width: 2,
+              colors: ['#ffffff']
+            },
+            tooltip: {
+              y: {
+                formatter: function (val) {
+                  return val + " minutes"
+                }
+              }
+            }
         }
     }
 
     return (
         <Container>
+          {dataChart?
             <Paper className={classes.root}>
                 <Grid container spacing={3}>
                     <Grid item xs={false} sm={6}>
@@ -216,7 +248,9 @@ const Chart = () => {
                         <Typography align="center" variant="h6">Light</Typography>
                     </Grid> 
                 </Grid>
-            </Paper>
+            </Paper>:
+            <CircularProgress />
+          }
         </Container>
     )
 }

@@ -13,7 +13,7 @@ import useStyles from "./styles"
 import { signIn } from '../../action/auth';
 import { useDispatch } from 'react-redux'
 import { useAuth } from '@contexts'
-const initialState = { username: '', password: '' }
+const initialState = { username: '', password: ''}
 
 const Login = () => {
   const classes = useStyles()
@@ -62,10 +62,6 @@ const Login = () => {
               label="Password"
               type="password"
               onChange={handleChange}
-            />
-            <FormControlLabel
-              control={<Checkbox value="remember" color="primary" />}
-              label="Remember me"
             />
             <Button
               type="submit"
