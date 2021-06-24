@@ -18,9 +18,9 @@ import Select from '@material-ui/core/Select';
 import InputLabel from '@material-ui/core/InputLabel';
 import FormControl from '@material-ui/core/FormControl';
 
-import { deleteDeviceSet, getAdminDeviceSet, getCountDeviceSet, addDeviceSet, updateDeviceSet } from '../../action/deviceset'
+import { deleteDeviceSet, getAdminDeviceSet, getCountDeviceSet, addDeviceSet, updateDeviceSet, getCountUnusedSet } from '../../action/deviceset'
 import { getTrafficlightName, getDHT11Name, getLightName } from '../../action/device'
-import { getUserName } from '../../action/user';
+import { getUserName, countSubscriber } from '../../action/user';
 function createData(index, id, time, setName, userID, trafficLightId, DHT11Id, lightId) {
     return { index, id, time, setName, userID, trafficLightId, DHT11Id, lightId };
 }
@@ -42,6 +42,7 @@ const AdminDeviceSet = ({limitPerPage}) => {
     const [updateIndex, setUpdateIndex] = useState(null)
 
     const [open, setOpen] = useState(false);
+    const [addUser, setAddUser] = useState(false)
     const [form, setForm] = useState(initialState);
     const [isUpdate, setIsUpdate] = useState(true);
 
@@ -60,6 +61,10 @@ const AdminDeviceSet = ({limitPerPage}) => {
         dispatch(getUserName());
     }, [open])
 
+    useEffect(() => {
+        dispatch(getUserName());
+    },[addUser])
+
     const handleChangePage = (e, value) => {
         e.preventDefault()
         setPage(value)
@@ -72,22 +77,28 @@ const AdminDeviceSet = ({limitPerPage}) => {
         e.preventDefault();
         if (form!=initialState) {
             if (isUpdate) {
-                dispatch(updateDeviceSet(form)) 
+                dispatch(updateDeviceSet(form)).then(()=>{                 
+                    dispatch(getCountDeviceSet())
+                    dispatch(getCountUnusedSet())
+                    dispatch(countSubscriber())
+                })
             } else {
-                dispatch(addDeviceSet(form));
+                dispatch(addDeviceSet(form))
             }
         }
-        //dispatch(getAdminDeviceSet({page: page, limit: limitPerPage})) 
+        // dispatch(getAdminDeviceSet({page: page, limit: limitPerPage})) 
         setForm(initialState);
         setIsUpdate(true);
         setUpdateIndex(null)
-        setOpen(!open);
+        setOpen(false);
+        setAddUser(false)
     };
 
     const handleClose = () => {
         setOpen(false);
         setForm(initialState);
         setIsUpdate(true);
+        setAddUser(false)
     };
 
     const handleToggle = (value) => {
@@ -95,6 +106,11 @@ const AdminDeviceSet = ({limitPerPage}) => {
       setForm({ ...form, id: rows[value].id });
       setOpen(!open);
     };
+
+    const handleAddUser = (value) => {
+        setForm({ ...form, id: rows[value].id });
+        setAddUser(true)
+    }
 
     const handleNewDevice = () => {
         setIsUpdate(false)
@@ -131,6 +147,44 @@ const AdminDeviceSet = ({limitPerPage}) => {
 
     return (
         <div>
+            <Backdrop className={classes.backdrop} open={addUser}> 
+                <Paper className={classes.paperAddUser}>
+                    <Typography align="center" variant="h6" gutterBottom>Add User</Typography>
+                    <form onSubmit={handleSubmit}>
+                        <Grid container spacing={2}>
+                            <Grid item xs={3}>
+                                <Typography className={classes.title} align="right" variant="h6" gutterBottom>User: </Typography>
+                            </Grid>
+                                <Grid item xs={9}>
+                                    <FormControl fullWidth variant="outlined" className={classes.formControl}>
+                                        <InputLabel id="username-new-label">Username</InputLabel>
+                                        <Select
+                                        labelId="username-new-label"
+                                        name="username"
+                                        value={form.username}
+                                        onChange={handleChange}
+                                        >
+                                        <MenuItem key="None" value="None">None</MenuItem>
+                                        {username?.map((name) => (
+                                            <MenuItem key={name} value={name}>
+                                            {name}
+                                            </MenuItem>
+                                        ))}
+                                        </Select>
+                                    </FormControl>
+                                </Grid>
+                                <Grid container spacing={2}>
+                                    <Grid item xs={6}>
+                                        <Button variant="outlined" color="secondary" size="large" onClick={handleClose} fullWidth>Close</Button>
+                                    </Grid>
+                                    <Grid item xs={6}>
+                                        <Button variant="outlined" color="primary" size="large" type="submit" fullWidth>Update</Button>
+                                    </Grid>
+                                </Grid>
+                        </Grid>
+                    </form>
+                </Paper>
+            </Backdrop>
              {(updateIndex == null && isUpdate == true) ? 
              <Backdrop className={classes.backdrop} open={open}> <CircularProgress /> </Backdrop> : 
              <Backdrop className={classes.backdrop} open={open}>
@@ -157,7 +211,7 @@ const AdminDeviceSet = ({limitPerPage}) => {
                                     onChange={handleChange}
                                     >
                                     <MenuItem key="None" value="None">None</MenuItem>
-                                    {username.map((name) => (
+                                    {username?.map((name) => (
                                         <MenuItem key={name} value={name}>
                                         {name}
                                         </MenuItem>
@@ -173,7 +227,7 @@ const AdminDeviceSet = ({limitPerPage}) => {
                                     onChange={handleChange}
                                     >
                                     <MenuItem key="None" value="None">None</MenuItem>
-                                    {trafficlightname.map((trafficlight) => (
+                                    {trafficlightname?.map((trafficlight) => (
                                         <MenuItem key={trafficlight} value={trafficlight}>
                                         {trafficlight}
                                         </MenuItem>
@@ -189,7 +243,7 @@ const AdminDeviceSet = ({limitPerPage}) => {
                                     onChange={handleChange}
                                     >
                                     <MenuItem key="None" value="None">None</MenuItem>
-                                    {dht11name.map((dht11) => (
+                                    {dht11name?.map((dht11) => (
                                         <MenuItem key={dht11} value={dht11}>
                                         {dht11}
                                         </MenuItem>
@@ -205,7 +259,7 @@ const AdminDeviceSet = ({limitPerPage}) => {
                                     onChange={handleChange}
                                     >
                                     <MenuItem key="None" value="None">None</MenuItem>
-                                    {lightname.map((light) => (
+                                    {lightname?.map((light) => (
                                         <MenuItem key={light} value={light}>
                                         {light}
                                         </MenuItem>
@@ -246,7 +300,7 @@ const AdminDeviceSet = ({limitPerPage}) => {
                                 onChange={handleChange}
                                 >
                                 <MenuItem key="None" value="None">None</MenuItem>
-                                {trafficlightname.map((trafficlight) => (
+                                {trafficlightname?.map((trafficlight) => (
                                     <MenuItem key={trafficlight} value={trafficlight}>
                                     {trafficlight}
                                     </MenuItem>
@@ -262,7 +316,7 @@ const AdminDeviceSet = ({limitPerPage}) => {
                                 onChange={handleChange}
                                 >
                                 <MenuItem key="None" value="None">None</MenuItem>
-                                {dht11name.map((dht11) => (
+                                {dht11name?.map((dht11) => (
                                     <MenuItem key={dht11} value={dht11}>
                                     {dht11}
                                     </MenuItem>
@@ -278,7 +332,7 @@ const AdminDeviceSet = ({limitPerPage}) => {
                                 onChange={handleChange}
                                 >
                                 <MenuItem key="None" value="None">None</MenuItem>
-                                {lightname.map((light) => (
+                                {lightname?.map((light) => (
                                     <MenuItem key={light} value={light}>
                                     {light}
                                     </MenuItem>
@@ -294,7 +348,7 @@ const AdminDeviceSet = ({limitPerPage}) => {
                                 onChange={handleChange}
                                 >
                                 <MenuItem key="None" value="None">None</MenuItem>
-                                {username.map((name) => (
+                                {username?.map((name) => (
                                     <MenuItem key={name} value={name}>
                                     {name}
                                     </MenuItem>
@@ -347,7 +401,9 @@ const AdminDeviceSet = ({limitPerPage}) => {
                         <TableCell component="th" scope="row">{row.index}</TableCell>
                         <TableCell align="left">{row.time}</TableCell>
                         <TableCell align="left">{row.setName}</TableCell>
-                        <TableCell align="left">{row.userID}</TableCell>
+                        <TableCell align="left">
+                            {row.userID ? row.userID:<Button variant="outlined" fullWidth color="primary" onClick={() => handleAddUser(row.index - 1)}>Add User</Button>}
+                        </TableCell>
                         <TableCell align="left">{row.trafficLightId}</TableCell>
                         <TableCell align="left">{row.DHT11Id}</TableCell>
                         <TableCell align="left">{row.lightId}</TableCell>

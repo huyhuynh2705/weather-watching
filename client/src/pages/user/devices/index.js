@@ -5,6 +5,7 @@ import Device from '@components/Device/Device'
 import { useDispatch } from 'react-redux';
 import { TOKEN_NAME } from '@environments';
 import { getAllDeviceData, getData } from '../../../action/data'
+import { Typography } from '@material-ui/core'
 
 const Devices = () => {
     const dispatch = useDispatch();
@@ -19,7 +20,11 @@ const Devices = () => {
       <div>
         <AppBar />
         <DataBar />
-        <Device />
+        {user.result.deviceSetName? <Device /> :
+        <div style={{marginTop: '25vh'}}>
+          <Typography align="center" variant="h6" gutterBottom>Your account doesn't have a device set. Please contact us to give you a set.</Typography>
+        </div>
+      }
       </div>
     )
 }

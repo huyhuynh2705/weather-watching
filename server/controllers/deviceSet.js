@@ -1,16 +1,11 @@
-import express from 'express';
-import mongoose from 'mongoose';
-
 import DeviceSetModel from '../models/deviceSet.js';
 import DeviceModel from '../models/device.js';
 import UserModel from "../models/user.js";
 
-const router = express.Router();
 
 export const getDeviceSet = async (req, res) => { 
     try {
         const deviceSetMessage = await DeviceSetModel.find();
-        console.log(deviceSetMessage);
 
         res.status(200).json(deviceSetMessage);
     } catch (error) {
@@ -47,6 +42,9 @@ export const updateDeviceSet = async (req, res) => {
 
     if (username == '') {
         userID = oldSet.userID;
+    } else if (username == 'None') {
+        await UserModel.findByIdAndUpdate(oldSet.userID, {deviceSetName: ''})
+        userID = '';
     }
     else {
         const user = await UserModel.findOne({ username })
@@ -59,13 +57,7 @@ export const updateDeviceSet = async (req, res) => {
         userID = user.id;
         //kiểm tra diviceSetName trong UserModel
         if (user.deviceSetName != setName) {
-            const oldDeviceSet = await UserModel.findOne( {deviceSetName: setName} );
-            if (oldDeviceSet) {
-                return res.status(400).json({ message: "Invalid Set Name: Device set already has user." });
-            }
-            else {
-                await UserModel.findByIdAndUpdate(userID, {deviceSetName: setName}, {new: true} );
-            }
+            await UserModel.findByIdAndUpdate(userID, {deviceSetName: setName}, {new: true} );
         }
     }
 
@@ -105,7 +97,19 @@ export const updateDeviceSet = async (req, res) => {
     let updateDeviceSet = { setName, userID, trafficLightId, DHT11Id, lightId };
 
     try {
-        const updatedDeviceSet = await DeviceSetModel.findByIdAndUpdate(id, updateDeviceSet, { new: true });
+        let updatedDeviceSet = await DeviceSetModel.findByIdAndUpdate(id, updateDeviceSet, { new: true });
+        const keys = ['DHT11Id', 'lightId', 'trafficLightId']
+        for (let i = 0; i < keys.length; i++) {
+            const device = await DeviceModel.findOne({
+                _id: updatedDeviceSet[keys[i]] 
+            })
+            updatedDeviceSet[keys[i]] = device.name
+        } 
+
+        if (userID) { 
+            const user = await UserModel.findById(userID);
+            updatedDeviceSet.userID = user.username
+        }
         res.status(200).json(updatedDeviceSet);
     } catch (error) {
         res.status(404).json({ message: error.message });
@@ -168,9 +172,20 @@ export const addDeviceSet = async (req, res) => {
         })
     }
     try {
-        await newDeviceSetMessage.save();
-
-        res.status(201).json(newDeviceSetMessage);
+        let savedDeviceSet = await newDeviceSetMessage.save();
+        const keys = ['DHT11Id', 'lightId', 'trafficLightId']
+        for (let i = 0; i < keys.length; i++) {
+            const device = await DeviceModel.findOne({
+                _id: savedDeviceSet[keys[i]] 
+            })
+            savedDeviceSet[keys[i]] = device.name
+        } 
+        if (savedDeviceSet.userID) { 
+            const user = await UserModel.findById(savedDeviceSet.userID);
+            savedDeviceSet.userID = user.username
+        }
+        console.log(savedDeviceSet);
+        res.status(201).json(savedDeviceSet);
     } catch (error) {
         res.status(409).json({ message: error.message });
     }
@@ -210,10 +225,10 @@ export const deleteDeviceSet = async (req, res) => {
         }
         if (!oldDeviceSet.userID) {
             await DeviceSetModel.findByIdAndRemove(id);
-            return res.status(200).json({ message: "DeviceSet is deleted."});            
+            return res.status(200).json(oldDeviceSet);            
         }
         else return res.status(404).json({ message: "DeviceSet is belong to an user and can't be deleted"});
-        
+
     } catch (error) {
         res.status(404).json({ message: error.message });
     }
@@ -235,6 +250,10 @@ export const getAdminDeviceSet = async (req, res) => {
                 })
                 
                 name[keys[i]] = device.name
+            }
+            if (set.userID) {
+                const user = await UserModel.findById(set.userID);
+                name.userID = user.username
             }
             result.push({
                 ...set,
