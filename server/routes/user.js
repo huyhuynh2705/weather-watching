@@ -1,7 +1,7 @@
 import express from "express";
 import auth from "../middleware/auth.js";
 
-import { signIn, signUp, addUser, updateProfile, getAdminUser, getCountUser, deleteUser, updateUser, getCountAdmin, getCountAllUser, getCountSubscriber, getUserName, forgotPassword } from "../controllers/user.js";
+import { signIn, signUp, addUser, updateProfile, getAdminUser, getCountUser, deleteUser, updateUser, getCountAdmin, getCountAllUser, getCountSubscriber, getUserName, forgotPassword, confirmUser } from "../controllers/user.js";
 const router = express.Router();
 
 router.post("/signIn", signIn);
@@ -11,6 +11,7 @@ router.post("/forgotpassword", forgotPassword);
 router.post("/admin/adduser", auth, addUser);
 router.post("/updateprofile/:id", auth, updateProfile);
 
+router.post("/admin/confirmUser/:id", auth, confirmUser);
 router.get('/admin/countAdmin', auth, getCountAdmin);
 router.get('/admin/countUser', auth, getCountUser);
 router.get('/admin/countAllUser', auth, getCountAllUser);

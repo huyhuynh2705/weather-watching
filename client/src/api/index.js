@@ -41,6 +41,6 @@ export const getLightName = () => API.get('/device/admin/LightName');
 export const getUserName = () => API.get('/user/admin/username');
 export const getCountUnusedSet = () => API.get('/set/admin/countUnusedSet');
 export const countSubscriber = () => API.get('/user/admin/countSubscriber');
-getUserName
+export const confirmUser = (id) => API.post(`/user/admin/confirmUser/${id}`);
 
 

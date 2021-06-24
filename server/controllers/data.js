@@ -24,7 +24,7 @@ export const getAllDeviceData = async (req, res) => {
         if (!oldDeviceSet) return res.status(404).json({ message: "Device set doesn't exist" });
         
         const trafficLightId =  {deviceId: oldDeviceSet.trafficLightId}
-        const trafficLightValue = await DataModel.find( trafficLightId )
+        let trafficLightValue = await DataModel.find( trafficLightId )
         const lightId =  {deviceId: oldDeviceSet.lightId}
         const lightValue = await DataModel.find( lightId )
         const DHT11Id =  {deviceId: oldDeviceSet.DHT11Id}
@@ -37,14 +37,15 @@ export const getAllDeviceData = async (req, res) => {
 
         if (trafficLightValue.length >= 10) {
             for (let i = (trafficLightValue.length - 1); i >= (trafficLightValue.length - 10); i--) {
-                tlvalues.push(trafficLightValue[i])
+                let tlObj = trafficLightValue[i]
+                tlObj.convertedTime = String(trafficLightValue[i].time.toString())
+                tlvalues.push(tlObj)
             }
         } else {
             for (let i = (trafficLightValue.length - 1); i >= 0; i--) {
                 tlvalues.push(trafficLightValue[i])
             }
         }
-
         if (lightValue.length >= 10) {
             for (let i = (lightValue.length - 1); i >= (lightValue.length - 10); i--) {
                 lvalues.push(lightValue[i])
@@ -111,8 +112,6 @@ export const addData = async (req, res) => {
 
     const newDataMessage = new DataModel({...data, time: new Date().toUTCString()})
 
-    // const test = new Date()
-    // console.log(test.toUTCString())
 
     try {
         await newDataMessage.save();
@@ -185,26 +184,33 @@ export const getChartData = async (req, res) => {
         let count01 = 0;
         let count10 = 0;
         let count11 = 0;
-        const lastTrafficTime = Traffic[Traffic.length-1].time.getTime()/1000;
-        let x = [];
+        let lastTrafficTime = Traffic[Traffic.length-1].time.getTime()/1000;
+        // let x = [];
         for (let i=(Traffic.length-1); i>=0; i--) {
             let thisTime = Traffic[i].time.getTime()/1000;
+            let delta = lastTrafficTime - thisTime
             if (thisTime<=lastTrafficTime && thisTime>=(lastTrafficTime-60*60*7)) {
                 if (Traffic[i].value == "01") {
-                    count01++;
+                    count01+=delta;
                 }
                 else if (Traffic[i].value == "10") {
-                    count10++;
+                    count10+=delta;
                 }
                 else if (Traffic[i].value == "11") {
-                    count11++;
+                    count11+=delta;
                 }
             }
             else {
                 break;
             }
+            lastTrafficTime = thisTime
         }
-        let traffic = [count01, count10, count11];
+        let traffic = [Number((count01/60).toFixed(2)), Number((count10/60).toFixed(2)), Number((count11/60).toFixed(2))];
+        if (Traffic.length == 1) {
+            if (Traffic[0].value == '01') traffic = [1, 0, 0];
+            if (Traffic[0].value == '10') traffic = [0, 1, 0];
+            if (Traffic[0].value == '11') traffic = [0, 0, 1];
+        }
         //=====================================================================
 
         //DHT11 section
@@ -258,9 +264,18 @@ export const getChartData = async (req, res) => {
         let temp = {min: minTemp, max: maxTemp, avg: avgTemp};
         let hum = {min: minHum, max: maxHum, avg: avgHum};
         //===========================================================================================
+        let dhtHour = String(DHT11[DHT11.length-1].time.getHours()) < 10 ? "0" +  String(DHT11[DHT11.length-1].time.getHours()) : String(DHT11[DHT11.length-1].time.getHours())
+        let dhtMinute = String(DHT11[DHT11.length-1].time.getMinutes()) < 10 ? "0" +  String(DHT11[DHT11.length-1].time.getMinutes()) : String(DHT11[DHT11.length-1].time.getMinutes())
+        let lightHour = String(Light[Light.length-1].time.getHours()) < 10 ? "0" +  String(Light[Light.length-1].time.getHours()) : String(Light[Light.length-1].time.getHours())
+        let lightMinute = String(Light[Light.length-1].time.getMinutes()) < 10 ? "0" +  String(Light[Light.length-1].time.getMinutes()) : String(Light[Light.length-1].time.getMinutes())
 
-        const result = {trafficLight: traffic, temperature: temp, humidity: hum, light: light}
-
+        const result = {
+            trafficLight: traffic, 
+            temperature: temp, 
+            humidity: hum, 
+            light: light, 
+            dhtTime: dhtHour + ":" + dhtMinute, 
+            lightTime: lightHour + ":" + lightMinute }
         res.status(200).json(result);     
     } catch (error) {
         res.status(409).json({ message: error.message });

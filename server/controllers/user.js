@@ -4,7 +4,6 @@ import jwt from "jsonwebtoken";
 import DeviceSetModel from "../models/deviceSet.js";
 import nodemailer from 'nodemailer';
 import dotenv from 'dotenv';
-
 import UserModel from "../models/user.js";
 
 dotenv.config();
@@ -219,25 +218,15 @@ export const getCountSubscriber = async (req, res) => {
 
 export const updateUser = async (req, res) => {
 
-  let { id, username, password, name, email, phoneNum, address, deviceSetName, role } = req.body;
+  let { id, password, name, email, phoneNum, address, deviceSetName, role } = req.body;
 
   const oldUser = await UserModel.findById(id)
   if (!oldUser) return res.status(404).json({ message: "User doesn't exist." });
   
-  if ((password == '' &&  deviceSetName == '' && role == '' && username == '' && name=='' && email=='' && phoneNum=='' && address=='') || 
+  if ((password == '' &&  deviceSetName == '' && role == '' && name=='' && email=='' && phoneNum=='' && address=='') || 
         (password==oldUser.password && deviceSetName==oldUser.deviceSetName && role==oldUser.role && username==oldUser.username
-          && username==oldUser.username && name==oldUser.name && email==oldUser.email && phoneNum==oldUser.phoneNum && address==oldUser.address)) {
+          && name==oldUser.name && email==oldUser.email && phoneNum==oldUser.phoneNum && address==oldUser.address)) {
         return res.status(200).json({ message: "User is up to date."});
-  }
-
-  if (username != oldUser.username) {
-      if (username == '') {
-          username = oldUser.username;
-      }
-      else {
-        const oldUsername = await UserModel.findOne({ username });
-        if (oldUsername) return res.status(400).json({ message: "Username already exists" });
-      }
   }
 
   if (name != oldUser.name) {
@@ -303,11 +292,11 @@ export const updateUser = async (req, res) => {
     }
   }
 
-  let updateUser = { username, deviceSetName, name, email, phoneNum, address, deviceSetName, role };
+  let updateUser = { deviceSetName, name, email, phoneNum, address, deviceSetName, role };
 
   if (password) {
     const hashedPassword = await bcrypt.hash(password, 12);
-    updateUser = { username, password: hashedPassword, name, email, phoneNum, address, deviceSetName, role };
+    updateUser = { password: hashedPassword, name, email, phoneNum, address, deviceSetName, role };
   }
 
   const updatedUser = await UserModel.findByIdAndUpdate(id, updateUser, { new: true });
@@ -361,6 +350,40 @@ export const forgotPassword = async (req, res) => {
   const updatedProfile = await UserModel.findByIdAndUpdate(oldUser._id, {password: hashedPassword}, { new: true });
   
   res.status(200).json(updatedProfile)
+  } catch (error) {
+      res.status(404).json({ message: error.message });
+  }
+}
+
+
+export const confirmUser = async (req, res) => {
+  const { id }= req.params
+  try {
+    const oldUser = await UserModel.findById(id)
+    if (!oldUser) return res.status(404).json({ message: "User doesn't exist." });
+    const email = oldUser.email
+    let transporter = nodemailer.createTransport({
+      service: 'gmail',
+      auth: {
+        user: process.env.EMAIL,
+        pass: process.env.PASSWORD
+      }
+    });
+    
+    let mailOptions = {
+      from: '"Weather Watching"',
+      to: email,
+      subject: 'Weather Watching - Confirm',
+      text: `Hello ${oldUser.name}.
+Your account has been confirmed. Now you can login with account ${oldUser.username}.` ,
+    };
+    
+    transporter.sendMail(mailOptions, (err, data) => {
+      if (err) {
+        return console.log('Error occurs', err);
+      }
+    });
+    res.status(200).json("Success")
   } catch (error) {
       res.status(404).json({ message: error.message });
   }

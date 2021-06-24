@@ -17,9 +17,10 @@ function AuthValue() {
   const login = useCallback(async () => {
     // handle login
     setIsAuth(!!localStorage.getItem(TOKEN_NAME))
-
-    const role = JSON.parse(localStorage.getItem(TOKEN_NAME)).result.role ;
-    (role == "Admin" ? setIsAdmin(true) : setIsAdmin(false))
+    if (JSON.parse(localStorage.getItem(TOKEN_NAME))) {
+      const role = JSON.parse(localStorage.getItem(TOKEN_NAME)).result.role ;
+      (role == "Admin" ? setIsAdmin(true) : setIsAdmin(false))
+    }
   })
 
   const register = useCallback(async () => {
