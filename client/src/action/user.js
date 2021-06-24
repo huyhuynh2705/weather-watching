@@ -7,8 +7,6 @@ export const addUser = (form) => async (dispatch) => {
   
       dispatch({ type: 'ADD_USER', payload: data })
 
-      alert("User Added")
-  
     } catch (error) {
       console.log(error)
       alert(error.response.data.message)
@@ -54,9 +52,8 @@ export const addUser = (form) => async (dispatch) => {
   export const deleteUser = (id) => async (dispatch) => {
     try {
       
-      await api.deleteUser(id);
-  
-      dispatch({ type: 'DELETE_USER', payload: id });
+      const { data } = await api.deleteUser(id);
+      dispatch({ type: 'DELETE_USER', payload: data });
   
     } catch (error) {
       console.log(error.response);

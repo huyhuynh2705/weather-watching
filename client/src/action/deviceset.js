@@ -5,11 +5,8 @@ export const addDeviceSet = (form) => async (dispatch) => {
       const { data } = await api.addDeviceSet(form)
   
       dispatch({ type: 'ADD_DEVICE_SET', payload: data })
-
-      alert("Device Set Added")
-      
     } catch (error) {
-      alert(error.response.data.message)
+      console.log(error.response);
     }
   }
   
@@ -33,7 +30,7 @@ export const getCountDeviceSet = () => async (dispatch) => {
     dispatch({ type: 'DEVICE_SET_COUNT', payload: data });
 
   } catch (error) {
-    console.log(error);
+    console.log(error.response);
   }
 };
 
@@ -43,9 +40,8 @@ export const getCountUnusedSet = () => async (dispatch) => {
     const { data } = await api.getCountUnusedSet();
 
     dispatch({ type: 'UNUSED_DEVICE_SET_COUNT', payload: data });
-
   } catch (error) {
-    console.log(error);
+    console.log(error.response);
   }
 };
 
@@ -55,7 +51,6 @@ export const updateDeviceSet = (form) => async (dispatch) => {
     const { data } = await api.updateDeviceSet(form);
 
     dispatch({ type: 'UPDATE_DEVICE_SET', payload: data });
-
   } catch (error) {
     console.log(error.response);
   }
@@ -64,12 +59,12 @@ export const updateDeviceSet = (form) => async (dispatch) => {
 export const deleteDeviceSet = (id) => async (dispatch) => {
   try {
     
-    await api.deleteDeviceSet(id);
+    const { data } = await api.deleteDeviceSet(id);
 
-    dispatch({ type: 'DELETE_DEVICE_SET', payload: id });
+    dispatch({ type: 'DELETE_DEVICE_SET', payload: data });
 
   } catch (error) {
-    console.log(error);
+    console.log(error.response);
     alert(error.response.data.message)
   }
 };

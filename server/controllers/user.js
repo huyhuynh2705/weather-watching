@@ -125,7 +125,7 @@ export const deleteUser = async (req, res) => {
   const { id } = req.params;
 
   try {
-      const oldUser= await UserModel.findById(id);
+      const oldUser = await UserModel.findById(id);
       if (!oldUser) {
           return res.status(404).json({ message: "User doesn't exist." });
       }
@@ -137,7 +137,7 @@ export const deleteUser = async (req, res) => {
 
       await UserModel.findByIdAndRemove(id);
 
-      return res.status(200).json({ message: "User is deleted."});            
+      return res.status(200).json(oldUser);            
       
   } catch (error) {
       res.status(404).json({ message: error.message });
@@ -267,9 +267,7 @@ export const updateUser = async (req, res) => {
     }
     else if (deviceSetName == 'None') { 
       deviceSetName = oldUser.deviceSetName 
-      const deviceSet = await DeviceSetModel.findOne( {setName: deviceSetName} )
-      if (!deviceSet) return res.status(404).json({ message: "Device set doesn't exist."}) 
-      await DeviceSetModel.findByIdAndUpdate( deviceSet._id, { userID: '' } , { new: true } )
+      await DeviceSetModel.findOneAndUpdate( {setName: deviceSetName}, { userID: '' } , { new: true } )
       deviceSetName = ''
     }
     else {

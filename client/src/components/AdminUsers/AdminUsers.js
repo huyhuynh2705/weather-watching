@@ -18,9 +18,8 @@ import Select from '@material-ui/core/Select';
 import InputLabel from '@material-ui/core/InputLabel';
 import FormControl from '@material-ui/core/FormControl';
 
-import { addUser, updateUser, deleteUser, getAdminUser, getCountAllUser } from '../../action/user'
-import { getNameSet } from '../../action/deviceset'
-import { confirmUser } from '../../action/user'
+import { addUser, updateUser, deleteUser, getAdminUser, getCountAllUser, confirmUser, countSubscriber } from '../../action/user'
+import { getNameSet, getCountDeviceSet, getCountUnusedSet } from '../../action/deviceset'
 
 function createData(index, id, username, name, email, phoneNum, address, deviceSetName, role) {
     return { index, id, username, name, email, phoneNum, address, deviceSetName, role };
@@ -70,15 +69,22 @@ const AdminUsers = ({limitPerPage}) => {
         }
         if (form!=initialState ) {
             if (isUpdate && !confirm) { 
-                dispatch(updateUser(form))
+                dispatch(updateUser(form)).then(()=> {
+                    dispatch(getCountDeviceSet())
+                    dispatch(getCountUnusedSet())
+                    dispatch(countSubscriber())
+                })
             } 
             else if(isUpdate && confirm) {
-                dispatch(updateUser(form))
+                dispatch(updateUser(form)).then(()=> {
+                    dispatch(getCountDeviceSet())
+                    dispatch(getCountUnusedSet())
+                    dispatch(countSubscriber())
+                })
                 dispatch(confirmUser(form.id))
             }
             else {
-                dispatch(addUser(form))
-                dispatch(getAdminUser({page: page, limit: limitPerPage})) 
+                dispatch(addUser(form)).then(()=> dispatch(getAdminUser({page: page, limit: limitPerPage})) )
             };
         }
         setForm(initialState);

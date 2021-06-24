@@ -13,6 +13,11 @@ export default makeStyles((theme) => ({
       width: '800px',
       padding: '20px'
     },
+    paperAddUser: {
+      width: '400px',
+      padding: '20px',
+      marginTop: '-10vh'
+    },
     title: {
       marginTop: '10px',
     },
