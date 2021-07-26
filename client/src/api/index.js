@@ -1,7 +1,7 @@
 import { TOKEN_NAME } from '@environments'
 import axios from 'axios'
 
-const API = axios.create({ baseURL: 'http://localhost:5000' })
+const API = axios.create({ baseURL: 'https://weather-watching.herokuapp.com/' })
 
 API.interceptors.request.use(req => {
   if (localStorage.getItem(TOKEN_NAME)) {
