@@ -18,9 +18,9 @@ import Select from '@material-ui/core/Select';
 import InputLabel from '@material-ui/core/InputLabel';
 import FormControl from '@material-ui/core/FormControl';
 
-import { deleteDeviceSet, getAdminDeviceSet, getCountDeviceSet } from '../../action/deviceset'
+import { deleteDeviceSet, getAdminDeviceSet, getCountDeviceSet, addDeviceSet, updateDeviceSet } from '../../action/deviceset'
 import { getTrafficlightName, getDHT11Name, getLightName } from '../../action/device'
-
+import { getUserName } from '../../action/user';
 function createData(index, id, time, setName, userID, trafficLightId, DHT11Id, lightId) {
     return { index, id, time, setName, userID, trafficLightId, DHT11Id, lightId };
 }
@@ -30,13 +30,14 @@ const initialState = {id: '', setName: '', username: '', trafficLightName: '', D
 const AdminDeviceSet = ({limitPerPage}) => {
     const classes = useStyles()
     const dispatch = useDispatch()
-    const totalItems = useSelector((state) => state.countdeviceset)
+    const totalItems = useSelector((state) => state.count.devicesets)
 
     let deviceset = useSelector((state) => state.deviceset)
 
-    let trafficlightname = useSelector((state) => state.trafficlightname)
-    let dht11name = useSelector((state) => state.dht11name)
-    let lightname = useSelector((state) => state.lightname)
+    let trafficlightname = useSelector((state) => state.names.tlnames)
+    let dht11name = useSelector((state) => state.names.dhtnames)
+    let lightname = useSelector((state) => state.names.lnames)
+    let username = useSelector((state) => state.names.usernames)
 
     const [updateIndex, setUpdateIndex] = useState(null)
 
@@ -56,6 +57,7 @@ const AdminDeviceSet = ({limitPerPage}) => {
         dispatch(getTrafficlightName());
         dispatch(getDHT11Name());
         dispatch(getLightName());
+        dispatch(getUserName());
     }, [open])
 
     const handleChangePage = (e, value) => {
@@ -69,16 +71,23 @@ const AdminDeviceSet = ({limitPerPage}) => {
     const handleSubmit = (e) => {
         e.preventDefault();
         if (form!=initialState) {
-            console.log(form);
-            //(isUpdate) ? dispatch(updateDevice(form)) : dispatch(addDevice(form));
+            if (isUpdate) {
+                dispatch(updateDeviceSet(form)) 
+            } else {
+                dispatch(addDeviceSet(form));
+            }
         }
+        //dispatch(getAdminDeviceSet({page: page, limit: limitPerPage})) 
+        setForm(initialState);
         setIsUpdate(true);
         setUpdateIndex(null)
         setOpen(!open);
     };
 
     const handleClose = () => {
-      setOpen(false);
+        setForm(initialState);
+        setOpen(false);
+        setIsUpdate(true);
     };
 
     const handleToggle = (value) => {
@@ -93,7 +102,6 @@ const AdminDeviceSet = ({limitPerPage}) => {
     }
 
     const handleDelete = (value) => {
-        console.log(rows[value].id);
         dispatch(deleteDeviceSet(rows[value].id))
         setUpdateIndex(null)
         if (rows.length == 1 &&  totalItems != 0) {
@@ -148,9 +156,12 @@ const AdminDeviceSet = ({limitPerPage}) => {
                                     value={form.username}
                                     onChange={handleChange}
                                     >
-                                        <MenuItem value="User 1">User 1</MenuItem>
-                                        <MenuItem value="User 2">User 2</MenuItem>
-                                        <MenuItem value="User 3">User 3</MenuItem>
+                                    <MenuItem key="None" value="None">None</MenuItem>
+                                    {username.map((name) => (
+                                        <MenuItem key={name} value={name}>
+                                        {name}
+                                        </MenuItem>
+                                    ))}
                                     </Select>
                                 </FormControl>
                                 <FormControl fullWidth variant="outlined" className={classes.formControl}>
@@ -230,9 +241,12 @@ const AdminDeviceSet = ({limitPerPage}) => {
                                 value={form.username}
                                 onChange={handleChange}
                                 >
-                                    <MenuItem value="User 1">User 1</MenuItem>
-                                    <MenuItem value="User 2">User 2</MenuItem>
-                                    <MenuItem value="User 3">User 3</MenuItem>
+                                <MenuItem key="None" value="None">None</MenuItem>
+                                {username.map((name) => (
+                                    <MenuItem key={name} value={name}>
+                                    {name}
+                                    </MenuItem>
+                                ))}
                                 </Select>
                             </FormControl>
                             <FormControl fullWidth variant="outlined" className={classes.formControl}>

@@ -8,8 +8,8 @@ import TableHead from '@material-ui/core/TableHead';
 import TableRow from '@material-ui/core/TableRow';
 // import light from './light.png'
 
-function createData(time, date, deviceId, type, temperature, humidity) {
-  return { time, date, deviceId, type, temperature, humidity };
+function createData(index, time, date, deviceId, type, temperature, humidity) {
+  return {index, time, date, deviceId, type, temperature, humidity };
 }
 
 function DHT11({ data }) {
@@ -32,13 +32,12 @@ function DHT11({ data }) {
   } else {
     divide = data.length / 2
   }
-
   for (let i = 0; i < data.length/2 ; i++) {
-    rows1.push(createData(data[i].time.slice(11, 19), data[i].time.slice(0, 10), data[i].deviceId, data[i].type, data[i].value, data[i].value2))
+    rows1.push(createData(i, data[i].time.slice(11, 19), data[i].time.slice(0, 10), data[i].deviceId, data[i].type, data[i].value, data[i].value2))
   }
 
   for (let i = divide; i < data.length ; i++) {
-    rows2.push(createData(data[i].time.slice(11, 19), data[i].time.slice(0, 10), data[i].deviceId, data[i].type, data[i].value, data[i].value2))
+    rows2.push(createData(i*2, data[i].time.slice(11, 19), data[i].time.slice(0, 10), data[i].deviceId, data[i].type, data[i].value, data[i].value2))
   }
 
   return (
@@ -62,7 +61,7 @@ function DHT11({ data }) {
             </TableHead>
             <TableBody>
               {rows1.map((row1) => (
-                <TableRow key={row1.time}>
+                <TableRow key={row1.index}>
                   <TableCell component="th" scope="row">{row1.date}</TableCell>
                   <TableCell align="center">{row1.time}</TableCell>
                   <TableCell align="left">{row1.type}</TableCell>
@@ -86,7 +85,7 @@ function DHT11({ data }) {
             </TableHead>
             <TableBody>
               {rows2.map((row2) => (
-                <TableRow key={row2.time}>
+                <TableRow key={row2.index}>
                   <TableCell component="th" scope="row">{row2.date}</TableCell>
                   <TableCell align="left">{row2.time}</TableCell>
                   <TableCell align="left">{row2.type}</TableCell>

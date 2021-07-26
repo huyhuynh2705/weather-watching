@@ -10,6 +10,18 @@ export const signIn = (form) => async (dispatch) => {
     
   } catch (error) {
     console.log(error.response)
+    alert(error.response.data.message)
+  }
+}
+
+export const signUp = (form) => async (dispatch) => {
+  try {
+    
+    await api.signUp(form)
+
+  } catch (error) {
+    console.log(error.response)
+    alert(error.response.data.message)
   }
 }
 
@@ -25,3 +37,12 @@ export const updateProfile = (id, form) => async (dispatch) => {
   }
 }
 
+export const forgotPassword = (form) => async (dispatch) => {
+  try {
+
+    await api.forgotPassword(form)
+
+  } catch (error) {
+    console.log(error.response)
+  }
+}

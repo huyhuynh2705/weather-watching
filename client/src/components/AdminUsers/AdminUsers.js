@@ -21,19 +21,19 @@ import FormControl from '@material-ui/core/FormControl';
 import { addUser, updateUser, deleteUser, getAdminUser, getCountAllUser } from '../../action/user'
 import { getNameSet } from '../../action/deviceset'
 
-function createData(index, id, username, name, email, phoneNum, deviceSetName, role) {
-    return { index, id, username, name, email, phoneNum, deviceSetName, role };
+function createData(index, id, username, name, email, phoneNum, address, deviceSetName, role) {
+    return { index, id, username, name, email, phoneNum, address, deviceSetName, role };
 }
   
-const initialState = {id: '', username: '', password: '', name: '', email:'', phoneNum: '', deviceSetName: '', role: '', confirmPassword: ''};
+const initialState = {id: '', username: '', password: '', name: '', email:'', phoneNum: '', address:'', deviceSetName: '', role: '', confirmPassword: ''};
 
 const AdminUsers = ({limitPerPage}) => {
     const classes = useStyles()
     const dispatch = useDispatch()
 
-    const totalItems = useSelector((state) => state.countuser)
+    const totalItems = useSelector((state) => state.count.users)
     let users = useSelector((state) => state.users)
-    let devicesetname = useSelector((state) => state.devicesetname)
+    let devicesetname = useSelector((state) => state.names.setnames)
 
     const [updateIndex, setUpdateIndex] = useState(null)
 
@@ -69,7 +69,7 @@ const AdminUsers = ({limitPerPage}) => {
         }
         if (form!=initialState ) {
          if (isUpdate) { 
-            dispatch(updateUser(form))
+             dispatch(updateUser(form))
         } 
         else {
             dispatch(addUser(form))
@@ -124,6 +124,7 @@ const AdminUsers = ({limitPerPage}) => {
                 users[i].name, 
                 users[i].email, 
                 users[i].phoneNum, 
+                users[i].address, 
                 users[i].deviceSetName, 
                 users[i].role))
         }
@@ -144,18 +145,19 @@ const AdminUsers = ({limitPerPage}) => {
                                 <Typography className={classes.title1} align="right" variant="h6" gutterBottom>Name: </Typography>
                                 <Typography className={classes.title1} align="right" variant="h6" gutterBottom>Email: </Typography>
                                 <Typography className={classes.title1} align="right" variant="h6" gutterBottom>Phone Number: </Typography>
+                                <Typography className={classes.title1} align="right" variant="h6" gutterBottom>Address: </Typography>
                                 <Typography className={classes.title1} align="right" variant="h6" gutterBottom>Device Set Id: </Typography>
                                 <Typography className={classes.title1} align="right" variant="h6" gutterBottom>Role: </Typography>
                                 <Typography className={classes.title1} align="right" variant="h6" gutterBottom>Password: </Typography>
                                 <Typography className={classes.title1} align="right" variant="h6" gutterBottom>Confirm Password: </Typography>
                             </Grid>
                             <Grid item xs={9}>
-                                <TextField className={classes.text} autoComplete="false" fullWidth variant="outlined" name="username" label={rows[updateIndex].username} onChange={handleChange}/>
-                                <TextField className={classes.text} autoComplete="false" fullWidth variant="outlined" name="name" label={rows[updateIndex].name} onChange={handleChange}/>
-                                <TextField className={classes.text} autoComplete="false" fullWidth variant="outlined" name="email" label={rows[updateIndex].email} onChange={handleChange} type="email" />
-                                <TextField className={classes.text} autoComplete="false" fullWidth variant="outlined" name="phoneNum" label={rows[updateIndex].phoneNum} onChange={handleChange} type="number"/>
-                                {/* <TextField className={classes.text} autoComplete="false" fullWidth variant="outlined" name="deviceSetName" label={rows[updateIndex].deviceSetName} onChange={handleChange}/> */}
-                                <FormControl fullWidth variant="outlined" className={classes.formControl}>
+                                <TextField className={classes.text} autoComplete="false" size="small" fullWidth variant="outlined" name="username" label={rows[updateIndex].username} onChange={handleChange}/>
+                                <TextField className={classes.text} autoComplete="false" size="small" fullWidth variant="outlined" name="name" label={rows[updateIndex].name} onChange={handleChange}/>
+                                <TextField className={classes.text} autoComplete="false" size="small" fullWidth variant="outlined" name="email" label={rows[updateIndex].email} onChange={handleChange} type="email" />
+                                <TextField className={classes.text} autoComplete="false" size="small" fullWidth variant="outlined" name="phoneNum" label={rows[updateIndex].phoneNum} onChange={handleChange} type="number"/>
+                                <TextField className={classes.text} autoComplete="false" size="small" fullWidth variant="outlined" name="address" label={rows[updateIndex].address} onChange={handleChange} />
+                                <FormControl fullWidth variant="outlined" size="small" className={classes.formControl}>
                                     <InputLabel id="deviceSetName-new-label">{(updateIndex==null) ? "Device Set Name" : rows[updateIndex].deviceSetName}</InputLabel>
                                     <Select
                                     labelId="deviceSetName-new-label"
@@ -171,8 +173,7 @@ const AdminUsers = ({limitPerPage}) => {
                                     ))}
                                     </Select>
                                 </FormControl>
-                                {/* <TextField className={classes.text} autoComplete="false" fullWidth variant="outlined" name="role" label={rows[updateIndex].role} onChange={handleChange}/> */}
-                                <FormControl fullWidth variant="outlined" className={classes.formControl}>
+                                <FormControl fullWidth variant="outlined" size="small" className={classes.formControl}>
                                     <InputLabel id="role-new-label">Role</InputLabel>
                                     <Select
                                     labelId="role-new-label"
@@ -184,8 +185,8 @@ const AdminUsers = ({limitPerPage}) => {
                                         <MenuItem value="Admin">Admin</MenuItem>
                                     </Select>
                                 </FormControl>
-                                <TextField className={classes.text} autoComplete="false" fullWidth variant="outlined" name="password" label={rows[updateIndex].password} onChange={handleChange}/>
-                                <TextField className={classes.text} autoComplete="false" fullWidth variant="outlined" name="confirmPassword" label={rows[updateIndex].confirmPassword} onChange={handleChange}/>
+                                <TextField className={classes.text} autoComplete="false" size="small" fullWidth variant="outlined" name="password" label={rows[updateIndex].password} onChange={handleChange}/>
+                                <TextField className={classes.text} autoComplete="false" size="small" fullWidth variant="outlined" name="confirmPassword" label={rows[updateIndex].confirmPassword} onChange={handleChange}/>
                             </Grid>
                         </Grid>
                         <Grid container spacing={2}>
@@ -207,18 +208,19 @@ const AdminUsers = ({limitPerPage}) => {
                             <Typography className={classes.title1} align="right" variant="h6" gutterBottom>Name: </Typography>
                             <Typography className={classes.title1} align="right" variant="h6" gutterBottom>Email: </Typography>
                             <Typography className={classes.title1} align="right" variant="h6" gutterBottom>Phone Number: </Typography>
+                            <Typography className={classes.title1} align="right" variant="h6" gutterBottom>Address: </Typography>
                             <Typography className={classes.title1} align="right" variant="h6" gutterBottom>Device Set Name: </Typography>
                             <Typography className={classes.title1} align="right" variant="h6" gutterBottom>Role: </Typography>
                             <Typography className={classes.title1} align="right" variant="h6" gutterBottom>Password: </Typography>
                             <Typography className={classes.title1} align="right" variant="h6" gutterBottom>Confirm Password: </Typography>
                         </Grid>
                         <Grid item xs={9}>
-                            <TextField required className={classes.text} autoComplete="false" fullWidth variant="outlined" name="username" label="Username" onChange={handleChange}/>
-                            <TextField required className={classes.text} autoComplete="false" fullWidth variant="outlined" name="name" label="Full Name" onChange={handleChange}/>
-                            <TextField required className={classes.text} autoComplete="false" fullWidth variant="outlined" name="email" label="Email" onChange={handleChange} type="email" />
-                            <TextField required className={classes.text} autoComplete="false" fullWidth variant="outlined" name="phoneNum" label="Phone Number" onChange={handleChange} type="number" />
-                            {/* <TextField className={classes.text} autoComplete="false" fullWidth variant="outlined" name="deviceSetName" label="Device Set Id" onChange={handleChange}/> */}
-                            <FormControl fullWidth variant="outlined" className={classes.formControl}>
+                            <TextField required className={classes.text} autoComplete="false" size="small" fullWidth variant="outlined" name="username" label="Username" onChange={handleChange}/>
+                            <TextField required className={classes.text} autoComplete="false" size="small" fullWidth variant="outlined" name="name" label="Full Name" onChange={handleChange}/>
+                            <TextField required className={classes.text} autoComplete="false" size="small" fullWidth variant="outlined" name="email" label="Email" onChange={handleChange} type="email" />
+                            <TextField required className={classes.text} autoComplete="false" size="small" fullWidth variant="outlined" name="phoneNum" label="Phone Number" onChange={handleChange} type="number" />
+                            <TextField required className={classes.text} autoComplete="false" size="small" fullWidth variant="outlined" name="address" label="Address" onChange={handleChange} />
+                            <FormControl fullWidth variant="outlined" size="small" className={classes.formControl}>
                                 <InputLabel id="deviceSetName-new-label">Device Set Name</InputLabel>
                                 <Select
                                 labelId="deviceSetName-new-label"
@@ -234,8 +236,7 @@ const AdminUsers = ({limitPerPage}) => {
                                 ))}
                                 </Select>
                             </FormControl>
-                            {/* <TextField required className={classes.text} autoComplete="false" fullWidth variant="outlined" name="role" label="Rol" onChange={handleChange}/> */}
-                            <FormControl fullWidth variant="outlined" className={classes.formControl}>
+                            <FormControl fullWidth variant="outlined" size="small" className={classes.formControl}>
                                 <InputLabel id="role-new-label">Role</InputLabel>
                                 <Select
                                 labelId="role-new-label"
@@ -247,8 +248,8 @@ const AdminUsers = ({limitPerPage}) => {
                                     <MenuItem value="Admin">Admin</MenuItem>
                                 </Select>
                             </FormControl>
-                            <TextField required className={classes.text} autoComplete="false" fullWidth variant="outlined" name="password" label="Password" onChange={handleChange}/>
-                            <TextField required className={classes.text} autoComplete="false" fullWidth variant="outlined" name="confirmPassword" label="Confirm Password" onChange={handleChange}/>
+                            <TextField required className={classes.text} autoComplete="false" size="small" fullWidth variant="outlined" name="password" label="Password" onChange={handleChange}/>
+                            <TextField required className={classes.text} autoComplete="false" size="small" fullWidth variant="outlined" name="confirmPassword" label="Confirm Password" onChange={handleChange}/>
                         </Grid>
                     </Grid>
                     <Grid container spacing={2}>

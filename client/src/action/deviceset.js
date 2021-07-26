@@ -1,15 +1,17 @@
 import * as api from '../api/index'
 
-// export const addDeviceSet = (form) => async (dispatch) => {
-//     try {
-//       const { data } = await api.addDeviceSet(form)
+export const addDeviceSet = (form) => async (dispatch) => {
+    try {
+      const { data } = await api.addDeviceSet(form)
   
-//       dispatch({ type: "ADDDEVICESET", data })
+      dispatch({ type: 'ADD_DEVICE_SET', payload: data })
+
+      alert("Device Set Added")
       
-//     } catch (error) {
-//       alert(error.response.data.message)
-//     }
-//   }
+    } catch (error) {
+      alert(error.response.data.message)
+    }
+  }
   
 export const getAdminDeviceSet = (form) => async (dispatch) => {
   try {
@@ -47,31 +49,28 @@ export const getCountUnusedSet = () => async (dispatch) => {
   }
 };
 
-// export const updateDeviceSet = (form) => async (dispatch) => {
-//   try {
+export const updateDeviceSet = (form) => async (dispatch) => {
+  try {
     
-//     const { data } = await api.updateDeviceSet(form);
+    const { data } = await api.updateDeviceSet(form);
 
-//     dispatch({ type: 'UPDATE_DEVICE', payload: data });
+    dispatch({ type: 'UPDATE_DEVICE_SET', payload: data });
 
-//   } catch (error) {
-//     console.log(error);
-//   }
-// };
+  } catch (error) {
+    console.log(error.response);
+  }
+};
 
 export const deleteDeviceSet = (id) => async (dispatch) => {
   try {
     
     await api.deleteDeviceSet(id);
 
-    const { data } = await api.getCountDeviceSet();
-    
-    dispatch({ type: 'DEVICE_SET_COUNT', payload: data });
-    
     dispatch({ type: 'DELETE_DEVICE_SET', payload: id });
 
   } catch (error) {
     console.log(error);
+    alert(error.response.data.message)
   }
 };
   

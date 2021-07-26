@@ -1,118 +1,220 @@
 import React, { useState } from 'react'
-import { Container, Grid, Typography } from '@material-ui/core'
+import { Container, Grid, Typography, CircularProgress } from '@material-ui/core'
 import Paper from '@material-ui/core/Paper';
 import useStyles from "./styles"
-import { Line } from 'react-chartjs-2';
 import { useSelector } from 'react-redux'
-
+import ReactApexChart  from 'react-apexcharts'
 
 const Chart = () => {
     const classes = useStyles()
-    const devicedata = useSelector((state) => state.alldevicedata)
-    let tldata = [];
-    let tllabels = [];
-
-    if (!!devicedata.tlvalues) {
-        for (let i = devicedata.tlvalues.length - 1 ; i >= 0 ; i--) {
-            tldata.push(devicedata.tlvalues[i].value)
-            tllabels.push(devicedata.tlvalues[i].time.slice(11, 16) + " " + devicedata.tlvalues[i].time.slice(8, 10)+ "/" + devicedata.tlvalues[i].time.slice(5, 7))
+    const dataChart = useSelector((state) => state.data.dataChart)
+    // console.log(dataChart);
+    const temperatureChartData = {
+        series: [{
+            name: 'Min temperature',
+            data: dataChart? dataChart.temperature.min: [0,0,0,0,0,0,0]
+          }, {
+            name: 'Max temperature',
+            data: dataChart? dataChart.temperature.max: [0,0,0,0,0,0,0]
+          }, {
+            name: 'Average temperature',
+            data: dataChart? dataChart.temperature.avg: [0,0,0,0,0,0,0]
+          }],
+          options: {
+            chart: {
+              type: 'bar',
+            },
+            plotOptions: {
+              bar: {
+                horizontal: false,
+                columnWidth: '55%',
+                endingShape: 'rounded'
+              },
+            },
+            dataLabels: {
+              enabled: false
+            },
+            stroke: {
+              show: true,
+              width: 2,
+              colors: ['transparent']
+            },
+            yaxis: {
+                title: {
+                  text: 'Celsius degree'
+                }
+            },
+            xaxis: {
+              categories: ['1', '2', '3', '4', '5', '6', '7'],
+              title: {
+                text: 'Hour(s) ago'
+              }
+            },
+            fill: {
+              opacity: 1
+            },
+            tooltip: {
+              y: {
+                formatter: function (val) {
+                  return val + "°C"
+                }
+              }
+            }
         }
     }
 
-    for (let i = 0; i < tldata.length; i++) {
-        if (tldata[i] == '10') { tldata[i] = '-1'}
-        else if (tldata[i] == '11') { tldata[i] = '0'}
-        else if (tldata[i] == '01') { tldata[i] = '1'}
-    }
-
-    let tempdata = [];
-    let templabels = [];    
-    let humdata = [];
-    let humlabels = [];
-
-    if (!!devicedata.dhtvalues) {
-        for (let i = devicedata.dhtvalues.length - 1 ; i >= 0 ; i--) {
-            tempdata.push(devicedata.dhtvalues[i].value)
-            humdata.push(devicedata.dhtvalues[i].value2)
-            templabels.push(devicedata.dhtvalues[i].time.slice(11, 16) + " " + devicedata.dhtvalues[i].time.slice(8, 10)+ "/" + devicedata.dhtvalues[i].time.slice(5, 7))
-            humlabels.push(devicedata.dhtvalues[i].time.slice(11, 16) + " " + devicedata.dhtvalues[i].time.slice(8, 10)+ "/" + devicedata.dhtvalues[i].time.slice(5, 7))
+    const humidityChartData = {
+        series: [{
+            name: 'Min humidity',
+            data: dataChart? dataChart.humidity.min: [0,0,0,0,0,0,0]
+          }, {
+            name: 'Max humidity',
+            data: dataChart? dataChart.humidity.max: [0,0,0,0,0,0,0]
+          }, {
+            name: 'Average humidity',
+            data: dataChart? dataChart.humidity.avg: [0,0,0,0,0,0,0]
+          }],
+          options: {
+            chart: {
+              type: 'bar',
+            },
+            plotOptions: {
+              bar: {
+                horizontal: false,
+                columnWidth: '55%',
+                endingShape: 'rounded'
+              },
+            },
+            dataLabels: {
+              enabled: false
+            },
+            stroke: {
+              show: true,
+              width: 2,
+              colors: ['transparent']
+            },
+            yaxis: {
+                title: {
+                  text: '% humidity'
+                }
+            },
+            xaxis: {
+              categories: ['1', '2', '3', '4', '5', '6', '7'],
+              title: {
+                text: 'Hour(s) ago'
+              }
+            },
+            fill: {
+              opacity: 1
+            },
+            tooltip: {
+              y: {
+                formatter: function (val) {
+                  return val + "%"
+                }
+              }
+            }
         }
     }
 
-    let lightdata = [];
-    let lightlabels = [];
-
-    if (!!devicedata.lvalues) {
-        for (let i = devicedata.lvalues.length - 1 ; i >= 0 ; i--) {
-            lightdata.push(devicedata.lvalues[i].value)
-            lightlabels.push(devicedata.lvalues[i].time.slice(11, 16) + " " + devicedata.lvalues[i].time.slice(8, 10)+ "/" + devicedata.lvalues[i].time.slice(5, 7))
+    const lightChartData = {
+        series: [{
+            name: 'Min light unit',
+            data: dataChart? dataChart.light.min: [0,0,0,0,0,0,0]
+          }, {
+            name: 'Max light unit',
+            data: dataChart? dataChart.light.max: [0,0,0,0,0,0,0]
+          }, {
+            name: 'Average light unit',
+            data: dataChart? dataChart.light.avg: [0,0,0,0,0,0,0]
+          }],
+          options: {
+            chart: {
+              type: 'bar',
+            },
+            plotOptions: {
+              bar: {
+                horizontal: false,
+                columnWidth: '55%',
+                endingShape: 'rounded'
+              },
+            },
+            dataLabels: {
+              enabled: false
+            },
+            stroke: {
+              show: true,
+              width: 2,
+              colors: ['transparent']
+            },
+            yaxis: {
+                title: {
+                  text: 'Unit'
+                }
+            },
+            xaxis: {
+              categories: ['1', '2', '3', '4', '5', '6', '7'],
+              title: {
+                text: 'Hour(s) ago'
+              }
+            },
+            fill: {
+              opacity: 1
+            },
+            tooltip: {
+              y: {
+                formatter: function (val) {
+                  return val + "unit"
+                }
+              }
+            }
         }
     }
 
     const tlChartData = {
-        labels: tllabels,
-        datasets: [{
-            label: 'Condition',
-            data: tldata,
-            fill: false,
-            borderColor: 'rgb(75, 192, 192)',
-            tension: 0.1
-        }]
-    };
+        series: dataChart? dataChart.trafficLight: [100,0,0],
+        options: {
+            chart: {
+                width: 380,
+                type: 'pie',
+            },
+            labels: ['Fine (Green light)', 'Normal (Yellow light)', 'Bad (Red light)'],
+            responsive: [{
+                breakpoint: 480,
+                options: {
+                chart: {
+                    width: 200
+                },
+                legend: {
+                    position: 'bottom'
+                }
+            }
+            }]
+        }
+    }
 
-    const tempChartData = {
-        labels: templabels,
-        datasets: [{
-            label: 'Temperature',
-            data: tempdata,
-            fill: false,
-            borderColor: 'rgb(75, 192, 192)',
-            tension: 0.1
-        }]
-    };
-
-    const humChartData = {
-        labels: humlabels,
-        datasets: [{
-            label: 'Humidity',
-            data: humdata,
-            fill: false,
-            borderColor: 'rgb(75, 192, 192)',
-            tension: 0.1
-        }]
-    };
-
-    const lightChartData = {
-        labels: lightlabels,
-        datasets: [{
-            label: 'Light',
-            data: lightdata,
-            fill: false,
-            borderColor: 'rgb(75, 192, 192)',
-            tension: 0.1
-        }]
-    };
-
-    return(
+    return (
         <Container>
             <Paper className={classes.root}>
                 <Grid container spacing={3}>
                     <Grid item xs={false} sm={6}>
-                        <Line data={tlChartData} height={200} />
-                        <Typography align="center" variant="h6">Condition Chart</Typography>
+                        <div id="chart">
+                            <ReactApexChart options={tlChartData.options} series={tlChartData.series} type="pie" />
+                        </div>
+                        <Typography align="center" variant="h6">Condition</Typography>
                     </Grid>
                     <Grid item xs={false} sm={6}>
-                        <Line data={tempChartData} height={200} />
-                        <Typography align="center" variant="h6">Temperature Chart</Typography>
+                        <ReactApexChart options={temperatureChartData.options} series={temperatureChartData.series} type="bar" />
+                        <Typography align="center" variant="h6">Temperature</Typography>
                     </Grid>
                     <Grid item xs={false} sm={6}>
-                        <Line data={humChartData} height={200} />
-                        <Typography align="center" variant="h6">Humidity Chart</Typography>
+                        <ReactApexChart options={humidityChartData.options} series={humidityChartData.series} type="bar" />
+                        <Typography align="center" variant="h6">Humidity</Typography>
                     </Grid>
                     <Grid item xs={false} sm={6}>
-                        <Line data={lightChartData} height={200} />
-                        <Typography align="center" variant="h6">Light Chart</Typography>
-                    </Grid>
+                        <ReactApexChart options={lightChartData.options} series={lightChartData.series} type="bar" />
+                        <Typography align="center" variant="h6">Light</Typography>
+                    </Grid> 
                 </Grid>
             </Paper>
         </Container>

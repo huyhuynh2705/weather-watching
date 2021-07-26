@@ -7,7 +7,7 @@ export const addDevice = (form) => async (dispatch) => {
     dispatch({ type: 'ADD_DEVICE', payload: data })
     
   } catch (error) {
-    console.log(error.message)
+    console.log(error.response)
   }
 }
 
@@ -30,7 +30,7 @@ export const getCountDevice = () => async (dispatch) => {
     dispatch({ type: 'DEVICE_COUNT', payload: data });
 
   } catch (error) {
-    console.log(error);
+    console.log(error.response);
   }
 };
 
@@ -42,7 +42,7 @@ export const updateDevice = (form) => async (dispatch) => {
     dispatch({ type: 'UPDATE_DEVICE', payload: data });
 
   } catch (error) {
-    console.log(error);
+    console.log(error.response);
   }
 };
 
@@ -51,14 +51,11 @@ export const deleteDevice = (id) => async (dispatch) => {
     
     await api.deleteDevice(id);
 
-    const { data } = await api.getCountDevice();
-    
-    dispatch({ type: 'DEVICE_COUNT', payload: data });
-    
     dispatch({ type: 'DELETE_DEVICE', payload: id });
 
   } catch (error) {
-    console.log(error);
+    console.log(error.response);
+    alert(error.response.data.message);
   }
 };
   

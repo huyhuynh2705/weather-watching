@@ -7,7 +7,7 @@ export const getData = (id) => async (dispatch) => {
       dispatch({ type: 'GET_DATA', payload: data });
 
     } catch (error) {
-      console.log(error.response);
+      console.log(error);
     }
   };
 
@@ -16,6 +16,17 @@ export const getData = (id) => async (dispatch) => {
       const { data } = await api.getAllDeviceData(id);
 
       dispatch({ type: 'GET_ALL_DATA', payload: data });
+
+    } catch (error) {
+      console.log(error.response);
+    }
+  };
+
+  export const getChartData = (id) => async (dispatch) => {
+    try {
+      const { data } = await api.getChartData(id);
+
+      dispatch({ type: 'GET_CHART_DATA', payload: data });
 
     } catch (error) {
       console.log(error.response);

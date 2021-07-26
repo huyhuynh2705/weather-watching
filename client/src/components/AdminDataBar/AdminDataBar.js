@@ -19,11 +19,11 @@ import { getCountDeviceSet, getCountUnusedSet } from '../../action/deviceset'
 function AdminDataBar() {
   const classes = useStyles()
   const dispatch = useDispatch()
-  const allDevices = useSelector((state) => state.countdevice)
-  const allDeviceSets = useSelector((state) => state.countdeviceset)
-  const allUsers = useSelector((state) => state.countuser)
-  const unUsedSet = useSelector((state) => state.countunusedset)
-  const subscriber = useSelector((state) => state.countsubscriber)
+  const allDevices = useSelector((state) => state.count.devices)
+  const allDeviceSets = useSelector((state) => state.count.devicesets)
+  const allUsers = useSelector((state) => state.count.users)
+  const unUsedSet = useSelector((state) => state.count.unusedsets)
+  const subscriber = useSelector((state) => state.count.subscribers)
 
   useEffect(() => {
     dispatch(getCountAllUser())
@@ -31,7 +31,7 @@ function AdminDataBar() {
     dispatch(getCountDevice())
     dispatch(getCountDeviceSet())
     dispatch(getCountUnusedSet())
-  }, [])
+  }, [dispatch])
 
   return (
     <Container >
