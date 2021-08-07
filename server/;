@@ -35,9 +35,8 @@ const sendTransaction = async (id, name, topic, unit, data) => {
         private_key
     );
 
-    const receipt = web3.eth.sendSignedTransaction(signedTx.rawTransaction)
+    const receipt = web3.eth.sendSignedTransaction(signedTx.rawTransaction).on("transactionHash", (tx) => {});
     await receipt.on("transactionHash", (hash) => {
-        console.log(hash)
         return hash
     })
 }
