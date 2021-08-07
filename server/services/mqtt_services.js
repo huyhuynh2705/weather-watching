@@ -2,7 +2,7 @@ import { mongoose, mqtt_client, mqtt_client2 } from '../helpers/index.js'
 import DeviceModel from '../models/device.js'
 import DataModel from '../models/data.js'
 import DeviceSetModel from '../models/deviceSet.js'
-import { dht11_topic, light_watcher_topic, trafic_light_topic } from '../environments/index.js'
+import { dht11_topic, light_watcher_topic, trafic_light_topic, private_key } from '../environments/index.js'
 import SaveContract from '../SaveData.js'
 import Web3 from 'web3'
 
@@ -14,7 +14,6 @@ let last_temp_value
 let last_humid_value
 
 const public_key = '0x7465FED2f2d9071B0279107204bFd6D562ba4a97'
-const private_key = 'ef6dfc6ceb389da29a3b2467a4d4d5c90f722860b0e0438a1150e6796d3e36e5'
 
 const sendTransaction = async (id, name, topic, unit, data) => {
     const tx = saveContract.methods.addData(id, name, topic, unit, data)
@@ -36,9 +35,11 @@ const sendTransaction = async (id, name, topic, unit, data) => {
         private_key
     );
 
-    const receipt = await web3.eth.sendSignedTransaction(signedTx.rawTransaction);
-    console.log(receipt)
-    return receipt.transactionHash
+    const receipt = web3.eth.sendSignedTransaction(signedTx.rawTransaction).on("transactionHash", (tx) => {});
+    await receipt.on("transactionHash", (hash) => {
+        console.log(hash)
+        return hash
+    })
 }
 
 const subscribe_topics = async () => {
